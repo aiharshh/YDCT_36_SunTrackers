@@ -6,6 +6,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f4f7f6;
   color: #333;
+  overflow-x: hidden;
 }
 
 /* 2. Navbar */
@@ -13,11 +14,9 @@ body {
   background-color: #2e7d32;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   width: 100%;
+  margin: 0;
 }
 
-/* IMPORTANT:
-   Navbar.jsx harus punya wrapper <div className="navbarInner"> ... </div>
-*/
 .navbarInner {
   max-width: 1400px;
   margin: 0 auto;
@@ -198,10 +197,16 @@ input, select {
     font-size: 0.78rem;
   }
 
+  .navbar {
+    max-width: 100%;
+    margin: 0;
+  }
+
   .navbarInner{
     padding: 0.7rem 0.9rem;
     flex-wrap: nowrap;  
     gap: 10px;
+    width: max(auto, 100%);
   }
 
   .logoText { display: none; }
