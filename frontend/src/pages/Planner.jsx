@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { calculateSolar } from '../services/api'; // Import our API helper
 import generateAdvisor from '../advisor/advisor';
 import '../App.css'; // Use our clean CSS
+import '../styles/Planner.css';
 
 export default function Planner() {
   const [formData, setFormData] = useState({ bill: '', district: 'Bandung' });
