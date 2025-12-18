@@ -26,16 +26,38 @@ app.post('/api/calculate-solar', (req, res) => {
     const systemSize = (bill / 1444) * 0.7 / 4.0; // Simplified math
     const cost = Math.round(systemSize * 14000000);
     const savings = Math.round(bill * 0.7);
-    
-    // AI Advice Generator (No API Key needed)
+
+    // Deterministic explanation (no external AI)
+    const panelWatt = 400; // typical panel wattage in W
+    const panels = Math.max(1, Math.round((systemSize * 1000) / panelWatt));
+    const paybackYears = (cost / (savings * 12)) || null;
+
     let advice = `Great location! ${district} has high solar potential.`;
     if (bill > 2000000) advice = `High usage detected. A ${systemSize.toFixed(1)}kWp system will maximize ROI.`;
+
+    const explanation = {
+        rationale: `Estimated system size ${systemSize.toFixed(1)} kWp is derived from your monthly bill using simplified local heuristics. This is a preliminary estimate and should be verified by a site survey.`,
+        assumptions: [
+            'Performance ratio (system losses) ~0.7',
+            `Panel wattage assumed ${panelWatt}W`,
+            'No storage (batteries) included'
+        ],
+        checklist: [
+            'Check roof orientation & shading',
+            'Request multiple installer quotes',
+            'Confirm local permits and electrical capacity',
+            'Plan maintenance and inverter access'
+        ],
+        panels: panels,
+        summary: `Approx. ${panels} panels (@ ${panelWatt}W). Estimated payback ~${paybackYears ? paybackYears.toFixed(1) + ' years' : 'N/A'}.`
+    };
 
     res.json({
         system_size: systemSize.toFixed(1),
         cost: cost,
         savings: savings,
-        advice: advice
+        advice: advice,
+        explanation: explanation
     });
 });
 

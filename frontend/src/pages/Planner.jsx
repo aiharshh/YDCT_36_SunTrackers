@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { calculateSolar } from '../services/api'; // Import our API helper
+import generateAdvisor from '../advisor/advisor';
 import '../App.css'; // Use our clean CSS
 
 export default function Planner() {
@@ -14,16 +15,20 @@ export default function Planner() {
     try {
       // Call the Python/Node Backend
       const data = await calculateSolar(formData); 
-      setResult(data);
+      // augment result with frontend advisor so UX is consistent even if backend changes
+      const explanation = generateAdvisor(formData, data);
+      setResult({ ...data, explanation });
     } catch (error) {
       console.error("Calculation failed", error);
       // Fallback for demo if backend fails
-      setResult({
+      const fallback = {
         system_size: (formData.bill / 1500000).toFixed(1),
         cost: Math.round((formData.bill / 1500000) * 14000000),
         savings: Math.round(formData.bill * 0.7),
         advice: `Based on ${formData.district}'s high solar index, this investment pays off in 3.2 years.`
-      });
+      };
+      const explanation = generateAdvisor(formData, fallback);
+      setResult({ ...fallback, explanation });
     }
     setLoading(false);
   };
@@ -83,6 +88,40 @@ export default function Planner() {
           <div style={{marginTop: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '5px'}}>
             <strong>🤖 AI Consultant's Note:</strong>
             <p style={{marginTop: '5px', fontStyle: 'italic'}}>"{result.advice}"</p>
+
+            {/* Explanation (deterministic) */}
+            {result.explanation && (
+              <div style={{marginTop: '10px'}}>
+                <h4 style={{marginBottom: '6px'}}>How we estimated this</h4>
+                <p style={{marginTop: 0}}>{result.explanation.rationale}</p>
+
+                <div style={{display: 'flex', gap: '20px', marginTop: '10px'}}>
+                  <div>
+                    <strong>Panels</strong>
+                    <p>{result.explanation.panels} pcs</p>
+                    <small>{result.explanation.summary}</small>
+                  </div>
+
+                  <div>
+                    <strong>Assumptions</strong>
+                    <ul>
+                      {result.explanation.assumptions.map((a, i) => (
+                        <li key={i}>{a}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div style={{marginTop: '10px'}}>
+                  <strong>Next steps</strong>
+                  <ol>
+                    {result.explanation.checklist.map((c, i) => (
+                      <li key={i}>{c}</li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
