@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 // FIX: We now import loginUser and registerUser instead of signInWithGoogle
 import { loginUser, registerUser } from '../firebase'; 
 import '../App.css';
+import '../styles/Login.css';
 
 export default function Login() {
   const navigate = useNavigate();
