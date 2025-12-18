@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -7,13 +7,14 @@ import Planner from './pages/Planner';
 import Invest from './pages/Invest';
 import Analysis from './pages/Analysis';
 
+function AppRoutes() {
+  const location = useLocation();
+  const showNavbar = location.pathname !== '/';
 
-export default function App() {
   return (
-    <BrowserRouter>
-      {/* The Navbar shows on every page EXCEPT Login */}
-      {window.location.pathname !== '/' && <Navbar />}
-      
+    <>
+      {showNavbar && <Navbar />}
+
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
@@ -21,6 +22,14 @@ export default function App() {
         <Route path="/invest" element={<Invest />} />
         <Route path="/analysis" element={<Analysis />} />
       </Routes>
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
     </BrowserRouter>
   );
 }

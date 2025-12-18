@@ -43,7 +43,7 @@ export default function Home() {
           <p>Track West Java's carbon reduction progress.</p>
           <br/>
           <Link to="/analysis">
-            <button className="btn" style={{backgroundColor: '#1976d2'}}>
+            <button className="btn" style={{backgroundColor: '#2e7d32'}}>
               View Dashboard
             </button>
           </Link>

@@ -10,12 +10,14 @@ export default function Planner() {
 
   const handleSubmit = async () => {
     if (!formData.bill) return alert("Please enter your monthly bill!");
-    
+    // ensure bill is numeric
+    const billNum = Number(formData.bill);
+    if (!Number.isFinite(billNum) || billNum <= 0) return alert('Please enter a valid monthly bill amount');
+
     setLoading(true);
     try {
-      // Call the Python/Node Backend
-      const data = await calculateSolar(formData); 
-      // augment result with frontend advisor so UX is consistent even if backend changes
+      // Call the backend
+      const data = await calculateSolar(formData);
       const explanation = generateAdvisor(formData, data);
       setResult({ ...data, explanation });
     } catch (error) {
@@ -34,24 +36,32 @@ export default function Planner() {
   };
 
   return (
-    <div className="container">
-      <h1 style={{textAlign: 'center', color: '#2e7d32'}}>☀️ Solar Calculator</h1>
-      <p style={{textAlign: 'center', color: '#666'}}>Find out how much your school can save.</p>
+    <div className="plannerPage">
+      <div className="plannerHeader">
+        <h1 className="plannerTitle">☀️ Solar Calculator</h1>
+        <p className="plannerSubtitle">Find out how much your school can save.</p>
+      </div>
 
       {/* INPUT SECTION */}
-      <div className="card" style={{maxWidth: '500px', margin: '20px auto'}}>
-        <label><strong>Monthly Electricity Bill (IDR)</strong></label>
-        <input 
-          type="number" 
-          placeholder="e.g. 2000000" 
+      <div className="plannerCard plannerFormCard">
+        <label className="plannerLabel">
+          <strong>Monthly Electricity Bill (IDR)</strong>
+        </label>
+        <input
+          className="plannerInput"
+          type="number"
+          placeholder="e.g. 2000000"
           value={formData.bill}
-          onChange={(e) => setFormData({...formData, bill: e.target.value})}
+          onChange={(e) => setFormData({ ...formData, bill: e.target.value })}
         />
 
-        <label><strong>District / Location</strong></label>
-        <select 
+        <label className="plannerLabel">
+          <strong>District / Location</strong>
+        </label>
+        <select
+          className="plannerSelect"
           value={formData.district}
-          onChange={(e) => setFormData({...formData, district: e.target.value})}
+          onChange={(e) => setFormData({ ...formData, district: e.target.value })}
         >
           <option value="Bandung">Bandung</option>
           <option value="Bekasi">Bekasi</option>
@@ -59,70 +69,84 @@ export default function Planner() {
           <option value="Cirebon">Cirebon</option>
         </select>
 
-        <br/><br/>
-        <button className="btn" onClick={handleSubmit} disabled={loading}>
+        <button className="plannerBtn" onClick={handleSubmit} disabled={loading}>
           {loading ? "Calculating AI..." : "Calculate Savings"}
         </button>
       </div>
 
       {/* RESULT SECTION */}
       {result && (
-        <div className="card" style={{backgroundColor: '#e8f5e9', border: '1px solid #a5d6a7'}}>
-          <h2 style={{borderBottom: '1px solid #ccc', paddingBottom: '10px'}}>Analysis Result</h2>
-          
-          <div className="grid">
-            <div style={{textAlign: 'center'}}>
-              <h3>🔌 System Size</h3>
-              <p style={{fontSize: '1.5rem', fontWeight: 'bold'}}>{result.system_size} kWp</p>
+        <div className="plannerCard plannerResultCard">
+          <h2 className="plannerResultTitle">Analysis Result</h2>
+
+          <div className="plannerGrid">
+            <div className="plannerMetric">
+              <h3 className="plannerMetricTitle">🔌 System Size</h3>
+              <p className="plannerMetricValue">{result.system_size} kWp</p>
             </div>
-            <div style={{textAlign: 'center'}}>
-              <h3>💰 Estimated Cost</h3>
-              <p style={{fontSize: '1.5rem', fontWeight: 'bold', color: '#d32f2f'}}>Rp {result.cost.toLocaleString()}</p>
+
+            <div className="plannerMetric">
+              <h3 className="plannerMetricTitle">💰 Estimated Cost</h3>
+              <p className="plannerMetricValue plannerMetricValueCost">
+                Rp {result.cost.toLocaleString()}
+              </p>
             </div>
-            <div style={{textAlign: 'center'}}>
-              <h3>🌱 Monthly Savings</h3>
-              <p style={{fontSize: '1.5rem', fontWeight: 'bold', color: '#2e7d32'}}>Rp {result.savings.toLocaleString()}</p>
+
+            <div className="plannerMetric">
+              <h3 className="plannerMetricTitle">🌱 Monthly Savings</h3>
+              <p className="plannerMetricValue plannerMetricValueSave">
+                Rp {result.savings.toLocaleString()}
+              </p>
             </div>
           </div>
 
-          <div style={{marginTop: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '5px'}}>
+          <div className="plannerNote">
             <strong>🤖 AI Consultant's Note:</strong>
             <p style={{marginTop: '5px', fontStyle: 'italic'}}>"{result.advice}"</p>
+          </div>
+          {/* Explanation (advisor) */}
+          {result.explanation && (
+            <div className="plannerCard plannerExplanationCard" style={{marginTop: 16}}>
+              <h3 className="plannerSectionTitle">How we estimated this</h3>
+              <p>{result.explanation.rationale}</p>
 
-            {/* Explanation (deterministic) */}
-            {result.explanation && (
-              <div style={{marginTop: '10px'}}>
-                <h4 style={{marginBottom: '6px'}}>How we estimated this</h4>
-                <p style={{marginTop: 0}}>{result.explanation.rationale}</p>
-
-                <div style={{display: 'flex', gap: '20px', marginTop: '10px'}}>
-                  <div>
-                    <strong>Panels</strong>
-                    <p>{result.explanation.panels} pcs</p>
-                    <small>{result.explanation.summary}</small>
-                  </div>
-
-                  <div>
-                    <strong>Assumptions</strong>
-                    <ul>
-                      {result.explanation.assumptions.map((a, i) => (
-                        <li key={i}>{a}</li>
-                      ))}
-                    </ul>
-                  </div>
+              <div style={{display: 'flex', gap: 20, marginTop: 12}}>
+                <div style={{flex: 1}}>
+                  <strong>Panels</strong>
+                  <p>{result.explanation.panels} pcs</p>
+                  <small>{result.explanation.summary}</small>
                 </div>
 
-                <div style={{marginTop: '10px'}}>
-                  <strong>Next steps</strong>
-                  <ol>
-                    {result.explanation.checklist.map((c, i) => (
-                      <li key={i}>{c}</li>
+                <div style={{flex: 2}}>
+                  <strong>Assumptions</strong>
+                  <ul>
+                    {Array.isArray(result.explanation.assumptions) && result.explanation.assumptions.map((a, i) => (
+                      <li key={i}>{a}</li>
                     ))}
-                  </ol>
+                  </ul>
                 </div>
               </div>
-            )}
-          </div>
+
+              <div style={{marginTop: 12}}>
+                <strong>Next steps</strong>
+                <ol>
+                  {Array.isArray(result.explanation.checklist) && result.explanation.checklist.map((c, i) => (
+                    <li key={i}>{c}</li>
+                  ))}
+                </ol>
+              </div>
+
+              <div style={{marginTop: 12}}>
+                <strong>Placement & optimizations</strong>
+                <p>{result.explanation.placement?.note}</p>
+                <ul>
+                  {Array.isArray(result.explanation.optimizations) && result.explanation.optimizations.map((o, i) => (
+                    <li key={i}>{o}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
