@@ -230,7 +230,9 @@ export default function Chat() {
       borderRadius: '25px', /* More rounded */
       fontSize: '1rem', /* Slightly larger font */
       fontFamily: 'inherit',
-      lineHeight: '1.4'
+      lineHeight: '1.4',
+      backgroundColor: 'transparent',
+      color: '#666',
     }}
     onFocus={(e) => e.target.style.borderColor = '#2e7d32'}
     onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
