@@ -9,10 +9,12 @@ export default function Navbar() {
           <span className="logoIcon">⚡ </span>
           <span className="logoText">PowerWestJava</span>
         </div>
+
         <div className="nav-links">
           <Link to="/home">HOME</Link>
           <Link to="/planner">CALCULATOR</Link>
           <Link to="/invest">INVEST</Link>
+          <Link to="/chat">CHAT</Link>
           <Link to="/analysis" className="nav-btn">ANALYSIS</Link>
         </div>
       </div>
