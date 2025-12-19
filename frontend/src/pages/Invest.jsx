@@ -68,7 +68,7 @@ export default function Invest() {
 
               <br/>
               <button className="btn" onClick={() => handleInvest(project.id)}>
-                Invest Rp 500k
+                Invest Rp 500.000
               </button>
             </div>
           </div>
