@@ -14,7 +14,7 @@ code/
 
 │   ├── package-lock.json
 
-│   └── server.js                  (The Logic: Solar Calc + Database API)
+│   └── index.js                  (Backend)
 
 │
 
