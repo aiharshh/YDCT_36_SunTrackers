@@ -59,50 +59,52 @@
 
 ```
 SunTrackers/
-├── README.md                    # This file
 ├── YDCT_36_SunTrackers/         # Main project directory
-│   ├── The Architecture.md      # Detailed architecture documentation
-│   ├── package.json            # Root package configuration
-│   │
-│   ├── backend/                # Node.js Express API server
-│   │   ├── index.js            # Main server file
-│   │   ├── package.json        # Backend dependencies
-│   │   └── package-lock.json   # Locked dependency versions
-│   │
-│   └── frontend/               # React application
-│       ├── public/             # Static assets
-│       │   ├── vite.svg        # Vite logo
-│       │   ├── dashboard-admin.png  # Admin dashboard preview
-│       │   └── dashboard-school.png # School dashboard preview
-│       │
-│       ├── src/                # Source code
-│       │   ├── assets/         # React logos and icons
-│       │   ├── components/     # Reusable React components
-│       │   │   └── Navbar.jsx  # Navigation component
-│       │   ├── pages/          # Main application screens
-│       │   │   ├── Home.jsx    # Dashboard hub
-│       │   │   ├── Login.jsx   # Authentication page
-│       │   │   ├── Planner.jsx # Solar calculator
-│       │   │   ├── Invest.jsx  # Investment marketplace
-│       │   │   ├── Analysis.jsx # Impact analytics
-│       │   │   └── Chat.jsx    # AI chat interface
-│       │   ├── services/       # API connection utilities
-│       │   │   └── api.js      # Backend API calls
-│       │   ├── advisor/        # AI advisor functionality
-│       │   │   └── advisor.js  # AI advisor logic
-│       │   ├── styles/         # CSS styling files
-│       │   │   ├── Invest.css  # Investment page styles
-│       │   │   ├── Login.css   # Login page styles
-│       │   │   └── Planner.css # Planner page styles
-│       │   ├── App.jsx         # Main app component with routing
-│       │   ├── App.css         # Global app styles
-│       │   ├── firebase.js     # Firebase configuration
-│       │   ├── index.css       # Global CSS
-│       │   └── main.jsx        # React entry point
-│       │
-│       ├── package.json        # Frontend dependencies
-│       ├── vite.config.js      # Vite configuration
-│       └── eslint.config.js    # ESLint configuration
+    ├── Readme.Md                     # ✅ Main comprehensive README (with team names)
+    ├── The Architecture.md           # Architecture documentation
+    ├── package.json                  # Root package config
+    ├── package-lock.json
+    │
+    ├── backend/                      # Node.js Express API
+    │   ├── index.js                  # Main server file
+    │   ├── package.json              # Backend dependencies
+    │   └── package-lock.json
+    │
+    └── frontend/                     # React application
+        ├── README.md                 # Default Vite template (basic)
+        ├── package.json              # Frontend dependencies
+        ├── package-lock.json
+        ├── vite.config.js
+        ├── eslint.config.js
+        ├── index.html
+        ├── public/                   # Static assets
+        │   ├── vite.svg
+        │   ├── dashboard-admin.png
+        │   └── dashboard-school.png
+        └── src/                      # React source code
+            ├── main.jsx              # Entry point
+            ├── App.jsx               # Main app with routing
+            ├── App.css               # Global styles
+            ├── index.css             # Global CSS
+            ├── firebase.js           # Firebase config
+            ├── assets/               # React assets
+            ├── components/           # Reusable components
+            │   └── Navbar.jsx
+            ├── pages/                # Main application pages
+            │   ├── Home.jsx
+            │   ├── Login.jsx
+            │   ├── Planner.jsx
+            │   ├── Invest.jsx
+            │   ├── Analysis.jsx
+            │   └── Chat.jsx
+            ├── services/             # API utilities
+            │   └── api.js
+            ├── advisor/              # AI advisor
+            │   └── advisor.js
+            └── styles/               # Page-specific CSS
+                ├── Invest.css
+                ├── Login.css
+                └── Planner.css
 ```
 
 ## 🚀 Quick Start
@@ -309,7 +311,7 @@ Developed for the **YDCT SL2 with Meta 2025** competition as part of efforts to 
 
 ## 🤝 Support
 
-For support, discord : shraddha_3176 or join our community discussions.
+For support, discord : shraddha_3176 or join our community discussions on discord.
 
 ## 🗺️ Roadmap
 
