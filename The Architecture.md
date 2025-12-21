@@ -124,11 +124,9 @@ npm install express mongoose cors dotenv openai
 
 **npm install -D nodemon**
 
+npm install groq-sdk
 
-
-
-
-
+node index.js
 
 
 
