@@ -297,7 +297,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Team
 
-Developed for the **YDCT 2025** competition as part of efforts to democratize renewable energy in Indonesia.
+Developed for the **YDCT SL2 with Meta 2025** competition as part of efforts to democratize renewable energy in Indonesia.
 
 ### Team Members:
 - **Shraddha Desai**
@@ -309,7 +309,7 @@ Developed for the **YDCT 2025** competition as part of efforts to democratize re
 
 ## 🤝 Support
 
-For support, email support@suntrackers.com or join our community discussions.
+For support, discord : shraddha_3176 or join our community discussions.
 
 ## 🗺️ Roadmap
 
