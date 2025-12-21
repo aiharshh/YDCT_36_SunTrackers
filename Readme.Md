@@ -302,7 +302,7 @@ Developed for the **YDCT SL2 with Meta 2025** competition as part of efforts to 
 ### Team Members:
 - **Shraddha Desai**
 - **Isha Samant**
-- **Febby Venera**
+- **Febian Nurwanto**
 - **Harsh Hublikar**
 - **Kim Seulkichan**
 - **Kishore K**
