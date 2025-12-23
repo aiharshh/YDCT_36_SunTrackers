@@ -25,8 +25,8 @@ export default function Planner() {
       console.error("Calculation failed", error);
       // Fallback for demo if backend fails
       const fallback = {
-        system_size: (formData.bill / 1500000).toFixed(1),
-        cost: Math.round((formData.bill / 1500000) * 14000000),
+        system_size: (formData.bill / 1444.7 / 130).toFixed(1),
+        cost: Math.round((formData.bill / 1444.7 / 130) * 14000000),
         savings: Math.round(formData.bill * 0.7),
         advice: `Based on ${formData.district}'s high solar index, this investment pays off in 3.2 years.`
       };
