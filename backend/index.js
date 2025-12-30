@@ -1,4 +1,3 @@
-console.log("GROQ KEY:", process.env.GROQ_API_KEY);
 // =====================
 // ENV SETUP
 // =====================
@@ -16,79 +15,97 @@ const Groq = require("groq-sdk");
 // APP SETUP
 // =====================
 const app = express();
+
+// Render uses an environment variable for PORT (usually 10000)
 const PORT = process.env.PORT || 5001;
 
-app.use(cors());
+// =====================
+// CORS CONFIGURATION
+// =====================
+// Explicitly allowing your Firebase domains and Localhost
+app.use(cors({
+    origin: [
+        "https://suntrackers-9171b.web.app",
+        "https://suntrackers-9171b.firebaseapp.com",
+        "http://localhost:5173"
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
+}));
+
 app.use(bodyParser.json());
 
 // =====================
 // GROQ CLIENT
 // =====================
-if (!process.env.GROQ_API_KEY) {
-  console.error("❌ GROQ_API_KEY missing");
-  process.exit(1);
+const groqApiKey = process.env.GROQ_API_KEY;
+
+let groq;
+if (groqApiKey) {
+    groq = new Groq({ apiKey: groqApiKey });
+    console.log("✅ Groq Client Initialized");
+} else {
+    console.warn("⚠️ Warning: GROQ_API_KEY is missing from Render environment variables.");
 }
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY
-});
-
 // =====================
-// FAKE DATABASE
+// DATA (In-Memory Database)
 // =====================
 let schools = [
-  { id: 1, name: "SMA 1 Bandung", district: "Bandung", target_amount: 100000000, raised_amount: 45000000 },
-  { id: 2, name: "SMK 3 Bekasi", district: "Bekasi", target_amount: 150000000, raised_amount: 12000000 },
-  { id: 3, name: "SDN 2 Bogor", district: "Bogor", target_amount: 50000000, raised_amount: 48000000 }
+    { id: 1, name: "SMA 1 Bandung", district: "Bandung", target_amount: 100000000, raised_amount: 45000000 },
+    { id: 2, name: "SMK 3 Bekasi", district: "Bekasi", target_amount: 150000000, raised_amount: 12000000 },
+    { id: 3, name: "SDN 2 Bogor", district: "Bogor", target_amount: 50000000, raised_amount: 48000000 }
 ];
 
 // =====================
 // ROUTES
 // =====================
 
-// Health check
+// 1. Health Check (Check this URL in your browser to see if server is awake)
 app.get("/", (req, res) => {
-  res.send("✅ Backend is running");
+    res.send("✅ West Java Solar Backend is LIVE and Running on Render!");
 });
 
-// Get projects
+// 2. Get school projects
 app.get("/api/projects", (req, res) => {
-  res.json(schools);
+    res.json(schools);
 });
 
-// Chat endpoint (GROQ 🔥)
+// 3. Chat endpoint (Groq AI Integration)
 app.post("/api/chat", async (req, res) => {
-  try {
-    const { messages } = req.body;
+    try {
+        const { messages } = req.body;
 
-    if (!Array.isArray(messages) || messages.length === 0) {
-      return res.status(400).json({ error: "messages required" });
+        if (!groq) {
+            return res.status(500).json({ error: "AI service not configured on server. Please check GROQ_API_KEY on Render." });
+        }
+
+        if (!Array.isArray(messages) || messages.length === 0) {
+            return res.status(400).json({ error: "Messages are required." });
+        }
+
+        const completion = await groq.chat.completions.create({
+            model: "moonshotai/kimi-k2-instruct", 
+            messages: messages,
+            temperature: 0.7
+        });
+
+        res.json({
+            assistant: completion.choices[0].message
+        });
+
+    } catch (err) {
+        console.error("❌ Groq Error:", err.message);
+        res.status(500).json({
+            error: "AI Generation Failed",
+            message: err.message
+        });
     }
-
-    const completion = await groq.chat.completions.create({
-      model: "moonshotai/kimi-k2-instruct", // FAST + FREE
-      messages: messages,
-      temperature: 0.7
-    });
-
-    res.json({
-      assistant: completion.choices[0].message
-    });
-
-  } catch (err) {
-    console.error("❌ Groq error:", err);
-    res.status(500).json({
-        error: "Groq API error",
-        message: err.message,
-        status: err.status,
-        raw: err
-    });
-  }
 });
 
 // =====================
 // START SERVER
 // =====================
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`🚀 Server is listening on Port ${PORT}`);
 });

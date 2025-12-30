@@ -4,12 +4,17 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "build": "npm install"
   },
-  "keywords": [],
+  "keywords": [
+    "solar",
+    "west-java",
+    "energy-democracy"
+  ],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Backend for West Java Solar Impact Portal - Competition Build",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.5",
