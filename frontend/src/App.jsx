@@ -10,14 +10,15 @@ import Chat from './pages/Chat';
 
 function AppRoutes() {
   const location = useLocation();
-  const showNavbar = location.pathname !== '/';
+  const showNavbar = location.pathname !== '/login';
 
   return (
     <>
       {showNavbar && <Navbar />}
 
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/planner" element={<Planner />} />
         <Route path="/invest" element={<Invest />} />

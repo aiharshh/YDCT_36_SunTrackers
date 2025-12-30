@@ -52,6 +52,22 @@
   transition: background-color 9999s ease-in-out 0s;
 }
 
+.login-skip{
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #556055;
+}
+
+.login-skip span{
+  color: #2e7d32;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.login-skip span:hover{
+  text-decoration: underline;
+}
+
 @media (max-width: 600px){
   .login-container{
     padding: 18px 12px;

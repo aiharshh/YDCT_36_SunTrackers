@@ -75,6 +75,9 @@ export default function Login() {
             {isRegistering ? "Log In" : "Sign Up"}
           </span>
         </p>
+        <p className="login-skip">
+          Just browsing? <span onClick={() => navigate('/home')}>Go to Home</span>
+        </p>
       </div>
     </div>
   );
