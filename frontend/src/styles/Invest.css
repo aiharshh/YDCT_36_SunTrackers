@@ -7,7 +7,7 @@
 .investTitle {
   text-align: center;
   color: #2e7d32;
-  font-size: clamp(28px, 4vw, 44px);
+  font-size: clamp(32px, 6vw, 42px);
   font-weight: 900;
   letter-spacing: -0.6px;
   margin: 8px 0 6px;

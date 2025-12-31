@@ -89,7 +89,7 @@ export default function Invest() {
 
   return (
     <div className="container">
-      <h1 style={{ textAlign: 'center', color: '#2e7d32' }}>🤝 Community Financing</h1>
+      <h1 className='investTitle'>🤝 Community Financing</h1>
       <p style={{ textAlign: 'center', color: '#666', marginBottom: '30px' }}>
         Invest in local solar projects and earn green returns.
       </p>

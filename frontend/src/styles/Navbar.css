@@ -1,21 +1,20 @@
 /* =========================
-   Navbar wrapper
+   NAVBAR (Desktop + Mobile Drawer)
 ========================= */
-.navbar {
+
+.navbar{
   width: 100%;
   margin: 0;
-  background-color: #2e7d32;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  overflow-x: clip;
+  background: #2e7d32;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.12);
 }
 
 .navbar,
-.navbar * {
+.navbar *{
   box-sizing: border-box;
 }
 
-/* Inner container */
-.navbarInner {
+.navbarInner{
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
@@ -37,35 +36,48 @@
   gap: 10px;
   white-space: nowrap;
   letter-spacing: -0.4px;
+
+  cursor: pointer;
+  user-select: none;
+  transition: transform .14s ease, filter .18s ease;
+}
+.logo:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+.logo:active{
+  transform: translateY(0);
+}
+.logo:focus-visible{
+  outline: 3px solid rgba(255,255,255,0.55);
+  outline-offset: 3px;
+  border-radius: 12px;
 }
 
 .logoIcon{ display: inline-flex; }
-.logoText{ display: inline-flex; }
+.logoText{ display: inline-flex !important; }
 
-/* =========================
-   Nav links wrapper
-========================= */
+/* Desktop links container */
 .nav-links{
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
 }
 
-/* =========================
-   Nav items base (links)
-========================= */
-.nav-links a{
+/* Shared nav item styles (links + logout button) */
+.nav-links a,
+.nav-links .nav-link{
   color: rgba(255,255,255,0.92);
-  text-decoration: none !important;
-  border-bottom: none !important;
-
   font-weight: 750;
   font-size: 0.92rem;
   letter-spacing: 0.4px;
 
   padding: 8px 12px;
   border-radius: 999px;
+
+  background: transparent;
+  border: 0;
+  cursor: pointer;
 
   transition:
     transform .14s ease,
@@ -75,7 +87,10 @@
     filter .18s ease;
 }
 
-/* kill underline on any state */
+.nav-links a{
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
 .nav-links a:hover,
 .nav-links a:active,
 .nav-links a:visited,
@@ -83,15 +98,28 @@
   text-decoration: none !important;
 }
 
-/* hover (elegan) */
-.nav-links a:hover{
+/* Hover effect */
+.nav-links a:hover,
+.nav-links .nav-link:hover{
   color: #fff;
   background: rgba(255,255,255,0.10);
   box-shadow: 0 10px 22px rgba(0,0,0,0.16);
   transform: translateY(-1px);
 }
 
-/* active = pill putih */
+.nav-links a:active,
+.nav-links .nav-link:active{
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+}
+
+.nav-links a:focus-visible,
+.nav-links .nav-link:focus-visible{
+  outline: 3px solid rgba(255,255,255,0.55);
+  outline-offset: 2px;
+}
+
+/* Active route (links only) */
 .nav-links a.active{
   background: rgba(255,255,255,0.96);
   color: #256a2b !important;
@@ -100,7 +128,6 @@
     inset 0 0 0 1px rgba(0,0,0,0.06);
   transform: translateY(-1px);
 }
-
 .nav-links a.active:hover{
   filter: brightness(0.98);
   box-shadow:
@@ -108,33 +135,18 @@
     inset 0 0 0 1px rgba(0,0,0,0.06);
 }
 
-/* focus for accessibility */
-.nav-links a:focus-visible{
-  outline: 3px solid rgba(255,255,255,0.55);
-  outline-offset: 2px;
-}
-
-/* =========================
-   LOGIN button (NavLink class="nav-btn")
-========================= */
+/* Login pill button */
 .nav-btn{
-  background: rgba(255,255,255,0.96);
+  background: rgba(255,255,255,0.96) !important;
   color: #256a2b !important;
-  padding: 9px 14px;
+  padding: 9px 14px !important;
   border-radius: 999px;
-  text-decoration: none !important;
-  font-weight: 900;
+  font-weight: 900 !important;
 
   box-shadow:
     0 10px 22px rgba(0,0,0,0.22),
     inset 0 0 0 1px rgba(0,0,0,0.06);
-
-  transition:
-    transform .14s ease,
-    box-shadow .18s ease,
-    filter .18s ease;
 }
-
 .nav-btn:hover{
   transform: translateY(-1px);
   filter: brightness(0.98);
@@ -142,49 +154,199 @@
     0 14px 28px rgba(0,0,0,0.26),
     inset 0 0 0 1px rgba(0,0,0,0.06);
 }
-
 .nav-btn:active{
-  transform: translateY(0px);
+  transform: translateY(0);
   box-shadow:
     0 8px 18px rgba(0,0,0,0.22),
     inset 0 0 0 1px rgba(0,0,0,0.06);
 }
 
 /* =========================
-   LOGOUT button (button.nav-link) -> style link biasa
+   Hamburger button + Drawer helpers
 ========================= */
-.nav-links .nav-link{
-  background: transparent;
+
+.navToggle{
+  display: none; /* shown on mobile */
   border: 0;
-  padding: 8px 12px;
-  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
   cursor: pointer;
 
-  color: rgba(255,255,255,0.92);
-  font-weight: 750;
-  font-size: 0.92rem;
-  letter-spacing: 0.4px;
+  align-items: center;
+  justify-content: center;
 
-  transition:
-    transform .14s ease,
-    background-color .18s ease,
-    box-shadow .18s ease,
-    color .18s ease,
-    filter .18s ease;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+  transition: transform .14s ease, filter .2s ease, background .2s ease, box-shadow .2s ease;
 }
 
-.nav-links .nav-link:hover{
-  color: #fff;
-  background: rgba(255,255,255,0.10);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+.navToggleIcon{
+  font-size: 22px;
+  line-height: 1;
+  transition: transform .18s ease;
+}
+
+/* ✅ Hover effect lebih kelihatan */
+.navToggle:hover{
+  background: rgba(255,255,255,0.18);
   transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(0,0,0,0.18);
+}
+.navToggle:hover .navToggleIcon{
+  transform: rotate(90deg);
 }
 
-.nav-links .nav-link:active{
+/* press */
+.navToggle:active{
   transform: translateY(0);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+  filter: brightness(0.98);
+}
+.navToggle:focus-visible{
+  outline: 3px solid rgba(255,255,255,0.55);
+  outline-offset: 3px;
 }
 
-/* ===== Auth Modal (Login Required) ===== */
+/* overlay (only shown when open in mobile) */
+.navOverlay{
+  display: none;
+}
+
+/* close button inside drawer */
+.navClose{
+  display: none;
+  border: 0;
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  cursor: pointer;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 20px;
+  line-height: 1;
+
+  box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+  transition: transform .14s ease, background .2s ease, box-shadow .2s ease;
+}
+.navClose:hover{
+  background: rgba(255,255,255,0.16);
+  transform: translateY(-1px) rotate(2deg);
+  box-shadow: 0 16px 30px rgba(0,0,0,0.18);
+}
+.navClose:active{
+  transform: translateY(0);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+}
+.navClose:focus-visible{
+  outline: 3px solid rgba(255,255,255,0.55);
+  outline-offset: 3px;
+}
+
+/* =========================
+   Mobile: turn nav-links into drawer
+========================= */
+@media (max-width: 720px){
+  .navbar{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  /* show hamburger */
+  .navToggle{
+    display: inline-flex;
+  }
+
+  /* overlay dim */
+  .navOverlay.show{
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 999;
+  }
+
+  /* drawer */
+  .nav-links{
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+
+    width: min(280px, 82vw);
+    max-width: 280px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+
+    padding: 64px 12px 14px;
+    background: #2e7d32;
+
+    transform: translateX(110%);
+    transition: transform .22s ease;
+    z-index: 1000;
+
+    box-shadow: -18px 0 40px rgba(0,0,0,0.22);
+    overflow-y: auto;
+  }
+
+  .nav-links.open{
+    transform: translateX(0);
+  }
+
+  .navClose{
+    display: inline-flex;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+
+  /* make items full-width */
+  .nav-links a,
+  .nav-links .nav-link{
+    width: 100%;
+    text-align: left;
+    padding: 11px 12px;
+    border-radius: 14px;
+    white-space: nowrap;
+    font-size: 0.92rem;
+  }
+
+  .nav-btn{
+    width: 100%;
+    text-align: center;
+    border-radius: 14px;
+  }
+
+  /* keep full brand name visible */
+  .navbarInner{
+    padding: 0.75rem 0.9rem;
+  }
+  .logo{
+    font-size: 1.08rem;
+    gap: 8px;
+  }
+  .logoText{
+    display: inline-flex !important;
+    max-width: 62vw; /* avoid pushing hamburger off-screen */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* =========================
+   AUTH MODAL
+========================= */
 .authModalOverlay{
   position: fixed;
   inset: 0;
@@ -213,9 +375,9 @@
   border: 1px solid rgba(0,0,0,0.08);
 
   position: relative;
-  animation: authPop .16s ease-out;
-
   text-align: center;
+
+  animation: authPop .16s ease-out;
 }
 
 @keyframes authPop{
@@ -247,7 +409,6 @@
 
   transition: transform .12s ease, filter .2s ease, background .2s ease;
 }
-
 .authModalClose:hover{
   background: rgba(46,125,50,0.16);
   transform: translateY(-1px);
@@ -262,12 +423,11 @@
 }
 
 .authModalText{
-  margin: 0 auto 18px;
+  margin: 0 auto 28px;
   max-width: 44ch;
   color: #556055;
   line-height: 1.55;
   font-size: 18px;
-  margin-bottom: 28px;
 }
 
 .authModalActions{
@@ -276,7 +436,6 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  margin-top: 6px;
 }
 
 .authBtn{
@@ -297,7 +456,6 @@
   color: #fff;
   box-shadow: 0 14px 26px rgba(46,125,50,0.22);
 }
-
 .authBtnPrimary:hover{
   filter: brightness(0.98);
   transform: translateY(-1px);
@@ -309,7 +467,6 @@
   color: #2e7d32;
   border: 1px solid rgba(46,125,50,0.22);
 }
-
 .authBtnGhost:hover{
   background: rgba(46,125,50,0.14);
   transform: translateY(-1px);
@@ -331,47 +488,5 @@
   }
   .authModalActions{
     width: 100%;
-  }
-}
-
-/* =========================
-   Responsive
-========================= */
-@media (max-width: 900px){
-  .navbarInner{ padding: 0.85rem 1.1rem; }
-  .nav-links{ gap: 8px; }
-}
-
-@media (max-width: 600px){
-  .navbarInner{
-    padding: 0.7rem 0.9rem;
-    gap: 10px;
-    flex-wrap: nowrap;
-  }
-
-  .logo{
-    font-size: 1.15rem;
-    gap: 6px;
-  }
-
-  .logoText{ display: none; }
-  .logoIcon{ font-size: 1.3rem; }
-
-  .nav-links{
-    gap: 6px;
-    flex-wrap: nowrap;
-  }
-
-  .nav-links a,
-  .nav-links .nav-link{
-    font-size: 0.78rem;
-    padding: 7px 10px;
-    letter-spacing: 0.2px;
-    white-space: nowrap;
-  }
-
-  .nav-btn{
-    padding: 7px 10px;
-    font-size: 0.78rem;
   }
 }

@@ -21,6 +21,7 @@
   margin: 0;
   color: #2e7d32;
   font-weight: 900;
+  font-size: clamp(32px, 6vw, 42px);
   letter-spacing: -0.4px;
 }
 
