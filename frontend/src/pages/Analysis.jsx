@@ -1,21 +1,33 @@
 import React, { useState } from "react";
 import "../styles/Analysis.css";
 import SchoolView from "../components/SchoolView";
+import AdminView from "../components/AdminView";
 
 export default function Analysis() {
-  const [view, setView] = useState("school"); // "school" | "admin" | "dynamic"
+  const [view, setView] = useState("school"); // "school" | "admin" | "dynamic" | "adminDynamic"
 
   const handleShare = () => {
     const currentUrl = window.location.href;
 
     const message =
-      view === "admin"
+      view === "admin" || view === "adminDynamic"
         ? `📊 West Java Government is scaling renewable energy! 331 units and counting. Track our progress: ${currentUrl}`
         : `🌿 Check out how West Java schools are hitting 69.3% Solar Independence! View the impact here: ${currentUrl}`;
 
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
+
+  const toggleBtnStyle = (active) => ({
+    padding: "8px 16px",
+    border: "none",
+    borderRadius: "6px",
+    background: active ? "white" : "transparent",
+    color: active ? "#2e7d32" : "#666",
+    fontWeight: "bold",
+    cursor: "pointer",
+    boxShadow: active ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
+  });
 
   return (
     <div className="analysisPage">
@@ -34,16 +46,7 @@ export default function Analysis() {
             <button
               onClick={() => setView("school")}
               className={`analysisToggleBtn ${view === "school" ? "analysisToggleBtnActive" : ""}`}
-              style={{
-                padding: "8px 16px",
-                border: "none",
-                borderRadius: "6px",
-                background: view === "school" ? "white" : "transparent",
-                color: view === "school" ? "#2e7d32" : "#666",
-                fontWeight: "bold",
-                cursor: "pointer",
-                boxShadow: view === "school" ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
-              }}
+              style={toggleBtnStyle(view === "school")}
             >
               School View
             </button>
@@ -51,16 +54,7 @@ export default function Analysis() {
             <button
               onClick={() => setView("admin")}
               className={`analysisToggleBtn ${view === "admin" ? "analysisToggleBtnActive" : ""}`}
-              style={{
-                padding: "8px 16px",
-                border: "none",
-                borderRadius: "6px",
-                background: view === "admin" ? "white" : "transparent",
-                color: view === "admin" ? "#2e7d32" : "#666",
-                fontWeight: "bold",
-                cursor: "pointer",
-                boxShadow: view === "admin" ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
-              }}
+              style={toggleBtnStyle(view === "admin")}
             >
               Admin View
             </button>
@@ -68,18 +62,18 @@ export default function Analysis() {
             <button
               onClick={() => setView("dynamic")}
               className={`analysisToggleBtn ${view === "dynamic" ? "analysisToggleBtnActive" : ""}`}
-              style={{
-                padding: "8px 16px",
-                border: "none",
-                borderRadius: "6px",
-                background: view === "dynamic" ? "white" : "transparent",
-                color: view === "dynamic" ? "#2e7d32" : "#666",
-                fontWeight: "bold",
-                cursor: "pointer",
-                boxShadow: view === "dynamic" ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
-              }}
+              style={toggleBtnStyle(view === "dynamic")}
             >
               S Dynamic
+            </button>
+
+            {/* ✅ tombol baru */}
+            <button
+              onClick={() => setView("adminDynamic")}
+              className={`analysisToggleBtn ${view === "adminDynamic" ? "analysisToggleBtnActive" : ""}`}
+              style={toggleBtnStyle(view === "adminDynamic")}
+            >
+              A Dynamic
             </button>
           </div>
         </div>
@@ -112,6 +106,9 @@ export default function Analysis() {
         )}
 
         {view === "dynamic" && <SchoolView />}
+
+        {/* ✅ render AdminView dinamis */}
+        {view === "adminDynamic" && <AdminView />}
       </div>
 
       <div
