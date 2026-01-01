@@ -1,5 +1,5 @@
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import '../styles/Navbar.css';
@@ -16,6 +16,10 @@ export default function Navbar() {
   // mobile menu state
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // user dropdown state
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUser(u));
     return () => unsub();
@@ -24,14 +28,16 @@ export default function Navbar() {
   // close menu on route change
   useEffect(() => {
     setMenuOpen(false);
+    setUserMenuOpen(false);
   }, [location.pathname]);
 
-  // close modal with ESC
+  // close modal + menu with ESC
   useEffect(() => {
     const onKeyDown = (e) => {
       if (e.key === 'Escape') {
         setShowAuthModal(false);
         setMenuOpen(false);
+        setUserMenuOpen(false);
       }
     };
     window.addEventListener('keydown', onKeyDown);
@@ -47,8 +53,20 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
+  // close user dropdown kalau klik di luar
+  useEffect(() => {
+    const onDocDown = (e) => {
+      if (!userMenuRef.current) return;
+      if (!userMenuRef.current.contains(e.target)) setUserMenuOpen(false);
+    };
+    document.addEventListener('mousedown', onDocDown);
+    return () => document.removeEventListener('mousedown', onDocDown);
+  }, []);
+
   const handleLogout = async () => {
     await signOut(auth);
+    setUserMenuOpen(false);
+    setMenuOpen(false);
     navigate('/login');
   };
 
@@ -56,6 +74,7 @@ export default function Navbar() {
     if (!user) {
       e.preventDefault();
       setMenuOpen(false);
+      setUserMenuOpen(false);
       setShowAuthModal(true);
     }
   };
@@ -66,6 +85,10 @@ export default function Navbar() {
   };
 
   const closeMenu = () => setMenuOpen(false);
+
+  // simple initial for avatar fallback
+  const userInitial =
+    (user?.displayName?.trim()?.[0] || user?.email?.trim()?.[0] || 'U').toUpperCase();
 
   return (
     <>
@@ -91,7 +114,10 @@ export default function Navbar() {
           {/* Overlay (mobile) */}
           <div
             className={`navOverlay ${menuOpen ? 'show' : ''}`}
-            onMouseDown={closeMenu}
+            onMouseDown={() => {
+              closeMenu();
+              setUserMenuOpen(false);
+            }}
             aria-hidden={!menuOpen}
           />
 
@@ -128,22 +154,78 @@ export default function Navbar() {
             >
               ANALYSIS
             </NavLink>
-
-            {/* Login / Logout */}
+            
             {!user ? (
               <NavLink to="/login" onClick={closeMenu} className="nav-btn">
                 LOGIN
               </NavLink>
             ) : (
-              <button type="button" className="nav-link" onClick={handleLogout}>
-                LOGOUT
-              </button>
+              <>
+                <div className="mobileOnly">
+                  <NavLink
+                    to="/profile"
+                    onClick={closeMenu}
+                    className={({ isActive }) => (isActive ? 'active' : '')}
+                  >
+                    PROFILE
+                  </NavLink>
+
+                  <button type="button" className="nav-link" onClick={handleLogout}>
+                    LOGOUT
+                  </button>
+                </div>
+
+                <div className="desktopOnly">
+                  <div className="userMenuWrap" ref={userMenuRef}>
+                    <button
+                      type="button"
+                      className="userIconBtn"
+                      aria-label="Open user menu"
+                      aria-expanded={userMenuOpen}
+                      onClick={() => setUserMenuOpen((v) => !v)}
+                    >
+                      {user?.photoURL ? (
+                        <img className="userAvatarImg" src={user.photoURL} alt="User avatar" />
+                      ) : (
+                        <span className="userAvatarFallback">{userInitial}</span>
+                      )}
+                    </button>
+
+                    {userMenuOpen && (
+                      <div className="userDropdown" role="menu" aria-label="User menu">
+                        <button
+                          type="button"
+                          className="userDropdownItem"
+                          onClick={() => {
+                            setUserMenuOpen(false);
+                            setMenuOpen(false);
+                            navigate('/profile');
+                          }}
+                          role="menuitem"
+                        >
+                          Profile
+                        </button>
+
+                        <div className="userDropdownDivider" />
+
+                        <button
+                          type="button"
+                          className="userDropdownItem danger"
+                          onClick={handleLogout}
+                          role="menuitem"
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
             )}
           </div>
         </div>
       </nav>
 
-      {/* ===== Modal (custom popup) ===== */}
       {showAuthModal && (
         <div
           className="authModalOverlay"

@@ -7,6 +7,7 @@ import Planner from './pages/Planner';
 import Invest from './pages/Invest';
 import Analysis from './pages/Analysis';
 import Chat from './pages/Chat';
+import Profile from './pages/Profile';
 
 function AppRoutes() {
   const location = useLocation();
@@ -24,6 +25,7 @@ function AppRoutes() {
         <Route path="/invest" element={<Invest />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/analysis" element={<Analysis />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </>
   );
