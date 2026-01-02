@@ -8,45 +8,36 @@ const YEARS = [2018, 2019, 2020, 2021, 2022, 2023, 2024];
 function normalizeName(s) {
   return String(s || "")
     .toUpperCase()
+    .replace(/\bKAB\.?\s*/i, "")
+    .replace(/\bKOTA\.?\s*/i, "")
     .replace(/^KABUPATEN\s+/i, "")
     .replace(/^KOTA\s+/i, "")
+    .replace(/[^\w\s]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
 
-function pickFeatureCode(props) {
-  const candidates = [
-    "city_district_code",
-    "kode_kab",
-    "kode_kota",
-    "KODE_KAB",
-    "KODE_KOTA",
-    "KODE",
-    "kode",
-    "id",
-  ];
-  for (const k of candidates) {
-    const v = props?.[k];
-    if (v !== undefined && v !== null && String(v).trim() !== "") return String(v).trim();
-  }
-  return null;
+function digitsOnly(s) {
+  return String(s ?? "").replace(/\D/g, "");
 }
 
-function pickFeatureName(props) {
-  const candidates = [
-    "city_district_name",
-    "nama_kab",
-    "nama_kota",
-    "NAMOBJ",
-    "name",
-    "NAME",
-    "nama",
-    "NAMA",
-  ];
-  for (const k of candidates) {
-    if (props?.[k]) return String(props[k]);
+function normalizeCodes({ kd_propinsi, kd_dati2, city_district_code }) {
+  const prov = digitsOnly(kd_propinsi);
+  const dati2 = digitsOnly(kd_dati2);
+  const csv = digitsOnly(city_district_code);
+
+  const codes = new Set();
+
+  if (dati2) codes.add(dati2);
+  if (prov && dati2) codes.add(`${prov}${dati2}`);
+
+  if (csv) {
+    codes.add(csv);
+    if (csv.length === 4 && csv.startsWith("32")) codes.add(csv.slice(2));
+    if (csv.length === 2) codes.add(`32${csv}`);
   }
-  return "";
+
+  return Array.from(codes);
 }
 
 function makeBins(maxVal) {
@@ -70,25 +61,23 @@ export default function AdminView() {
   const mapDivRef = useRef(null);
   const mapRef = useRef(null);
   const geoLayerRef = useRef(null);
+  const didFitRef = useRef(false);
 
   const [geo, setGeo] = useState(null);
   const [rows, setRows] = useState([]);
   const [year, setYear] = useState(2024);
+  const [selected, setSelected] = useState(null);
 
-  // selected disimpan hanya code+name (value dihitung dari yearData)
-  const [selected, setSelected] = useState(null); // { code, name }
-
-  // load geojson (1x)
   useEffect(() => {
     (async () => {
-      const res = await fetch("/geo/west_java_boundary.geojson");
+      const res = await fetch("/geo/Kota_Kabupaten_Jawa_Barat.geojson");
       if (!res.ok) throw new Error(`GeoJSON fetch failed: ${res.status}`);
       const gj = await res.json();
       setGeo(gj);
+      didFitRef.current = false;
     })().catch((e) => console.error("Failed to load geojson:", e));
   }, []);
 
-  // load csv (1x)
   useEffect(() => {
     (async () => {
       const res = await fetch("/data/admin.csv");
@@ -109,23 +98,32 @@ export default function AdminView() {
     const filtered = rows.filter((r) => Number(r.year) === Number(year));
 
     for (const r of filtered) {
-      const code = r.city_district_code != null ? String(r.city_district_code).trim() : null;
-      const name = normalizeName(r.city_district_name);
       const val = Number(r.number_of_power_plants) || 0;
 
-      if (code) byCode.set(code, val);
+      const codes = normalizeCodes({ city_district_code: r.city_district_code });
+      for (const c of codes) byCode.set(c, val);
+
+      const name = normalizeName(r.city_district_name);
       if (name) byName.set(name, val);
     }
+
     return { byCode, byName, filtered };
   }, [rows, year]);
 
   const selectedValue = useMemo(() => {
     if (!selected) return null;
 
-    const code = selected.code ? String(selected.code).trim() : null;
-    const nameNorm = normalizeName(selected.name);
+    const selectedCodes = normalizeCodes({
+      kd_propinsi: selected.kd_propinsi,
+      kd_dati2: selected.kd_dati2,
+      city_district_code: selected.code,
+    });
 
-    if (code && yearData.byCode.has(code)) return yearData.byCode.get(code);
+    for (const c of selectedCodes) {
+      if (yearData.byCode.has(c)) return yearData.byCode.get(c);
+    }
+
+    const nameNorm = normalizeName(selected.name);
     if (nameNorm && yearData.byName.has(nameNorm)) return yearData.byName.get(nameNorm);
 
     return 0;
@@ -144,7 +142,6 @@ export default function AdminView() {
 
   const bins = useMemo(() => makeBins(maxVal), [maxVal]);
 
-  // init map once
   useEffect(() => {
     if (!mapDivRef.current || mapRef.current) return;
 
@@ -167,56 +164,78 @@ export default function AdminView() {
     };
   }, []);
 
-  // draw / redraw geo layer whenever geo/year/yearData/selected changes
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !geo) return;
 
-    // remove old layer
     if (geoLayerRef.current) {
       geoLayerRef.current.remove();
       geoLayerRef.current = null;
     }
 
-    const styleFn = (feature) => {
-      const props = feature?.properties || {};
-      const code = pickFeatureCode(props);
-      const nameNorm = normalizeName(pickFeatureName(props));
+    const getValueForFeature = (props) => {
+      const codes = normalizeCodes({
+        kd_propinsi: props?.kd_propinsi,
+        kd_dati2: props?.kd_dati2,
+      });
 
-      let value = null;
-      if (code && yearData.byCode.has(code)) value = yearData.byCode.get(code);
-      else if (nameNorm && yearData.byName.has(nameNorm)) value = yearData.byName.get(nameNorm);
+      for (const c of codes) {
+        if (yearData.byCode.has(c)) return yearData.byCode.get(c);
+      }
 
-      const isSelected =
-        !!selected &&
-        ((code && selected.code && String(selected.code).trim() === String(code).trim()) ||
-          (nameNorm && normalizeName(selected.name) === nameNorm));
+      const nameNorm = normalizeName(props?.nm_dati2);
+      if (nameNorm && yearData.byName.has(nameNorm)) return yearData.byName.get(nameNorm);
 
-      return {
-        weight: isSelected ? 3 : 1,
-        color: isSelected ? "#000000" : "#263238",
-        fillOpacity: isSelected ? 0.85 : 0.65,
-        fillColor: getColor(value, bins),
-        dashArray: value === null ? "4 4" : undefined,
-      };
+      return null;
+    };
+
+    const isFeatureSelected = (props) => {
+      if (!selected) return false;
+
+      const featureCodes = normalizeCodes({
+        kd_propinsi: props?.kd_propinsi,
+        kd_dati2: props?.kd_dati2,
+      });
+
+      const selectedCodes = normalizeCodes({
+        kd_propinsi: selected.kd_propinsi,
+        kd_dati2: selected.kd_dati2,
+        city_district_code: selected.code,
+      });
+
+      const featureSet = new Set(featureCodes);
+      for (const c of selectedCodes) {
+        if (featureSet.has(c)) return true;
+      }
+
+      const a = normalizeName(props?.nm_dati2);
+      const b = normalizeName(selected.name);
+      return !!a && !!b && a === b;
     };
 
     const layer = L.geoJSON(geo, {
-      style: styleFn,
+      style: (feature) => {
+        const props = feature?.properties || {};
+        const value = getValueForFeature(props);
+        const sel = isFeatureSelected(props);
+
+        return {
+          weight: sel ? 3 : 1,
+          color: sel ? "#000000" : "#263238",
+          fillOpacity: sel ? 0.85 : 0.65,
+          fillColor: getColor(value, bins),
+          dashArray: value === null ? "4 4" : undefined,
+        };
+      },
       onEachFeature: (feature, l) => {
         const props = feature?.properties || {};
-        const code = pickFeatureCode(props);
-        const rawName = pickFeatureName(props);
-        const nameNorm = normalizeName(rawName);
-
-        let value = null;
-        if (code && yearData.byCode.has(code)) value = yearData.byCode.get(code);
-        else if (nameNorm && yearData.byName.has(nameNorm)) value = yearData.byName.get(nameNorm);
+        const rawName = props?.nm_dati2 || "Wilayah";
+        const value = getValueForFeature(props);
 
         const tooltipHtml = [
           `<div class="tt">`,
           `<div class="ttTitle">Year: ${year}</div>`,
-          `<div class="ttRow"><b>City/Regency:</b> ${rawName || "Wilayah"}</div>`,
+          `<div class="ttRow"><b>City/Regency:</b> ${rawName}</div>`,
           `<div class="ttRow"><b>Number of Power Plants:</b> ${value ?? "-"}</div>`,
           `</div>`,
         ].join("");
@@ -228,15 +247,14 @@ export default function AdminView() {
         });
 
         l.on("mouseover", () => l.setStyle({ weight: 2, fillOpacity: 0.8 }));
-        l.on("mouseout", () => {
-          // balik ke style normal + selected-highlight (Leaflet akan panggil styleFn)
-          layer.resetStyle(l);
-        });
+        l.on("mouseout", () => layer.resetStyle(l));
 
         l.on("click", () => {
           setSelected({
-            code,
-            name: rawName || "Wilayah",
+            kd_propinsi: props?.kd_propinsi,
+            kd_dati2: props?.kd_dati2,
+            code: props?.kd_dati2,
+            name: rawName,
           });
         });
       },
@@ -245,12 +263,16 @@ export default function AdminView() {
     layer.addTo(map);
     geoLayerRef.current = layer;
 
-    // fit bounds sekali ketika pertama kali ada geo
-    try {
-      const b = layer.getBounds();
-      if (b.isValid()) map.fitBounds(b, { padding: [20, 20] });
-    } catch {
-      // ignore
+    if (!didFitRef.current) {
+      try {
+        const b = layer.getBounds();
+        if (b.isValid()) {
+          map.fitBounds(b, { padding: [20, 20] });
+          didFitRef.current = true;
+        }
+      } catch {
+        // ignore
+      }
     }
   }, [geo, yearData, bins, year, selected]);
 

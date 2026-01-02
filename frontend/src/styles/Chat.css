@@ -6,7 +6,6 @@
   box-sizing: border-box;
 }
 
-/* Header */
 .chatHeader {
   text-align: center;
   padding: 18px 18px;
@@ -30,7 +29,6 @@
   font-size: 0.98rem;
 }
 
-/* Quick questions */
 .chatQuick {
   background: #ffffff;
   border: 1px solid rgba(0,0,0,0.06);
@@ -73,7 +71,6 @@
   transform: scale(0.99);
 }
 
-/* Chat box */
 .chatBox {
   background: #fff;
   border: 1px solid rgba(0,0,0,0.08);
@@ -85,7 +82,6 @@
   margin-bottom: 16px;
 }
 
-/* Message rows */
 .chatRow {
   display: flex;
   margin: 10px 0;
@@ -99,7 +95,6 @@
   justify-content: flex-start;
 }
 
-/* Bubble */
 .chatBubble {
   max-width: min(76%, 560px);
   padding: 12px 14px;
@@ -121,7 +116,6 @@
   border-radius: 18px 18px 18px 6px;
 }
 
-/* Text */
 .chatText {
   white-space: pre-wrap;
   line-height: 1.55;
@@ -134,7 +128,6 @@
   opacity: 0.75;
 }
 
-/* Typing */
 .chatTyping {
   display: flex;
   align-items: center;
@@ -163,7 +156,6 @@
   font-weight: 700;
 }
 
-/* Composer */
 .chatComposer {
   display: flex;
   gap: 12px;
@@ -202,7 +194,6 @@
   box-shadow: 0 0 0 4px rgba(46,125,50,0.14);
 }
 
-/* Send button */
 .chatSend {
   width: 88px;
   height: 88px;
@@ -229,7 +220,6 @@
   box-shadow: none;
 }
 
-/* Footer note */
 .chatFooter {
   margin-top: 14px;
   text-align: center;
@@ -240,7 +230,6 @@
   font-size: 0.86rem;
 }
 
-/* Animations */
 @keyframes chatFadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -251,7 +240,6 @@
   40% { transform: scale(1); }
 }
 
-/* Responsive */
 @media (max-width: 600px) {
   .chatPage {
     margin: 18px auto;

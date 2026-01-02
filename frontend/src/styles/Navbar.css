@@ -1,7 +1,3 @@
-/* =========================
-   NAVBAR (Desktop + Mobile Drawer)
-========================= */
-
 .navbar{
   width: 100%;
   margin: 0;
@@ -26,7 +22,6 @@
   gap: 14px;
 }
 
-/* Brand */
 .logo{
   color: #fff;
   font-size: 1.45rem;
@@ -57,14 +52,12 @@
 .logoIcon{ display: inline-flex; }
 .logoText{ display: inline-flex !important; }
 
-/* Desktop links container */
 .nav-links{
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Shared nav item styles (links + logout button) */
 .nav-links a,
 .nav-links .nav-link{
   color: rgba(255,255,255,0.92);
@@ -98,7 +91,6 @@
   text-decoration: none !important;
 }
 
-/* Hover effect */
 .nav-links a:hover,
 .nav-links .nav-link:hover{
   color: #fff;
@@ -119,7 +111,6 @@
   outline-offset: 2px;
 }
 
-/* Active route (links only) */
 .nav-links a.active{
   background: rgba(255,255,255,0.96);
   color: #256a2b !important;
@@ -135,7 +126,6 @@
     inset 0 0 0 1px rgba(0,0,0,0.06);
 }
 
-/* Login pill button */
 .nav-btn{
   background: rgba(255,255,255,0.96) !important;
   color: #256a2b !important;
@@ -161,12 +151,8 @@
     inset 0 0 0 1px rgba(0,0,0,0.06);
 }
 
-/* =========================
-   Hamburger button + Drawer helpers
-========================= */
-
 .navToggle{
-  display: none; /* shown on mobile */
+  display: none;
   border: 0;
   background: rgba(255,255,255,0.12);
   color: #fff;
@@ -188,7 +174,6 @@
   transition: transform .18s ease;
 }
 
-/* ✅ Hover effect lebih kelihatan */
 .navToggle:hover{
   background: rgba(255,255,255,0.18);
   transform: translateY(-1px);
@@ -198,7 +183,6 @@
   transform: rotate(90deg);
 }
 
-/* press */
 .navToggle:active{
   transform: translateY(0);
   box-shadow: 0 10px 22px rgba(0,0,0,0.14);
@@ -209,12 +193,10 @@
   outline-offset: 3px;
 }
 
-/* overlay (only shown when open in mobile) */
 .navOverlay{
   display: none;
 }
 
-/* close button inside drawer */
 .navClose{
   display: none;
   border: 0;
@@ -248,9 +230,6 @@
   outline-offset: 3px;
 }
 
-/* =========================
-   Mobile: turn nav-links into drawer
-========================= */
 @media (max-width: 720px){
   .navbar{
     position: sticky;
@@ -258,12 +237,10 @@
     z-index: 1000;
   }
 
-  /* show hamburger */
   .navToggle{
     display: inline-flex;
   }
 
-  /* overlay dim */
   .navOverlay.show{
     display: block;
     position: fixed;
@@ -274,7 +251,6 @@
     z-index: 999;
   }
 
-  /* drawer */
   .nav-links{
     position: fixed;
     top: 0;
@@ -311,7 +287,6 @@
     right: 12px;
   }
 
-  /* make items full-width */
   .nav-links a,
   .nav-links .nav-link{
     width: 100%;
@@ -328,7 +303,6 @@
     border-radius: 14px;
   }
 
-  /* keep full brand name visible */
   .navbarInner{
     padding: 0.75rem 0.9rem;
   }
@@ -338,15 +312,12 @@
   }
   .logoText{
     display: inline-flex !important;
-    max-width: 62vw; /* avoid pushing hamburger off-screen */
+    max-width: 62vw;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 }
 
-/* =========================
-   AUTH MODAL
-========================= */
 .authModalOverlay{
   position: fixed;
   inset: 0;
@@ -471,10 +442,6 @@
   background: rgba(46,125,50,0.14);
   transform: translateY(-1px);
 }
-
-/* =========================
-   USER MENU (icon + dropdown)
-========================= */
 
 .userMenuWrap{
   position: relative;

@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // FIX: We now import loginUser and registerUser instead of signInWithGoogle
@@ -15,17 +14,15 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError(''); 
     let user;
     
-    // Check if user is trying to Sign Up or Log In
     if (isRegistering) {
       user = await registerUser(email, password);
     } else {
       user = await loginUser(email, password);
     }
 
-    // If successful, go to Home
     if (user) {
       navigate('/home');
     } else {

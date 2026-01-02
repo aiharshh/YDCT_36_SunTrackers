@@ -226,7 +226,6 @@ function AreaChart({ title, series, valueKey, yTitle = "", height = 220 }) {
             </g>
           )}
 
-          {/* x labels full month, miring */}
           {series.map((d, i) => {
             const x = padL + i * xStep;
             const y = height - 45;
@@ -258,7 +257,6 @@ export default function SchoolView() {
 
   const [selectedSchoolId, setSelectedSchoolId] = useState(null);
 
-  // table sorting
   const [sortKey, setSortKey] = useState("sum_saving");
   const [sortDir, setSortDir] = useState("asc");
 
@@ -527,7 +525,6 @@ export default function SchoolView() {
           />
         </div>
 
-        {/* Bottom row */}
         <div className="svGridBottom">
           <div className="svCard">
             <div className="svCardHead">

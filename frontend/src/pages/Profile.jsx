@@ -16,11 +16,9 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('history'); // 'history' | 'settings'
 
-  // UI messages
   const [info, setInfo] = useState('');
   const [error, setError] = useState('');
 
-  // Settings form
   const [newEmail, setNewEmail] = useState('');
   const [emailLoading, setEmailLoading] = useState(false);
 
@@ -91,15 +89,15 @@ export default function Profile() {
     const email = newEmail.trim().toLowerCase();
 
     if (!email) {
-      setError('Email baru wajib diisi.');
+      setError('New email is required.');
       return;
     }
     if (!isValidEmailFormat(email)) {
-      setError('Format email tidak valid.');
+      setError('Invalid email format.');
       return;
     }
     if (email === (user.email || '').toLowerCase()) {
-      setError('Email baru tidak boleh sama dengan email saat ini.');
+      setError('New email cannot be the same as the current email.');
       return;
     }
 

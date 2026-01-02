@@ -3,14 +3,12 @@
   background: #ffffff;
 }
 
-/* header container (full width, tapi background putih) */
 .profileHeader{
   width: 100%;
   padding: 18px 0;
   background: transparent;
 }
 
-/* bikin banner hijau ngikut lebar container profileBody */
 .profileTitle{
   width: min(920px, 92vw);
   margin: 0 auto;
@@ -84,7 +82,6 @@
   letter-spacing: -0.2px;
 }
 
-/* Tabs */
 .profileTabs{
   display: flex;
   gap: 18px;
@@ -119,7 +116,6 @@
   border-radius: 999px;
 }
 
-/* Alerts */
 .profileAlert{
   margin: 10px 0 14px;
   border-radius: 14px;
@@ -152,7 +148,6 @@
   font-weight: 600;
 }
 
-/* History cards */
 .historyList{
   display: flex;
   flex-direction: column;
@@ -221,7 +216,6 @@
   text-align: right;
 }
 
-/* Settings */
 .settingsGrid{
   display: grid;
   grid-template-columns: 1fr 1fr;

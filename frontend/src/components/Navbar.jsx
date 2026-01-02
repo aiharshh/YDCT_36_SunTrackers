@@ -10,13 +10,10 @@ export default function Navbar() {
 
   const [user, setUser] = useState(null);
 
-  // modal state
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // mobile menu state
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // user dropdown state
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
 
@@ -25,13 +22,11 @@ export default function Navbar() {
     return () => unsub();
   }, []);
 
-  // close menu on route change
   useEffect(() => {
     setMenuOpen(false);
     setUserMenuOpen(false);
   }, [location.pathname]);
 
-  // close modal + menu with ESC
   useEffect(() => {
     const onKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -44,7 +39,6 @@ export default function Navbar() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
-  // optional: auto-close menu kalau resize ke desktop
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth > 720) setMenuOpen(false);
@@ -53,7 +47,6 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // close user dropdown kalau klik di luar
   useEffect(() => {
     const onDocDown = (e) => {
       if (!userMenuRef.current) return;
@@ -86,7 +79,6 @@ export default function Navbar() {
 
   const closeMenu = () => setMenuOpen(false);
 
-  // simple initial for avatar fallback
   const userInitial =
     (user?.displayName?.trim()?.[0] || user?.email?.trim()?.[0] || 'U').toUpperCase();
 
@@ -99,7 +91,6 @@ export default function Navbar() {
             <span className="logoText">PowerWestJava</span>
           </div>
 
-          {/* Hamburger (mobile) */}
           <button
             type="button"
             className="navToggle"
@@ -111,7 +102,6 @@ export default function Navbar() {
             <span className="navToggleIcon" aria-hidden="true">☰</span>
           </button>
 
-          {/* Overlay (mobile) */}
           <div
             className={`navOverlay ${menuOpen ? 'show' : ''}`}
             onMouseDown={() => {
@@ -122,7 +112,6 @@ export default function Navbar() {
           />
 
           <div id="mainNav" className={`nav-links ${menuOpen ? 'open' : ''}`}>
-            {/* Close button inside drawer (mobile) */}
             <button type="button" className="navClose" onClick={closeMenu} aria-label="Close menu">
               ✕
             </button>
@@ -143,7 +132,6 @@ export default function Navbar() {
               CHAT
             </NavLink>
 
-            {/* ANALYSIS: kalau belum login -> buka modal */}
             <NavLink
               to="/analysis"
               onClick={(e) => {
@@ -241,7 +229,7 @@ export default function Navbar() {
               onClick={() => setShowAuthModal(false)}
               aria-label="Close"
             >
-              ×
+              x
             </button>
 
             <h3 className="authModalTitle">Please sign in</h3>

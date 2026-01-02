@@ -1,18 +1,14 @@
-/* ========= Page wrapper ========= */
 .plannerPage {
   width: 100%;
   padding: 24px 12px 40px;
 
-  /* bikin semua konten selalu ketengah */
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  /* safety anti geser kanan */
   overflow-x: hidden;
 }
 
-/* ========= Header ========= */
 .plannerHeader {
   width: 100%;
   max-width: 1100px;
@@ -37,7 +33,6 @@
   max-width: 46ch;
 }
 
-/* ========= Card base ========= */
 .plannerCard {
   background: #fff;
   border: 1px solid rgba(0,0,0,.08);
@@ -55,7 +50,6 @@
   margin: 16px auto 0;
 }
 
-/* ========= Form ========= */
 .plannerLabel {
   display: block;
   margin: 12px 0 8px;
@@ -88,7 +82,6 @@
   box-shadow: 0 0 0 4px rgba(46,125,50,.14);
 }
 
-/* Button */
 .plannerBtn {
   width: 100%;
   max-width: 560px; 
@@ -110,7 +103,6 @@
 .plannerBtn:active { transform: scale(0.99); }
 .plannerBtn:disabled { opacity: .65; cursor: not-allowed; }
 
-/* ========= Result card ========= */
 .plannerResultCard {
   width: min(1100px, 100%);
   margin-top: 18px;
@@ -127,7 +119,6 @@
   color: #1f2a1f;
 }
 
-/* ========= Metrics grid ========= */
 .plannerGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -161,7 +152,6 @@
 .plannerMetricValueCost { color: #d32f2f; }
 .plannerMetricValueSave { color: #2e7d32; }
 
-/* Note */
 .plannerNote {
   margin-top: 16px;
   padding: 14px;
@@ -203,7 +193,6 @@
   color: #1f2a1f;
 }
 
-/* Lists */
 .plannerExplanationCard ul,
 .plannerExplanationCard ol{
   margin: 10px 0 0;
@@ -246,7 +235,6 @@
   overflow-wrap: anywhere;
 }
 
-/* ========= Responsive breakpoints ========= */
 @media (max-width: 900px) {
   .plannerGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

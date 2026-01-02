@@ -10,13 +10,11 @@ export default function Invest() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
-  // Modal state
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [pendingProjectId, setPendingProjectId] = useState(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successProjectName, setSuccessProjectName] = useState('');
 
-  // Dummy data
   const [projects, setProjects] = useState([
     {
       id: 1,
@@ -44,14 +42,12 @@ export default function Invest() {
     },
   ]);
 
-  // Listen auth
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUser(u));
     return () => unsub();
   }, []);
 
   const doInvest = (id) => {
-    // Confetti
     confetti({
       particleCount: 150,
       spread: 70,
@@ -63,7 +59,6 @@ export default function Invest() {
     const proj = projects.find((p) => p.id === id);
     setSuccessProjectName(proj?.name || 'this project');
 
-    // Update progress (simulated)
     setProjects((prev) =>
       prev.map((p) => (p.id === id ? { ...p, raised: p.raised + 500000 } : p))
     );
@@ -72,13 +67,11 @@ export default function Invest() {
   };
 
   const handleInvestClick = (id) => {
-    // kalau belum login -> modal
     if (!user) {
       setPendingProjectId(id);
       setShowAuthModal(true);
       return;
     }
-    // kalau sudah login -> invest
     doInvest(id);
   };
 
@@ -97,7 +90,6 @@ export default function Invest() {
       <div className="grid">
         {projects.map((project) => (
           <div key={project.id} className="card" style={{ padding: '0', overflow: 'hidden' }}>
-            {/* Project Image */}
             <div style={{ height: '150px', background: `url(${project.img}) center/cover` }} />
 
             <div style={{ padding: '20px' }}>
@@ -116,7 +108,6 @@ export default function Invest() {
                 </span>
               </div>
 
-              {/* Progress Bar */}
               <div style={{ marginTop: '15px', marginBottom: '5px', fontSize: '0.9rem', color: '#555' }}>
                 <span>Raised: Rp {(project.raised / 1000000).toFixed(1)} Juta</span>
                 <span style={{ float: 'right' }}>{Math.round((project.raised / project.target) * 100)}%</span>
@@ -143,7 +134,6 @@ export default function Invest() {
         ))}
       </div>
 
-      {/* ===== Login Required Modal (re-use from Navbar.css) ===== */}
       {showAuthModal && (
         <div
           className="authModalOverlay"
@@ -158,7 +148,7 @@ export default function Invest() {
               onClick={() => setShowAuthModal(false)}
               aria-label="Close"
             >
-              ×
+              x
             </button>
 
             <h2 className="authModalTitle">Please sign in</h2>
@@ -199,7 +189,7 @@ export default function Invest() {
               onClick={() => setShowSuccessModal(false)}
               aria-label="Close"
             >
-              ×
+              x
             </button>
 
             <h2 className="authModalTitle">Investment confirmed</h2>

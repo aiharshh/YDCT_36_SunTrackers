@@ -1,11 +1,7 @@
-// src/pages/Home.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase';
-
-// NOTE: kalau kamu sudah tidak mau pakai App.css, boleh hapus.
-// import '../App.css';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -72,7 +68,6 @@ export default function Home() {
           <p>Track West Java's carbon reduction progress.</p>
           <br />
 
-          {/* IMPORTANT: replace Link to="/analysis" dengan button check login */}
           <button
             className="btn"
             style={{ backgroundColor: '#2e7d32' }}
@@ -84,12 +79,10 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Footer */}
       <div style={{ textAlign: 'center', marginTop: '50px', color: '#999', fontSize: '0.9rem' }}>
         <p>Logged in securely via Firebase</p>
       </div>
 
-      {/* ===== Login Required Modal (re-use same classes) ===== */}
       {showAuthModal && (
         <div
           className="authModalOverlay"
@@ -104,7 +97,7 @@ export default function Home() {
               onClick={() => setShowAuthModal(false)}
               aria-label="Close"
             >
-              ×
+              x
             </button>
 
             <h2 className="authModalTitle">Please sign in</h2>

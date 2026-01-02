@@ -16,13 +16,11 @@ export default function Chat() {
   const firstRender = useRef(true);
 
   useEffect(() => {
-    // Jangan auto-scroll pas pertama kali masuk halaman
     if (firstRender.current) {
       firstRender.current = false;
       return;
     }
 
-    // Auto-scroll hanya di dalam chatBox (bukan window)
     if (boxRef.current) {
       boxRef.current.scrollTop = boxRef.current.scrollHeight;
     }
@@ -95,7 +93,6 @@ export default function Chat() {
         </div>
       )}
 
-      {/* PASANG ref DI SINI */}
       <div className="chatBox" ref={boxRef}>
         {messages.map((m, i) => (
           <div key={i} className={`chatRow ${m.role === 'user' ? 'isUser' : 'isAssistant'}`}>

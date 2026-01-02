@@ -4,7 +4,7 @@ import SchoolView from "../components/SchoolView";
 import AdminView from "../components/AdminView";
 
 export default function Analysis() {
-  const [view, setView] = useState("school"); // "school" | "admin" | "dynamic" | "adminDynamic"
+  const [view, setView] = useState("school"); // "school" | "admin" | "s dynamic" | "a dynamic"
 
   const handleShare = () => {
     const currentUrl = window.location.href;
@@ -67,7 +67,6 @@ export default function Analysis() {
               S Dynamic
             </button>
 
-            {/* ✅ tombol baru */}
             <button
               onClick={() => setView("adminDynamic")}
               className={`analysisToggleBtn ${view === "adminDynamic" ? "analysisToggleBtnActive" : ""}`}
@@ -107,7 +106,6 @@ export default function Analysis() {
 
         {view === "dynamic" && <SchoolView />}
 
-        {/* ✅ render AdminView dinamis */}
         {view === "adminDynamic" && <AdminView />}
       </div>
 
