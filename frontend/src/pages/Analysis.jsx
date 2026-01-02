@@ -48,15 +48,7 @@ export default function Analysis() {
               className={`analysisToggleBtn ${view === "school" ? "analysisToggleBtnActive" : ""}`}
               style={toggleBtnStyle(view === "school")}
             >
-              School View
-            </button>
-
-            <button
-              onClick={() => setView("admin")}
-              className={`analysisToggleBtn ${view === "admin" ? "analysisToggleBtnActive" : ""}`}
-              style={toggleBtnStyle(view === "admin")}
-            >
-              Admin View
+              S
             </button>
 
             <button
@@ -64,7 +56,7 @@ export default function Analysis() {
               className={`analysisToggleBtn ${view === "dynamic" ? "analysisToggleBtnActive" : ""}`}
               style={toggleBtnStyle(view === "dynamic")}
             >
-              S Dynamic
+              School
             </button>
 
             <button
@@ -72,7 +64,7 @@ export default function Analysis() {
               className={`analysisToggleBtn ${view === "adminDynamic" ? "analysisToggleBtnActive" : ""}`}
               style={toggleBtnStyle(view === "adminDynamic")}
             >
-              A Dynamic
+              Admin
             </button>
           </div>
         </div>
