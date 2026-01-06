@@ -60,7 +60,7 @@ export function generateAdvisor(formData = {}, result = {}) {
     'Negotiate a panel warranty and performance guarantee with suppliers',
   ];
 
-  const summary = `Estimated production ${annualKWh.toLocaleString()} kWh/year — roughly offsetting ${Math.round((annualKWh / (bill === 0 ? 1 : (bill * 12 / 1500))) )}% of annual consumption (approx).`;
+  const summary = `Estimated production ${annualKWh.toLocaleString()} kWh/year - roughly offsetting ${Math.round((annualKWh / (bill === 0 ? 1 : (bill * 12 / 1500))) )}% of annual consumption (approx).`;
 
   return {
     rationale,

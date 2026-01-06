@@ -38,7 +38,7 @@ export default function Home() {
       <section className="solarHero" aria-label="How Solar Power Works">
         <div className="solarHeroOverlay" />
         <div className="solarHeroContent">
-          <h2 className="solarHeroTitle">How Solar Power Works</h2>
+          <h2 className="solarHeroTitle">How Solar Panel Works</h2>
           <p className="solarHeroText">
             Discover how solar panels convert sunlight into clean energy.
           </p>
