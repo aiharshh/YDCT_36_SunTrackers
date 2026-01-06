@@ -1,0 +1,249 @@
+.homeContainer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 18px 40px;
+}
+
+.homeHeader {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.homeTitle {
+  color: #2e7d32;
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+}
+
+.homeSubtitle {
+  color: #667085;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.solarHero {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  padding: 26px;
+  margin: 22px 0 26px;
+
+  background-image: url("/Home_SolarPanelBackground.png");
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.12);
+}
+
+.solarHeroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 0.75) 32%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+}
+
+.solarHeroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+}
+
+.solarHeroTitle {
+  margin: 0 0 10px;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  color: #1f3a2a;
+  letter-spacing: -0.01em;
+}
+
+.solarHeroText {
+  margin: 0 0 16px;
+  color: #475467;
+  line-height: 1.55;
+}
+
+.solarHeroCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  color: #ffffff;
+  background: #2e7d32;
+  box-shadow: 0 10px 18px rgba(46, 125, 50, 0.22);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.solarHeroCta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px rgba(46, 125, 50, 0.26);
+  background: #256629;
+}
+
+.homeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+@media (max-width: 900px) {
+  .homeGrid {
+    grid-template-columns: 1fr;
+  }
+  .solarHero {
+    padding: 20px;
+    min-height: 210px;
+  }
+  .solarHeroOverlay {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 255, 255, 0.75) 55%,
+      rgba(255, 255, 255, 0.25) 100%
+    );
+  }
+}
+
+.homeCard {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px 18px;
+  text-align: center;
+  box-shadow: 0 10px 26px rgba(16, 24, 40, 0.08);
+  border: 1px solid rgba(16, 24, 40, 0.06);
+}
+
+.homeCard--orange {
+  border-top: 5px solid #ffa000;
+}
+.homeCard--green {
+  border-top: 5px solid #2e7d32;
+}
+.homeCard--blue {
+  border-top: 5px solid #1976d2;
+}
+
+.homeCardIcon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.homeCardTitle {
+  margin: 0 0 8px;
+  color: #1f2937;
+}
+
+.homeCardText {
+  margin: 0 0 16px;
+  color: #667085;
+  line-height: 1.55;
+}
+
+.homeBtn {
+  border: none;
+  border-radius: 12px;
+  padding: 11px 14px;
+  width: 100%;
+  cursor: pointer;
+  font-weight: 700;
+  background: #2e7d32;
+  color: #fff;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  box-shadow: 0 10px 18px rgba(46, 125, 50, 0.16);
+}
+
+.homeBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px rgba(46, 125, 50, 0.2);
+  background: #256629;
+}
+
+.homeBtn--primary {
+  background: #2e7d32;
+}
+
+.homeFooter {
+  text-align: center;
+  margin-top: 28px;
+  color: #98a2b3;
+  font-size: 0.95rem;
+}
+
+.authModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 24, 40, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 999;
+}
+
+.authModal {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 26px 70px rgba(16, 24, 40, 0.25);
+  position: relative;
+}
+
+.authModalClose {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  color: #667085;
+}
+
+.authModalTitle {
+  margin: 6px 0 6px;
+  color: #111827;
+}
+
+.authModalText {
+  margin: 0 0 14px;
+  color: #475467;
+}
+
+.authModalActions {
+  display: flex;
+  gap: 10px;
+}
+
+.authBtn {
+  flex: 1;
+  border: 1px solid rgba(16, 24, 40, 0.12);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.authBtnPrimary {
+  background: #2e7d32;
+  color: #fff;
+  border-color: transparent;
+}
+
+.authBtnPrimary:hover {
+  background: #256629;
+}
+
+.authBtnGhost {
+  background: #fff;
+  color: #111827;
+}

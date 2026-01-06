@@ -8,6 +8,7 @@ import Invest from './pages/Invest';
 import Analysis from './pages/Analysis';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
+import SolarPanelExplanation from './components/SolarPanelExplanation.jsx';
 
 function AppRoutes() {
   const location = useLocation();
@@ -26,6 +27,7 @@ function AppRoutes() {
         <Route path="/chat" element={<Chat />} />
         <Route path="/analysis" element={<Analysis />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/solarExplanation" element={<SolarPanelExplanation />} />
       </Routes>
     </>
   );

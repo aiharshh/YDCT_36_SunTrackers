@@ -3,6 +3,7 @@ import confetti from 'canvas-confetti';
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase';
+import HowInvestmentWorks from '../components/HowInvestmentWorks.jsx';
 
 import '../styles/Invest.css';
 
@@ -86,7 +87,7 @@ export default function Invest() {
       <p style={{ textAlign: 'center', color: '#666', marginBottom: '30px' }}>
         Invest in local solar projects and earn green returns.
       </p>
-
+      <HowInvestmentWorks />
       <div className="grid">
         {projects.map((project) => (
           <div key={project.id} className="card" style={{ padding: '0', overflow: 'hidden' }}>

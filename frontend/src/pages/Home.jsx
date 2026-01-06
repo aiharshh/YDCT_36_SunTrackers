@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase';
+import '../styles/Home.css';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -28,58 +29,69 @@ export default function Home() {
   };
 
   return (
-    <div className="container">
-      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <h1 style={{ color: '#2e7d32', fontSize: '2.5rem', marginBottom: '10px' }}>
-          Welcome to the Green Future
-        </h1>
-        <p style={{ color: '#666', fontSize: '1.1rem' }}>
-          West Java's Platform for Energy Democracy
-        </p>
+    <div className="homeContainer">
+      <div className="homeHeader">
+        <h1 className="homeTitle">Welcome to the Green Future</h1>
+        <p className="homeSubtitle">West Java&apos;s Platform for Energy Democracy</p>
       </div>
 
-      <div className="grid">
-        {/* Card 1: Calculator */}
-        <div className="card" style={{ textAlign: 'center', borderTop: '5px solid #ffa000' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '10px' }}>☀️</div>
-          <h2>Plan Solar</h2>
-          <p>Calculate costs and savings for your school or home.</p>
-          <br />
+      <section className="solarHero" aria-label="How Solar Power Works">
+        <div className="solarHeroOverlay" />
+        <div className="solarHeroContent">
+          <h2 className="solarHeroTitle">How Solar Power Works</h2>
+          <p className="solarHeroText">
+            Discover how solar panels convert sunlight into clean energy.
+          </p>
+
+          <Link to="/solarExplanation" className="solarHeroCta">
+            Learn More <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </section>
+
+      <div className="homeGrid">
+        <div className="homeCard homeCard--orange">
+          <div className="homeCardIcon" aria-hidden="true">
+            ☀️
+          </div>
+          <h2 className="homeCardTitle">Plan Solar</h2>
+          <p className="homeCardText">Calculate costs and savings for your school or home.</p>
+
           <Link to="/planner">
-            <button className="btn">Open Calculator</button>
+            <button className="homeBtn" type="button">
+              Open Calculator
+            </button>
           </Link>
         </div>
 
-        {/* Card 2: Invest */}
-        <div className="card" style={{ textAlign: 'center', borderTop: '5px solid #2e7d32' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '10px' }}>💰</div>
-          <h2>Invest</h2>
-          <p>Fund community projects and earn green returns.</p>
-          <br />
+        <div className="homeCard homeCard--green">
+          <div className="homeCardIcon" aria-hidden="true">
+            💰
+          </div>
+          <h2 className="homeCardTitle">Invest</h2>
+          <p className="homeCardText">Fund community projects and earn green returns.</p>
+
           <Link to="/invest">
-            <button className="btn">Browse Projects</button>
+            <button className="homeBtn" type="button">
+              Browse Projects
+            </button>
           </Link>
         </div>
 
-        {/* Card 3: Analysis */}
-        <div className="card" style={{ textAlign: 'center', borderTop: '5px solid #1976d2' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '10px' }}>📊</div>
-          <h2>Impact Analysis</h2>
-          <p>Track West Java's carbon reduction progress.</p>
-          <br />
+        <div className="homeCard homeCard--blue">
+          <div className="homeCardIcon" aria-hidden="true">
+            📊
+          </div>
+          <h2 className="homeCardTitle">Impact Analysis</h2>
+          <p className="homeCardText">Track West Java's carbon reduction progress visually.</p>
 
-          <button
-            className="btn"
-            style={{ backgroundColor: '#2e7d32' }}
-            onClick={handleAnalysisClick}
-            type="button"
-          >
+          <button className="homeBtn homeBtn--primary" onClick={handleAnalysisClick} type="button">
             View Dashboard
           </button>
         </div>
       </div>
 
-      <div style={{ textAlign: 'center', marginTop: '50px', color: '#999', fontSize: '0.9rem' }}>
+      <div className="homeFooter">
         <p>Logged in securely via Firebase</p>
       </div>
 
@@ -107,7 +119,11 @@ export default function Home() {
               <button type="button" className="authBtn authBtnPrimary" onClick={goLogin}>
                 Login
               </button>
-              <button type="button" className="authBtn authBtnGhost" onClick={() => setShowAuthModal(false)}>
+              <button
+                type="button"
+                className="authBtn authBtnGhost"
+                onClick={() => setShowAuthModal(false)}
+              >
                 Cancel
               </button>
             </div>
