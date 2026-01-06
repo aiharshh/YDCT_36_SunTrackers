@@ -9,6 +9,7 @@
   --sv-head-bg: #FFF7ED;
   --sv-foot-bg: #FFF1E6;
   --sv-active-bar: #166534;
+  --svCtrlH: 44px;
 }
 
 .svWrap{
@@ -58,7 +59,7 @@
 
 .svHeadTopRow{
   display:flex;
-  align-items:center;
+  align-items:stretch;
   gap:10px;
   flex-wrap:wrap;
   justify-content: flex-end;
@@ -497,12 +498,13 @@
   background: rgba(255,255,255,0.16);
   border: 1px solid rgba(255,255,255,0.24);
   flex-wrap: wrap;
+  height: var(--svCtrlH);
 }
 
 .svSegBtn{
   border: 0;
   border-radius: 999px;
-  padding: 10px 12px;
+  padding: 0 14px;
   font-weight: 900;
   cursor: pointer;
   background: transparent;
@@ -522,7 +524,7 @@
 
 .svCompareBtn{
   border-radius: 999px;
-  padding: 10px 12px;
+  padding: 0 16px;
   font-weight: 900;
   cursor: pointer;
   background: rgba(255,255,255,0.16);
@@ -530,6 +532,11 @@
   border: 1px solid rgba(255,255,255,0.28);
   outline: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+.svCompareBtn,
+.svSeg{
+  box-sizing: border-box;
 }
 
 .svCompareBtn:hover{
