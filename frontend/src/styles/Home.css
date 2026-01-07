@@ -1,91 +1,200 @@
-.homeContainer {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 28px 18px 40px;
+.homePage {
+  background: #f6f7fb;
+  min-height: 100vh;
 }
 
-.homeHeader {
-  text-align: center;
-  margin-bottom: 22px;
-}
-
-.homeTitle {
-  color: #2e7d32;
-  font-size: clamp(2rem, 3.5vw, 2.8rem);
-  letter-spacing: -0.02em;
-  margin: 0 0 10px;
-}
-
-.homeSubtitle {
-  color: #667085;
-  font-size: 1.05rem;
-  margin: 0;
-}
-
-.solarHero {
+.hero {
   position: relative;
-  border-radius: 22px;
-  overflow: hidden;
-  min-height: 220px;
+  min-height: 520px;
   display: flex;
   align-items: center;
-  padding: 26px;
-  margin: 22px 0 26px;
+  overflow: hidden;
 
-  background-image: url("/Home_SolarPanelBackground.png");
+  background-image: url("/background.png");
   background-size: cover;
   background-position: center;
-  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.12);
+  background-repeat: no-repeat;
 }
 
-.solarHeroOverlay {
+.heroOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(255, 255, 255, 0.75) 32%,
-    rgba(255, 255, 255, 0.15) 100%
-  );
+  background:
+    linear-gradient(90deg, rgba(10, 14, 18, 0.78) 0%, rgba(10, 14, 18, 0.35) 55%, rgba(10, 14, 18, 0.10) 100%),
+    linear-gradient(180deg, rgba(10, 14, 18, 0.25) 0%, rgba(10, 14, 18, 0.55) 100%);
 }
 
-.solarHeroContent {
+.heroInner {
   position: relative;
   z-index: 1;
-  max-width: 520px;
+  width: min(1100px, calc(100% - 36px));
+  margin: 0 auto;
+  padding: 70px 0 90px;
+  color: #fff;
 }
 
-.solarHeroTitle {
-  margin: 0 0 10px;
-  font-size: clamp(1.4rem, 2.4vw, 2rem);
-  color: #1f3a2a;
-  letter-spacing: -0.01em;
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(6px);
 }
 
-.solarHeroText {
-  margin: 0 0 16px;
-  color: #475467;
+.heroTitle {
+  margin: 14px 0 10px;
+  font-size: clamp(2.2rem, 4.2vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+
+.heroTitle span {
+  color: #7fe08a;
+}
+
+.heroSubtitle {
+  max-width: 640px;
+  margin: 0 0 18px;
+  color: rgba(255,255,255,0.85);
   line-height: 1.55;
+  font-size: 1.2rem;
 }
 
-.solarHeroCta {
+.heroActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.heroBtn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   padding: 12px 16px;
   border-radius: 999px;
   text-decoration: none;
-  font-weight: 600;
-  color: #ffffff;
-  background: #2e7d32;
-  box-shadow: 0 10px 18px rgba(46, 125, 50, 0.22);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  font-weight: 700;
+  border: 1px solid transparent;
 }
 
-.solarHeroCta:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 24px rgba(46, 125, 50, 0.26);
+.heroBtnPrimary {
+  background: #2e7d32;
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(46, 125, 50, 0.25);
+}
+
+.heroBtnPrimary:hover {
   background: #256629;
+}
+
+.heroBtnGhost {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.22);
+  color: #fff;
+  backdrop-filter: blur(6px);
+}
+
+.heroBtnGhost:hover {
+  background: rgba(255,255,255,0.16);
+}
+
+.heroWave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 120px;
+  z-index: 2;
+}
+
+.heroWave svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.heroWave path {
+  fill: #f6f7fb;
+}
+
+.content {
+  width: min(1100px, calc(100% - 36px));
+  margin: -60px auto 40px; 
+  position: relative;
+  z-index: 3;
+}
+
+.infoCard {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 12px 30px rgba(16,24,40,0.08);
+  border: 1px solid rgba(16,24,40,0.06);
+  margin-bottom: 18px;
+}
+
+.infoKicker {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  color: #667085;
+}
+
+.infoTitle {
+  margin: 0 0 10px;
+  color: #111827;
+  letter-spacing: -0.02em;
+  font-size: 1.8rem;
+}
+
+.infoTitle span {
+  color: #b26a00;
+}
+
+.infoText {
+  margin: 0 0 12px;
+  color: #475467;
+  line-height: 1.6;
+  font-size: 1.15rem;
+}
+
+.infoPills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #f2f4f7;
+  color: #344054;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.infoRight {
+  height: 100%;
+}
+
+.infoImage {
+  width: 100%;
+  height: 100%;
+  min-height: 140px; 
+  border-radius: 14px;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  background: #f2f4f7;
 }
 
 .homeGrid {
@@ -95,30 +204,21 @@
 }
 
 @media (max-width: 900px) {
-  .homeGrid {
-    grid-template-columns: 1fr;
-  }
-  .solarHero {
-    padding: 20px;
-    min-height: 210px;
-  }
-  .solarHeroOverlay {
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.92) 0%,
-      rgba(255, 255, 255, 0.75) 55%,
-      rgba(255, 255, 255, 0.25) 100%
-    );
-  }
+  .hero { min-height: 480px; }
+  .content { margin-top: -40px; }
+  .homeGrid { grid-template-columns: 1fr; }
+  .infoCard { grid-template-columns: 1fr; }
 }
 
 .homeCard {
   background: #ffffff;
   border-radius: 18px;
   padding: 22px 18px;
-  text-align: center;
+  text-align: left;
   box-shadow: 0 10px 26px rgba(16, 24, 40, 0.08);
   border: 1px solid rgba(16, 24, 40, 0.06);
+  position: relative;
+  overflow: hidden;
 }
 
 .homeCard--orange {
@@ -132,19 +232,62 @@
 }
 
 .homeCardIcon {
-  font-size: 3rem;
-  margin-bottom: 10px;
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 12px 0;
+  font-size: 1.6rem;
+  background: rgba(46, 125, 50, 0.10);
+  color: #2e7d32;
+  box-shadow: 0 10px 20px rgba(16,24,40,0.06);
 }
 
+.homeCardIcon i {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.homeCardDeco {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 84px;
+  height: 84px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  transform: rotate(14deg);
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+.homeCardDeco i {
+  font-size: 3rem;
+}
+
+.homeCard--orange .homeCardIcon { background: rgba(255, 160, 0, 0.14); color: #b26a00; }
+.homeCard--orange .homeCardDeco { background: rgba(255, 160, 0, 0.16); color: #b26a00; }
+
+.homeCard--green .homeCardIcon { background: rgba(46, 125, 50, 0.12); color: #2e7d32; }
+.homeCard--green .homeCardDeco { background: rgba(46, 125, 50, 0.14); color: #2e7d32; }
+
+.homeCard--blue .homeCardIcon { background: rgba(25, 118, 210, 0.14); color: #1976d2; }
+.homeCard--blue .homeCardDeco { background: rgba(25, 118, 210, 0.14); color: #1976d2; }
+
 .homeCardTitle {
-  margin: 0 0 8px;
-  color: #1f2937;
+  margin: 0 0 10px;
+  color: #111827;
+  font-size: 1.45rem;
+  font-weight: 750;
 }
 
 .homeCardText {
-  margin: 0 0 16px;
+  margin: 0 0 18px;
   color: #667085;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .homeBtn {
