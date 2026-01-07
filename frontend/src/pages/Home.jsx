@@ -33,7 +33,7 @@ export default function Home() {
       <section className="hero">
         <div className="heroOverlay" />
         <div className="heroInner">
-          <div className="heroBadge">West Java's Platform for Energy Democracy</div>
+          <div className="heroBadge">Dream West Java Progressing Towards Reality</div>
 
           <h1 className="heroTitle">
             Welcome to the <span>Green Future</span>
@@ -92,12 +92,10 @@ export default function Home() {
 
         <div className="homeGrid">
           <div className="homeCard homeCard--orange">
-            {/* icon kecil kiri atas */}
             <div className="homeCardIcon" aria-hidden="true">
               <i className="bi bi-sun-fill"></i>
             </div>
 
-            {/* dekor kanan atas */}
             <div className="homeCardDeco" aria-hidden="true">
               <i className="bi bi-calculator"></i>
             </div>
@@ -156,7 +154,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* modal kamu tetap */}
       {showAuthModal && (
         <div className="authModalOverlay" role="dialog" aria-modal="true" onClick={() => setShowAuthModal(false)}>
           <div className="authModal" onClick={(e) => e.stopPropagation()}>

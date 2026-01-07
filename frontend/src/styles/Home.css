@@ -10,7 +10,7 @@
   align-items: center;
   overflow: hidden;
 
-  background-image: url("/background.png");
+  background-image: url("/background.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -44,6 +44,17 @@
   border: 1px solid rgba(255,255,255,0.18);
   backdrop-filter: blur(6px);
 }
+
+.heroTagline{
+  margin-top: 25px;
+  margin-bottom: 6px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.78);
+}
+
 
 .heroTitle {
   margin: 14px 0 10px;
