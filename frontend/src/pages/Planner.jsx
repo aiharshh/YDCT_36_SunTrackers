@@ -1,147 +1,547 @@
-import React, { useState } from 'react';
-import { calculateSolar } from '../services/api';
-import generateAdvisor from '../advisor/advisor';
-import '../App.css';
-import '../styles/Planner.css';
+import React, { useMemo, useState } from "react";
+import { calculateSolar } from "../services/api";
+import generateAdvisor from "../advisor/advisor";
+import "../App.css";
+import "../styles/Planner.css";
+
+const DISTRICT_CONFIG = {
+  Bandung: { psh: 5.0, capexPerKwp: 13500000 },
+  Bekasi: { psh: 4.6, capexPerKwp: 14000000 },
+  Bogor: { psh: 4.5, capexPerKwp: 13500000 },
+  Cirebon: { psh: 5.3, capexPerKwp: 13000000 },
+};
+
+const TARIFF_BY_TYPE = { School: 1200, Household: 1450, SME: 1550 };
+const SHADING_FACTOR = { None: 1.0, Medium: 0.85, Heavy: 0.7 };
+const ROOF_MAX_KWP = { Small: 1, Medium: 3, Large: 10 };
+const TARGET_OFFSET = { School: 0.3, Household: 0.4, SME: 0.5 };
+
+const PR = 0.75;
+const PANEL_W = 330;
+const CO2_KG_PER_KWH = 0.82;
+const COMMUNITY_NET_RATE = 0.7;
+
+function clamp(n, min, max) {
+  return Math.max(min, Math.min(max, n));
+}
+
+function formatIDR(n) {
+  if (!Number.isFinite(n)) return "-";
+  return `Rp ${Math.round(n).toLocaleString("id-ID")}`;
+}
+
+function formatNum(n, digits = 1) {
+  if (!Number.isFinite(n)) return "-";
+  return Number(n).toFixed(digits);
+}
+
+function UiSelect({ label, value, onChange, options }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="uiSelect">
+      {label && (
+        <label className="plannerLabel">
+          <strong>{label}</strong>
+        </label>
+      )}
+
+      <button
+        type="button"
+        className="uiSelectBtn"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+      >
+        <span className="uiSelectVal">
+          {options.find((o) => o.value === value)?.label ?? value}
+        </span>
+        <i className="bi bi-chevron-down"></i>
+      </button>
+
+      {open && (
+        <>
+          <div className="uiSelectBackdrop" onClick={() => setOpen(false)} />
+          <div className="uiSelectMenu" role="listbox">
+            {options.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                className={`uiSelectItem ${opt.value === value ? "isActive" : ""}`}
+                onClick={() => {
+                  onChange(opt.value);
+                  setOpen(false);
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function calcLocal(inputs) {
+  const districtCfg = DISTRICT_CONFIG[inputs.district] || DISTRICT_CONFIG.Bandung;
+  const userType = inputs.userType || "School";
+
+  const tariff = TARIFF_BY_TYPE[userType] ?? TARIFF_BY_TYPE.School;
+  const shadingFactor = SHADING_FACTOR[inputs.shading] ?? 1.0;
+  const roofMax = ROOF_MAX_KWP[inputs.roofSize] ?? 3;
+  const targetOffset = TARGET_OFFSET[userType] ?? 0.3;
+
+  const billIdr = Number(inputs.bill);
+  const monthlyKwh = billIdr / tariff;
+
+  const kwhPerKwpPerMonth = districtCfg.psh * 30 * PR * shadingFactor;
+  const desiredMonthlyOffsetKwh = monthlyKwh * targetOffset;
+
+  let recommendedKwp = desiredMonthlyOffsetKwh / kwhPerKwpPerMonth;
+  if (!Number.isFinite(recommendedKwp) || recommendedKwp <= 0) recommendedKwp = 0.1;
+
+  const systemKwp = clamp(recommendedKwp, 0.1, roofMax);
+  const panels = Math.max(1, Math.ceil((systemKwp * 1000) / PANEL_W));
+
+  const annualKwh = systemKwp * districtCfg.psh * 365 * PR * shadingFactor;
+  const monthlySavings = (annualKwh / 12) * tariff;
+
+  const grantPct = clamp(Number(inputs.grantPct ?? 0), 0, 100);
+  const baseCapex = systemKwp * districtCfg.capexPerKwp;
+  const capexAfterGrant = baseCapex * (1 - grantPct / 100);
+
+  const annualSavings = monthlySavings * 12;
+  const paybackYears = annualSavings > 0 ? capexAfterGrant / annualSavings : Number.POSITIVE_INFINITY;
+
+  const billReductionPct = clamp((monthlySavings / billIdr) * 100, 0, 100);
+  const co2KgYear = annualKwh * CO2_KG_PER_KWH;
+
+  const isCommunity = inputs.financing === "Community";
+  const greenFee = isCommunity ? monthlySavings * (1 - COMMUNITY_NET_RATE) : 0;
+  const netSavingsSchool = isCommunity ? monthlySavings * COMMUNITY_NET_RATE : monthlySavings;
+
+  return {
+    system_size: Number(systemKwp.toFixed(1)),
+    cost: Math.round(capexAfterGrant),
+    savings: Math.round(monthlySavings),
+    annual_kwh: Math.round(annualKwh),
+    panels,
+    tariff,
+    psh: districtCfg.psh,
+    shadingFactor,
+    pr: PR,
+    bill_reduction_pct: Number(billReductionPct.toFixed(0)),
+    co2_kg_year: Math.round(co2KgYear),
+    payback_years: Number.isFinite(paybackYears) ? Number(paybackYears.toFixed(1)) : null,
+    financing: inputs.financing,
+    upfront_cost_school: isCommunity ? 0 : Math.round(capexAfterGrant),
+    green_fee: Math.round(greenFee),
+    net_savings_school: Math.round(netSavingsSchool),
+    grantPct,
+  };
+}
+
+function makeAdvice(inputs, computed) {
+  const isCommunity = inputs.financing === "Community";
+  if (isCommunity) {
+    return `With community funding, your upfront cost is Rp 0. Estimated net savings after a green fee is ${formatIDR(
+      computed.net_savings_school
+    )}/month.`;
+  }
+
+  const pb = computed.payback_years;
+  if (!pb) return `This estimate depends on site conditions. Check shading and roof suitability.`;
+  if (pb <= 4) return `Strong economics: estimated payback is about ${pb} years for ${inputs.district}.`;
+  if (pb <= 7) return `Solid option: estimated payback is about ${pb} years. Grants can shorten it further.`;
+  return `Payback is about ${pb} years. Consider grants or reducing shading to improve returns.`;
+}
+
+function getLeftNote({ result, formData, localPreview }) {
+  if (result?.advice) return result.advice;
+
+  if (localPreview) {
+    return makeAdvice(formData, { ...localPreview, financing: formData.financing });
+  }
+
+  return "Run a calculation to get a personalized note based on your site and financing options.";
+}
 
 export default function Planner() {
-  const [formData, setFormData] = useState({ bill: '', district: 'Bandung' });
+  const [formData, setFormData] = useState({
+    bill: "",
+    district: "Bandung",
+    userType: "School",
+    roofSize: "Medium",
+    shading: "None",
+    financing: "Direct",
+    grantPct: 0,
+  });
+
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
-    if (!formData.bill) return alert("Please enter your monthly bill!");
-    const billNum = Number(formData.bill);
-    if (!Number.isFinite(billNum) || billNum <= 0) return alert('Please enter a valid monthly bill amount');
+  const [uiAlert, setUiAlert] = useState({ open: false, title: "", message: "" });
 
+  const openAlert = (title, message) => setUiAlert({ open: true, title, message });
+  const closeAlert = () => setUiAlert((s) => ({ ...s, open: false }));
+
+  const localPreview = useMemo(() => {
+    const billNum = Number(formData.bill);
+    if (!Number.isFinite(billNum) || billNum <= 0) return null;
+    return calcLocal({ ...formData, bill: billNum });
+  }, [formData]);
+
+  const handleSubmit = async () => {
+    if (!formData.bill) {
+      openAlert("Missing input", "Please enter your monthly electricity bill (IDR) to calculate savings.");
+      return;
+    }
+
+    const billNum = Number(formData.bill);
+    if (!Number.isFinite(billNum) || billNum <= 0) {
+      openAlert("Invalid amount", "Please enter a valid monthly bill amount greater than 0.");
+      return;
+    }
+    
     setLoading(true);
     try {
-      const data = await calculateSolar(formData);
-      const explanation = generateAdvisor(formData, data);
-      setResult({ ...data, explanation });
+      const apiData = await calculateSolar({ ...formData, bill: billNum });
+      const computed = calcLocal({ ...formData, bill: billNum });
+
+      const merged = {
+        ...computed,
+        ...apiData,
+        system_size: apiData?.system_size ?? computed.system_size,
+        cost: apiData?.cost ?? computed.cost,
+        savings: apiData?.savings ?? computed.savings,
+      };
+
+      const advice = apiData?.advice ?? makeAdvice(formData, merged);
+
+      let explanation = null;
+      try {
+        explanation = generateAdvisor(formData, { ...merged, advice });
+      } catch {
+        explanation = null;
+      }
+
+      setResult({ ...merged, advice, explanation });
     } catch (error) {
       console.error("Calculation failed", error);
-      const fallback = {
-        system_size: (formData.bill / 1444.7 / 130).toFixed(1),
-        cost: Math.round((formData.bill / 1444.7 / 130) * 14000000),
-        savings: Math.round(formData.bill * 0.7),
-        advice: `Based on ${formData.district}'s high solar index, this investment pays off in 3.2 years.`
-      };
-      const explanation = generateAdvisor(formData, fallback);
-      setResult({ ...fallback, explanation });
+
+      const computed = calcLocal({ ...formData, bill: billNum });
+      const advice = makeAdvice(formData, computed);
+
+      let explanation = null;
+      try {
+        explanation = generateAdvisor(formData, { ...computed, advice });
+      } catch {
+        explanation = null;
+      }
+
+      setResult({ ...computed, advice, explanation });
     }
     setLoading(false);
   };
 
+  const isCommunity = formData.financing === "Community";
+  const displayCost = result ? (isCommunity ? result.upfront_cost_school : result.cost) : 0;
+  const displaySavings = result ? (isCommunity ? result.net_savings_school : result.savings) : 0;
+  const leftNoteText = getLeftNote({ result, formData, localPreview });
+
   return (
-    <div className="plannerPage">
-      <div className="plannerHeader">
-        <h1 className="plannerTitle">☀️ Solar Calculator</h1>
-        <p className="plannerSubtitle">Find out how much your school can save.</p>
-      </div>
-
-      <div className="plannerCard plannerFormCard">
-        <label className="plannerLabel">
-          <strong>Monthly Electricity Bill (IDR)</strong>
-        </label>
-        <input
-          className="plannerInput"
-          type="number"
-          placeholder="e.g. 2000000"
-          value={formData.bill}
-          onChange={(e) => setFormData({ ...formData, bill: e.target.value })}
-        />
-
-        <label className="plannerLabel">
-          <strong>District / Location</strong>
-        </label>
-        <select
-          className="plannerSelect"
-          value={formData.district}
-          onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-        >
-          <option value="Bandung">Bandung</option>
-          <option value="Bekasi">Bekasi</option>
-          <option value="Bogor">Bogor</option>
-          <option value="Cirebon">Cirebon</option>
-        </select>
-
-        <button className="plannerBtn" onClick={handleSubmit} disabled={loading}>
-          {loading ? "Calculating AI..." : "Calculate Savings"}
-        </button>
-      </div>
-
-      {result && (
-        <div className="plannerCard plannerResultCard">
-          <h2 className="plannerResultTitle">Analysis Result</h2>
-
-          <div className="plannerGrid">
-            <div className="plannerMetric">
-              <h3 className="plannerMetricTitle">🔌 System Size</h3>
-              <p className="plannerMetricValue">{result.system_size} kWp</p>
-            </div>
-
-            <div className="plannerMetric">
-              <h3 className="plannerMetricTitle">💰 Estimated Cost</h3>
-              <p className="plannerMetricValue plannerMetricValueCost">
-                Rp {result.cost.toLocaleString()}
-              </p>
-            </div>
-
-            <div className="plannerMetric">
-              <h3 className="plannerMetricTitle">🌱 Monthly Savings</h3>
-              <p className="plannerMetricValue plannerMetricValueSave">
-                Rp {result.savings.toLocaleString()}
-              </p>
-            </div>
+    <div className="plannerShell">
+      <div className="plannerTwoCol">
+        {/* LEFT */}
+        <aside className="plannerLeft">
+          <div className="leftHeader">
+            <h1 className="leftTitle">
+              <i className="bi bi-sun-fill"></i> Solar Calculator
+            </h1>
+            <p className="leftSubtitle">Estimate solar savings, payback, and community-funded options.</p>
           </div>
 
-          <div className="plannerNote">
-            <strong>🤖 AI Consultant's Note:</strong>
-            <p style={{marginTop: '5px', fontStyle: 'italic'}}>"{result.advice}"</p>
+          <div className="plannerCard plannerFormCard">
+            <label className="plannerLabel">
+              <strong>Monthly Electricity Bill (IDR)</strong>
+            </label>
+            <input
+              className="plannerInput"
+              type="number"
+              placeholder="e.g. 2000000"
+              value={formData.bill}
+              onChange={(e) => setFormData({ ...formData, bill: e.target.value })}
+            />
+
+            <div className="plannerFormGrid">
+              <div>
+                <label className="plannerLabel">
+                  <strong>District / Location</strong>
+                </label>
+                <UiSelect
+                  className="plannerSelect"
+                  value={formData.district}
+                  onChange={(e) => setFormData({ ...formData, district: e.target.value })}
+                  options={[
+                    { value: "Bandung", label: "Bandung" },
+                    { value: "Bekasi", label: "Bekasi" },
+                    { value: "Bogor", label: "Bogor" },
+                    { value: "Cirebon", label: "Cirebon" },
+                  ]}
+                />
+              </div>
+
+              <div>
+                <UiSelect
+                  label="User Type"
+                  value={formData.userType}
+                  onChange={(v) => setFormData({ ...formData, userType: v })}
+                  options={[
+                    { value: "School", label: "School" },
+                    { value: "Household", label: "Household" },
+                    { value: "SME", label: "SME" },
+                  ]}
+                />
+              </div>
+
+              <div>
+                <UiSelect
+                  label="Roof Size"
+                  value={formData.roofSize}
+                  onChange={(v) => setFormData({ ...formData, roofSize: v })}
+                  options={[
+                    { value: "Small", label: "Small" },
+                    { value: "Medium", label: "Medium" },
+                    { value: "Large", label: "Large" },
+                  ]}
+                />
+              </div>
+
+              <div>
+                <UiSelect
+                  label="Shading"
+                  value={formData.shading}
+                  onChange={(v) => setFormData({ ...formData, shading: v })}
+                  options={[
+                    { value: "None", label: "None" },
+                    { value: "Medium", label: "Medium" },
+                    { value: "Heavy", label: "Heavy" },
+                  ]}
+                />
+              </div>
+
+              <div>
+                <UiSelect
+                  label="Financing"
+                  value={formData.financing}
+                  onChange={(v) => setFormData({ ...formData, financing: v })}
+                  options={[
+                    { value: "Direct", label: "Direct" },
+                    { value: "Community", label: "Community" },
+                  ]}
+                />
+              </div>
+
+              <div>
+                <label className="plannerLabel">
+                  <strong>Grant Coverage</strong>
+                  <span className="plannerHint"> {formData.grantPct}%</span>
+                </label>
+                <input
+                  className="plannerRange"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={formData.grantPct}
+                  onChange={(e) => setFormData({ ...formData, grantPct: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+
+            <button className="plannerBtn" onClick={handleSubmit} disabled={loading}>
+              {loading ? "Calculating..." : "Calculate Savings"}
+            </button>
+
+            {localPreview && (
+              <div className="plannerMiniPreview">
+                <div className="plannerMiniRow">
+                  <span>Quick preview</span>
+                  <span>
+                    {formatNum(localPreview.system_size, 1)} kWp • ~{localPreview.panels} panels
+                  </span>
+                </div>
+                <div className="plannerMiniRow">
+                  <span>Est. savings</span>
+                  <span>{formatIDR(localPreview.savings)}/month</span>
+                </div>
+              </div>
+            )}
+            <div className="plannerCard leftNoteCard">
+              <div className="noteHead">
+                <i className="bi bi-robot"></i>
+                <div className="noteTitle">AI Consultant's Note</div>
+              </div>
+              <div className="noteBody">“{leftNoteText}”</div>
+            </div>
           </div>
-          {result.explanation && (
-            <div className="plannerCard plannerExplanationCard" style={{marginTop: 16}}>
-              <h3 className="plannerSectionTitle">How we estimated this</h3>
-              <p>{result.explanation.rationale}</p>
+        </aside>
 
-              <div style={{display: 'flex', gap: 20, marginTop: 12}}>
-                <div style={{flex: 1}}>
-                  <strong>Panels</strong>
-                  <p>{result.explanation.panels} pcs</p>
-                  <small>{result.explanation.summary}</small>
+        {/* RIGHT */}
+        <main className="plannerRight">
+          <div className="rightHeader">
+            <h2 className="rightTitle">
+              <i className="bi bi-calculator"></i> Analysis Result
+            </h2>
+          </div>
+
+          {!result ? (
+            <div className="plannerCard emptyState">
+              <div className="emptyIcon">
+                <i className="bi bi-arrow-left-circle"></i>
+              </div>
+              <div className="emptyTitle">Fill the inputs, then calculate.</div>
+              <div className="emptyText">
+                You'll see system size, estimated cost, payback, bill reduction, CO₂ impact, and the full breakdown here.
+              </div>
+              <div className="emptyTips">
+                <div className="tipRow">
+                  <i className="bi bi-lightning-charge"></i>
+                  <span>Try changing shading and roof size to see the difference.</span>
+                </div>
+                <div className="tipRow">
+                  <i className="bi bi-people"></i>
+                  <span>Select “Community Funded” to simulate Rp 0 upfront cost.</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="rightStack">
+              <div className="plannerMetricsGrid">
+                <div className="metricCard">
+                  <div className="metricIcon">
+                    <i className="bi bi-tools"></i>
+                  </div>
+                  <div className="metricLabel">System Size</div>
+                  <div className="metricValue">{formatNum(result.system_size, 1)} kWp</div>
+                  <div className="metricSub">~{result.panels} panels</div>
                 </div>
 
-                <div style={{flex: 2}}>
-                  <strong>Assumptions</strong>
-                  <ul>
-                    {Array.isArray(result.explanation.assumptions) && result.explanation.assumptions.map((a, i) => (
-                      <li key={i}>{a}</li>
-                    ))}
-                  </ul>
+                <div className="metricCard metricCost">
+                  <div className="metricIcon">
+                    <i className="bi bi-cash"></i>
+                  </div>
+                  <div className="metricLabel">{isCommunity ? "Upfront Cost" : "Estimated Cost"}</div>
+                  <div className="metricValue">{formatIDR(displayCost)}</div>
+                  <div className="metricSub">
+                    {isCommunity ? "covered by community" : result.grantPct ? `after ${result.grantPct}% grant` : "est. capex"}
+                  </div>
+                </div>
+
+                <div className="metricCard metricSave">
+                  <div className="metricIcon">
+                    <i className="bi bi-piggy-bank"></i>
+                  </div>
+                  <div className="metricLabel">Monthly Savings</div>
+                  <div className="metricValue">{formatIDR(displaySavings)}</div>
+                  <div className="metricSub">{isCommunity ? "net to school" : "bill reduction value"}</div>
+                </div>
+
+                <div className="metricCard">
+                  <div className="metricIcon">
+                    <i className="bi bi-hourglass"></i>
+                  </div>
+                  <div className="metricLabel">Payback</div>
+                  <div className="metricValue">
+                    {isCommunity ? "0 years" : result.payback_years ? `${result.payback_years} years` : "N/A"}
+                  </div>
+                  <div className="metricSub">{isCommunity ? "no upfront spend" : "simple estimate"}</div>
+                </div>
+
+                <div className="metricCard">
+                  <div className="metricIcon">
+                    <i className="bi bi-graph-down"></i>
+                  </div>
+                  <div className="metricLabel">Bill Reduction</div>
+                  <div className="metricValue">
+                    {Number.isFinite(result.bill_reduction_pct) ? `${result.bill_reduction_pct}%` : "-"}
+                  </div>
+                  <div className="metricSub">based on tariff estimate</div>
+                </div>
+
+                <div className="metricCard">
+                  <div className="metricIcon">
+                    <i className="bi bi-globe-americas"></i>
+                  </div>
+                  <div className="metricLabel">CO₂ Reduced</div>
+                  <div className="metricValue">
+                    {Number.isFinite(result.co2_kg_year) ? `${Math.round(result.co2_kg_year / 1000)} t/yr` : "-"}
+                  </div>
+                  <div className="metricSub">
+                    {Number.isFinite(result.annual_kwh) ? `${result.annual_kwh.toLocaleString("id-ID")} kWh/yr` : ""}
+                  </div>
                 </div>
               </div>
 
-              <div style={{marginTop: 12}}>
-                <strong>Next steps</strong>
-                <ol>
-                  {Array.isArray(result.explanation.checklist) && result.explanation.checklist.map((c, i) => (
-                    <li key={i}>{c}</li>
-                  ))}
-                </ol>
-              </div>
+              {result.explanation && (
+                <div className="plannerCard breakdownCard">
+                  <h3 className="breakdownTitle">How we estimated this</h3>
+                  {result.explanation.rationale && <p className="breakdownText">{result.explanation.rationale}</p>}
 
-              <div style={{marginTop: 12}}>
-                <strong>Placement & optimizations</strong>
-                <p>{result.explanation.placement?.note}</p>
-                <ul>
-                  {Array.isArray(result.explanation.optimizations) && result.explanation.optimizations.map((o, i) => (
-                    <li key={i}>{o}</li>
-                  ))}
-                </ul>
-              </div>
+                  <div className="breakdownGrid">
+                    <div className="breakdownBox">
+                      <div className="breakdownBoxTitle">Panels</div>
+                      <div className="breakdownBoxValue">{result.explanation.panels ?? result.panels} pcs</div>
+                      {result.explanation.summary && <div className="breakdownBoxSub">{result.explanation.summary}</div>}
+                    </div>
+
+                    <div className="breakdownBox">
+                      <div className="breakdownBoxTitle">Assumptions</div>
+                      <ul className="breakdownList">
+                        {Array.isArray(result.explanation.assumptions) &&
+                          result.explanation.assumptions.map((a, i) => <li key={i}>{a}</li>)}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="breakdownSection">
+                    <div className="breakdownSectionTitle">Next steps</div>
+                    <ol className="breakdownList">
+                      {Array.isArray(result.explanation.checklist) &&
+                        result.explanation.checklist.map((c, i) => <li key={i}>{c}</li>)}
+                    </ol>
+                  </div>
+
+                  <div className="breakdownSection">
+                    <div className="breakdownSectionTitle">Placement & optimizations</div>
+                    {result.explanation.placement?.note && <p className="breakdownText">{result.explanation.placement.note}</p>}
+                    <ol className="breakdownList">
+                      {Array.isArray(result.explanation.optimizations) &&
+                        result.explanation.optimizations.map((o, i) => <li key={i}>{o}</li>)}
+                    </ol>
+                  </div>
+                </div>
+              )}
             </div>
           )}
+        </main>
+      </div>
+      {uiAlert.open && (
+        <div className="uiModalOverlay" onClick={closeAlert} role="presentation">
+          <div className="uiModal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+            <div className="uiModalHead">
+              <div className="uiModalIcon">
+                <i className="bi bi-exclamation-triangle"></i>
+              </div>
+              <div className="uiModalTitleWrap">
+                <div className="uiModalTitle">{uiAlert.title}</div>
+                <div className="uiModalMsg">{uiAlert.message}</div>
+              </div>
+            </div>
+
+            <div className="uiModalActions">
+              <button className="uiModalBtn" onClick={closeAlert}>OK</button>
+            </div>
+          </div>
         </div>
       )}
     </div>
