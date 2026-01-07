@@ -4,13 +4,13 @@ import SchoolView from "../components/SchoolView";
 import AdminView from "../components/AdminView";
 
 export default function Analysis() {
-  const [view, setView] = useState("school"); // "school" | "admin" | "s dynamic" | "a dynamic"
+  const [view, setView] = useState("dynamic");
 
   const handleShare = () => {
     const currentUrl = window.location.href;
 
     const message =
-      view === "admin" || view === "adminDynamic"
+      view === "adminDynamic"
         ? `📊 West Java Government is scaling renewable energy! 331 units and counting. Track our progress: ${currentUrl}`
         : `🌿 Check out how West Java schools are hitting 69.3% Solar Independence! View the impact here: ${currentUrl}`;
 
@@ -33,8 +33,11 @@ export default function Analysis() {
     <div className="analysisPage">
       <div className="analysisHeader">
         <div className="analysisTitleWrap">
-          <h1 style={{ margin: 0 }}>📊 Impact Dashboard</h1>
-          <p style={{ margin: 0 }}>Real-time monitoring of West Java&apos;s transition.</p>
+          <h1 style={{ margin: 0 }}><i className="bi bi-graph-up"></i> Impact Dashboard</h1>
+          <p style={{ margin: 0 }}>
+            Real-time monitoring of West Java's transition to sustainable energy. 
+            Track savings, generation, & environmental impact. 
+          </p>
         </div>
 
         <div className="analysisActions">
@@ -43,14 +46,6 @@ export default function Analysis() {
           </button>
 
           <div className="analysisToggle">
-            <button
-              onClick={() => setView("school")}
-              className={`analysisToggleBtn ${view === "school" ? "analysisToggleBtnActive" : ""}`}
-              style={toggleBtnStyle(view === "school")}
-            >
-              S
-            </button>
-
             <button
               onClick={() => setView("dynamic")}
               className={`analysisToggleBtn ${view === "dynamic" ? "analysisToggleBtnActive" : ""}`}
@@ -80,24 +75,7 @@ export default function Analysis() {
           borderRadius: "8px",
         }}
       >
-        {view === "school" && (
-          <img
-            src="/dashboard-school.png"
-            alt="School Analytics"
-            style={{ width: "100%", height: "auto", display: "block" }}
-          />
-        )}
-
-        {view === "admin" && (
-          <img
-            src="/dashboard-admin.png"
-            alt="Government Analytics"
-            style={{ width: "100%", height: "auto", display: "block" }}
-          />
-        )}
-
         {view === "dynamic" && <SchoolView />}
-
         {view === "adminDynamic" && <AdminView />}
       </div>
 
