@@ -72,17 +72,23 @@ export default function Home() {
             <p className="infoText">
               Solar panels convert sunlight into DC electricity. An inverter converts this into AC
               electricity, which powers your home. Excess energy flows back to the grid or charges
-              your battery, ensuring  you always have power when you need it.
+              your battery, ensuring you always have power when you need it.
             </p>
 
             <div className="infoPills">
-              <div className="pill"> <i class="bi bi-sun-fill"></i> Clean Energy</div>
-              <div className="pill"> <i class="bi bi-piggy-bank-fill"></i> Cost Savings</div>
+              <div className="pill"><i className="bi bi-sun-fill"></i> Clean Energy</div>
+              <div className="pill"><i className="bi bi-piggy-bank-fill"></i> Cost Savings</div>
+            </div>
+
+            <div className="infoActions">
+              <Link to="/solarExplanation" className="infoBtn infoBtnPrimary">
+                Read More <span aria-hidden="true">→</span>
+              </Link>
             </div>
           </div>
 
           <div className="infoRight">
-             <img
+            <img
               className="infoImage"
               src="/Home_SolarPanelBackground.png"
               alt="How solar works illustration"

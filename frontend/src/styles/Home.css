@@ -88,30 +88,48 @@
   gap: 10px;
   padding: 12px 16px;
   border-radius: 999px;
-  text-decoration: none;
+  text-decoration: none !important;
   font-weight: 700;
   border: 1px solid transparent;
+  color: inherit;
 }
 
 .heroBtnPrimary {
   background: #2e7d32;
-  color: #fff;
+  color: #fff !important;
   box-shadow: 0 12px 24px rgba(46, 125, 50, 0.25);
 }
 
 .heroBtnPrimary:hover {
   background: #256629;
+  color: #fff !important;
+}
+
+.heroBtnPrimary:visited,
+.heroBtnPrimary:active,
+.heroBtnPrimary:focus {
+  color: #fff !important;
+  text-decoration: none !important;
 }
 
 .heroBtnGhost {
   background: rgba(255,255,255,0.10);
   border-color: rgba(255,255,255,0.22);
-  color: #fff;
+  color: #fff !important;
   backdrop-filter: blur(6px);
+  text-decoration: none !important;
 }
 
 .heroBtnGhost:hover {
   background: rgba(255,255,255,0.16);
+  color: #fff !important;
+}
+
+.heroBtnGhost:visited,
+.heroBtnGhost:active,
+.heroBtnGhost:focus {
+  color: #fff !important;
+  text-decoration: none !important;
 }
 
 .heroWave {
@@ -193,6 +211,51 @@
   font-size: 0.9rem;
 }
 
+/* === Read More button (match Explore Solutions) === */
+.infoActions{
+  margin-top: 14px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.infoBtn{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  text-decoration: none !important;
+  color: #fff !important;
+  background: #2e7d32;
+  box-shadow: 0 12px 24px rgba(46, 125, 50, 0.25);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.infoBtn:visited,
+.infoBtn:hover,
+.infoBtn:active,
+.infoBtn:focus{
+  text-decoration: none !important;
+  color: #fff !important;
+}
+
+.infoBtn:hover{
+  background: #256629;
+  transform: translateY(-1px);
+}
+
+.infoBtn:active{
+  transform: translateY(0);
+}
+
+.infoBtn:focus-visible{
+  outline: 3px solid rgba(46,125,50,0.30);
+  outline-offset: 3px;
+}
+
 .infoRight {
   height: 100%;
 }
@@ -219,6 +282,10 @@
   .content { margin-top: -40px; }
   .homeGrid { grid-template-columns: 1fr; }
   .infoCard { grid-template-columns: 1fr; }
+  .infoBtn{
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .homeCard {
