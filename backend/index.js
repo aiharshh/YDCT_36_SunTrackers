@@ -84,15 +84,74 @@ app.post("/api/chat", async (req, res) => {
             return res.status(400).json({ error: "Messages are required." });
         }
 
+        // Inject a system prompt to constrain the assistant to solar/West Java topics
+        const systemPrompt = `You are an expert assistant focused exclusively on solar energy systems, investments, and local West Java (Jawa Barat) policy and regulations. Only answer questions that are directly related to solar energy (system sizing, panels, inverters, batteries, costs, payback, energy savings, tariffs, installation, and West Java-specific rules). If a user asks about unrelated topics (movies, trending topics, sports, unrelated finance, gossip, etc.), politely refuse and state that you only handle solar/West Java topics. Be concise, factual, and when appropriate recommend consulting a certified solar professional for final decisions.`;
+
+        // Prepend the system message so the model is guided by it
+        const messagesWithSystem = [
+            { role: "system", content: systemPrompt },
+            ...messages
+        ];
+
+        // Generate completion with a lower temperature to reduce creative off-topic answers
         const completion = await groq.chat.completions.create({
-            model: "moonshotai/kimi-k2-instruct", 
-            messages: messages,
-            temperature: 0.7
+            model: "moonshotai/kimi-k2-instruct",
+            messages: messagesWithSystem,
+            temperature: 0.2,
+            max_tokens: 800
         });
 
-        res.json({
-            assistant: completion.choices[0].message
-        });
+        const assistantMsg = completion.choices[0].message;
+        const assistantText = (assistantMsg?.content || "").toString();
+
+        // Simple allowlist-based post-check to detect clearly off-topic responses.
+        // If the model's reply doesn't contain known solar/West Java keywords, refuse.
+        const allowKeywords = [
+            "solar",
+            "panel",
+            "pv",
+            "photovoltaic",
+            "payback",
+            "kwh",
+            "kw",
+            "inverter",
+            "battery",
+            "storage",
+            "west java",
+            "jawa barat",
+            "policy",
+            "regulation",
+            "subsidy",
+            "installation",
+            "tariff",
+            "energy",
+            "savings",
+            "invest",
+            "investment",
+            "capacity",
+            "efficiency",
+            "irradiance",
+            "insolation",
+            "system sizing",
+            "cost",
+            "payback period"
+        ];
+
+        const textLower = assistantText.toLowerCase();
+        const containsAllow = allowKeywords.some(k => textLower.includes(k));
+
+        if (!containsAllow) {
+            // Return a polite refusal instead of the off-topic assistant text
+            return res.json({
+                assistant: {
+                    role: "assistant",
+                    content: "I can only answer questions about solar energy systems, investments, and West Java (Jawa Barat) policy. Please ask a question related to those topics."
+                }
+            });
+        }
+
+        // If it looks on-topic, forward the assistant message
+        res.json({ assistant: assistantMsg });
 
     } catch (err) {
         console.error("❌ Groq Error:", err.message);
