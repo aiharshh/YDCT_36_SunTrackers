@@ -67,15 +67,28 @@ export default function Invest() {
     setShowSuccessModal(true);
   };
 
-  const handleInvestClick = (id) => {
-    if (!user) {
-      setPendingProjectId(id);
-      setShowAuthModal(true);
-      return;
-    }
-    doInvest(id);
-  };
+  // const handleInvestClick = (id) => {
+  //   if (!user) {
+  //     setPendingProjectId(id);
+  //     setShowAuthModal(true);
+  //     return;
+  //   }
+  //   doInvest(id);
+  // };
 
+const handleInvestClick = (projectId) => {
+  const project = projects.find(p => p.id === projectId);
+  
+  if (project) {
+    navigate('/checkout', { 
+      state: { 
+        projectId: project.id, 
+        projectName: project.name, 
+        amount: 500000 // Fixed investment unit
+      } 
+    });
+  }
+};
   const goLogin = () => {
     setShowAuthModal(false);
     navigate('/login');

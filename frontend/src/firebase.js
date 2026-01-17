@@ -1,18 +1,26 @@
 import { initializeApp } from "firebase/app";
-import { 
-  getAuth, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword 
-} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getDatabase } from "firebase/database"; // Use getDatabase
+import { ref, set } from "firebase/database"; // Import these
+
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC_wDHvEJc1z5FNepW9TxSwr6qHpLcXAVY", 
+  apiKey: "AIzaSyC_wDHvEJc1z5FNepW9TxSwr6qHpLcXAVY",
+  authDomain: "suntrackers-9171b.firebaseapp.com",
+  databaseURL: "https://suntrackers-9171b-default-rtdb.firebaseio.com/", // Required for RTDB
+  projectId: "suntrackers-9171b",
+  storageBucket: "suntrackers-9171b.firebasestorage.app",
+  messagingSenderId: "752736161128",
+  appId: "1:752736161128:web:5078cbc2d928a9cc705add"
 };
 
-
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
 
+export const auth = getAuth(app);
+// FIX: Export Realtime Database instead of Firestore
+export const db = getDatabase(app);
+
+// --- Authentication Helpers ---
 const mapAuthError = (err) => {
   const code = err?.code || "";
   switch (code) {
@@ -32,13 +40,23 @@ const mapAuthError = (err) => {
       return err?.message || "Authentication failed.";
   }
 };
-
 export const registerUser = async (email, password) => {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, password);
-    return { user: result.user, error: "" };
+    const user = result.user;
+
+    // We use set() to create the user node with the initial 10M grant
+    await set(ref(db, `users/${user.uid}`), {
+      email: user.email,
+      walletBalance: 600000, // 6 Millioncredits
+      createdAt: new Date().toISOString()
+    });
+
+    return { user: user, error: "" };
   } catch (error) {
-    return { user: null, error: mapAuthError(error), code: error?.code || "" };
+    // Check if the email already exists or if password is too weak
+    console.error("Signup Error:", error.code); 
+    return { user: null, error: mapAuthError(error) };
   }
 };
 

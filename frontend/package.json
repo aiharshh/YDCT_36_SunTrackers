@@ -12,6 +12,8 @@
   "dependencies": {
     "canvas-confetti": "^1.9.4",
     "firebase": "^12.7.0",
+    "leaflet": "^1.9.4",
+    "papaparse": "^5.5.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.10.1"

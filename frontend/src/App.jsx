@@ -9,6 +9,9 @@ import Analysis from './pages/Analysis';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import SolarPanelExplanation from './components/SolarPanelExplanation.jsx';
+import Checkout from './pages/Checkout.jsx';
+import TopUp from './pages/TopUp.jsx';
+import Receipt from './pages/Receipt.jsx';
 
 function AppRoutes() {
   const location = useLocation();
@@ -28,6 +31,9 @@ function AppRoutes() {
         <Route path="/analysis" element={<Analysis />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/solarExplanation" element={<SolarPanelExplanation />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="topUp"element={<TopUp />} />
+        <Route path="/receipt" element={<Receipt />} />
       </Routes>
     </>
   );
