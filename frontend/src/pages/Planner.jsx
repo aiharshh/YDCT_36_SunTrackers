@@ -4,22 +4,27 @@ import generateAdvisor from "../advisor/advisor";
 import "../App.css";
 import "../styles/Planner.css";
 
-const DISTRICT_CONFIG = {
-  Bandung: { psh: 5.0, capexPerKwp: 13500000 },
-  Bekasi: { psh: 4.6, capexPerKwp: 14000000 },
-  Bogor: { psh: 4.5, capexPerKwp: 13500000 },
-  Cirebon: { psh: 5.3, capexPerKwp: 13000000 },
+const DISTRICT_CONFIG = { // https://landscape.id/pages/landscape-solar said that in Indonesia, avg peak sun 4-5 hours, there's no website/journal showing per-district psh, so just use rough estimates
+  Bandung: { psh: 5.0, capexPerKwp: 16500000 }, // https://share.google/qDeYObK5xSMtYIjhF , use avg price
+  Bekasi: { psh: 4.6, capexPerKwp: 20000000 }, // https://www.rumah123.com/panduan-properti/tips-properti-101590-solar-panel-rumah-id.html
+  Bogor: { psh: 4.5, capexPerKwp: 17500000 },
+  Cirebon: { psh: 5.3, capexPerKwp: 17500000 },
 };
 
-const TARIFF_BY_TYPE = { School: 1699.53, Household: 1444.70, MSME: 1444.70 }; //https://web.pln.co.id/media/2025/12/tarif-listrik
+const TARIFF_BY_TYPE = { School: 1699.53, Household: 1444.70, MSME: 1444.70 }; //https://web.pln.co.id/media/2025/12/tarif-listrik , no tariff for school so use R3/6600VA
 const SHADING_FACTOR = { None: 1.0, Medium: 0.85, Heavy: 0.7 };
-const ROOF_MAX_KWP = { Small: 1, Medium: 3, Large: 10 };
+const ROOF_MAX_KWP = { Small: 1, Medium: 3, Large: 10 }; //6-10m2, 18-30, 60-100
 const TARGET_OFFSET = { School: 0.3, Household: 0.4, MSME: 0.5 };
 
-const PR = 0.75;
-const PANEL_W = 330;
+const PR = 0.75; //best Performance Ratio assumption betwewn 0.75-0.85, so just  take the lower bound
+const PANEL_W = 350; // https://share.google/O8iQSUCcPgIADHSFH
+//260W: Harga berkisar antara Rp3.900.000 - Rp6.300.000
+//300W: Harga berkisar antara Rp4.500.000 - Rp7.500.000
+//350W: Harga berkisar antara Rp5.250.000 - Rp8.750.000
+//400W: Harga berkisar antara Rp6.000.000 - Rp10.000.000
+
 const CO2_KG_PER_KWH = 0.85; // https://share.google/hyPUrBbFnh8FKtgxg
-const COMMUNITY_NET_RATE = 0.7;
+const COMMUNITY_NET_RATE = 0.7; // user gets 70% of savings after green fee
 
 function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n));
