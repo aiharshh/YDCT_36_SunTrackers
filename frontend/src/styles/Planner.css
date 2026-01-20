@@ -525,6 +525,111 @@
   color: #2e7d32;
 }
 
+.labelWithHelp{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.metricLabel.labelWithHelp{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.helpTipWrap{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.helpTipBtn{
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: rgba(24, 36, 24, 0.55);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.helpTipBtn:hover{
+  color: rgba(24, 36, 24, 0.85);
+}
+
+.helpTipBtn i{
+  font-size: 14px;
+}
+
+.helpTipBubble{
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: max-content;
+  max-width: 280px;
+  background: #182418;
+  color: #fff;
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.45;
+  font-weight: 600;
+  box-shadow: 0 16px 40px rgba(0,0,0,.22);
+  z-index: 10001;
+}
+
+.helpTipBubble::before{
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 10px;
+  width: 10px;
+  height: 10px;
+  background: #182418;
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+
+.metricCard .helpTipBubble{
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.metricCard .helpTipBubble::before{
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+@media (max-width: 560px){
+  .helpTipBubble{
+    left: auto;
+    right: 0;
+    max-width: min(280px, 80vw);
+  }
+
+  .helpTipBubble::before{
+    left: auto;
+    right: 12px;
+  }
+
+  .metricCard .helpTipBubble{
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: min(280px, 84vw);
+  }
+
+  .metricCard .helpTipBubble::before{
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) rotate(45deg);
+  }
+}
+
 @media (max-width: 1080px){
   .plannerTwoCol{
     grid-template-columns: 420px 1fr;

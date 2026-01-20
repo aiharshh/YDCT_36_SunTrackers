@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, useRef, useId } from "react";
 import { calculateSolar } from "../services/api";
 import generateAdvisor from "../advisor/advisor";
 import "../App.css";
@@ -35,14 +35,64 @@ function formatNum(n, digits = 1) {
   return Number(n).toFixed(digits);
 }
 
-function UiSelect({ label, value, onChange, options }) {
+function HelpTip({ text }) {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef(null);
+  const tipId = useId();
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", onDoc);
+    return () => document.removeEventListener("pointerdown", onDoc);
+  }, [open]);
+
+  return (
+    <span
+      ref={wrapRef}
+      className="helpTipWrap"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <button
+        type="button"
+        className="helpTipBtn"
+        aria-label="Help"
+        aria-describedby={open ? tipId : undefined}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen((v) => !v);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") setOpen(false);
+        }}
+      >
+        <i className="bi bi-question-circle"></i>
+      </button>
+
+      {open && (
+        <span id={tipId} role="tooltip" className="helpTipBubble">
+          {text}
+        </span>
+      )}
+    </span>
+  );
+}
+
+function UiSelect({ label, helpText, value, onChange, options }) {
   const [open, setOpen] = useState(false);
 
   return (
     <div className="uiSelect">
       {label && (
         <label className="plannerLabel">
-          <strong>{label}</strong>
+          <strong className="labelWithHelp">
+            {label}
+            {helpText ? <HelpTip text={helpText} /> : null}
+          </strong>
         </label>
       )}
 
@@ -275,13 +325,11 @@ export default function Planner() {
 
             <div className="plannerFormGrid">
               <div>
-                <label className="plannerLabel">
-                  <strong>District / Location</strong>
-                </label>
                 <UiSelect
-                  className="plannerSelect"
+                  label="District / Location"
+                  helpText="Used to estimate local sun hours and typical installed cost for your area."
                   value={formData.district}
-                  onChange={(e) => setFormData({ ...formData, district: e.target.value })}
+                  onChange={(v) => setFormData({ ...formData, district: v })}
                   options={[
                     { value: "Bandung", label: "Bandung" },
                     { value: "Bekasi", label: "Bekasi" },
@@ -294,6 +342,7 @@ export default function Planner() {
               <div>
                 <UiSelect
                   label="User Type"
+                  helpText="Affects the electricity tariff and the target offset used to size the solar system."
                   value={formData.userType}
                   onChange={(v) => setFormData({ ...formData, userType: v })}
                   options={[
@@ -307,6 +356,7 @@ export default function Planner() {
               <div>
                 <UiSelect
                   label="Roof Size"
+                  helpText="A simple proxy for available roof area. It limits the maximum system size we can recommend."
                   value={formData.roofSize}
                   onChange={(v) => setFormData({ ...formData, roofSize: v })}
                   options={[
@@ -320,6 +370,7 @@ export default function Planner() {
               <div>
                 <UiSelect
                   label="Shading"
+                  helpText="Shading reduces solar output. Choose Medium/Heavy if trees or buildings shade the roof during peak hours."
                   value={formData.shading}
                   onChange={(v) => setFormData({ ...formData, shading: v })}
                   options={[
@@ -333,6 +384,7 @@ export default function Planner() {
               <div>
                 <UiSelect
                   label="Financing"
+                  helpText="Direct means you pay upfront and keep the savings. Community means Rp 0 upfront, but savings are shared via a green fee."
                   value={formData.financing}
                   onChange={(v) => setFormData({ ...formData, financing: v })}
                   options={[
@@ -344,7 +396,9 @@ export default function Planner() {
 
               <div>
                 <label className="plannerLabel">
-                  <strong>Grant Coverage</strong>
+                  <strong className="labelWithHelp">
+                    Grant Coverage <HelpTip text="The percentage of upfront cost covered by grants or subsidies. Higher coverage lowers payback time." />
+                  </strong>
                   <span className="plannerHint"> {formData.grantPct}%</span>
                 </label>
                 <input
@@ -421,7 +475,12 @@ export default function Planner() {
                   <div className="metricIcon">
                     <i className="bi bi-tools"></i>
                   </div>
-                  <div className="metricLabel">System Size</div>
+
+                  <div className="metricLabel labelWithHelp">
+                    <span>System Size</span>
+                    <HelpTip text="Recommended solar capacity (kWp). Higher values usually mean more energy production and higher upfront cost." />
+                  </div>
+
                   <div className="metricValue">{formatNum(result.system_size, 1)} kWp</div>
                   <div className="metricSub">~{result.panels} panels</div>
                 </div>
@@ -430,7 +489,12 @@ export default function Planner() {
                   <div className="metricIcon">
                     <i className="bi bi-cash"></i>
                   </div>
-                  <div className="metricLabel">{isCommunity ? "Upfront Cost" : "Estimated Cost"}</div>
+
+                  <div className="metricLabel labelWithHelp">
+                    <span>{isCommunity ? "Upfront Cost" : "Estimated Cost"}</span>
+                    <HelpTip text="Estimated installation cost for the recommended system size. Grants will reduce this amount. " />
+                  </div>
+
                   <div className="metricValue">{formatIDR(displayCost)}</div>
                   <div className="metricSub">
                     {isCommunity ? "covered by community" : result.grantPct ? `after ${result.grantPct}% grant` : "est. capex"}
@@ -441,7 +505,12 @@ export default function Planner() {
                   <div className="metricIcon">
                     <i className="bi bi-piggy-bank"></i>
                   </div>
-                  <div className="metricLabel">Monthly Savings</div>
+
+                  <div className="metricLabel labelWithHelp">
+                    <span>Monthly Savings</span>
+                    <HelpTip text="Estimated value of the bill reduction per month. Under Community funding, this is the net amount after the green fee." />
+                  </div>
+
                   <div className="metricValue">{formatIDR(displaySavings)}</div>
                   <div className="metricSub">{isCommunity ? "net to school" : "bill reduction value"}</div>
                 </div>
@@ -450,7 +519,12 @@ export default function Planner() {
                   <div className="metricIcon">
                     <i className="bi bi-hourglass"></i>
                   </div>
-                  <div className="metricLabel">Payback</div>
+
+                  <div className="metricLabel labelWithHelp">
+                    <span>Payback</span>
+                    <HelpTip text="Simple payback = upfront cost / yearly savings. It ignores inflation, export credits, maintenance, and financing costs." />
+                  </div>
+
                   <div className="metricValue">
                     {isCommunity ? "0 years" : result.payback_years ? `${result.payback_years} years` : "N/A"}
                   </div>
@@ -461,7 +535,12 @@ export default function Planner() {
                   <div className="metricIcon">
                     <i className="bi bi-graph-down"></i>
                   </div>
-                  <div className="metricLabel">Bill Reduction</div>
+
+                  <div className="metricLabel labelWithHelp">
+                    <span>Bill Reduction</span>
+                    <HelpTip text="Estimated percentage of your current bill offset by solar production. Actual results depend on usage patterns and system performance." />
+                  </div>
+
                   <div className="metricValue">
                     {Number.isFinite(result.bill_reduction_pct) ? `${result.bill_reduction_pct}%` : "-"}
                   </div>
@@ -472,7 +551,12 @@ export default function Planner() {
                   <div className="metricIcon">
                     <i className="bi bi-globe-americas"></i>
                   </div>
-                  <div className="metricLabel">CO₂ Reduced</div>
+
+                  <div className="metricLabel labelWithHelp">
+                    <span>CO₂ Reduced</span>
+                    <HelpTip text="Estimated annual emissions avoided based on your solar energy production. Uses an emissions factor per kWh (grid average assumption)." />
+                  </div>
+
                   <div className="metricValue">
                     {Number.isFinite(result.co2_kg_year) ? `${Math.round(result.co2_kg_year / 1000)} t/yr` : "-"}
                   </div>
