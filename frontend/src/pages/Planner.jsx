@@ -11,14 +11,14 @@ const DISTRICT_CONFIG = {
   Cirebon: { psh: 5.3, capexPerKwp: 13000000 },
 };
 
-const TARIFF_BY_TYPE = { School: 1200, Household: 1450, SME: 1550 };
+const TARIFF_BY_TYPE = { School: 1699.53, Household: 1444.70, MSME: 1444.70 }; //https://web.pln.co.id/media/2025/12/tarif-listrik
 const SHADING_FACTOR = { None: 1.0, Medium: 0.85, Heavy: 0.7 };
 const ROOF_MAX_KWP = { Small: 1, Medium: 3, Large: 10 };
-const TARGET_OFFSET = { School: 0.3, Household: 0.4, SME: 0.5 };
+const TARGET_OFFSET = { School: 0.3, Household: 0.4, MSME: 0.5 };
 
 const PR = 0.75;
 const PANEL_W = 330;
-const CO2_KG_PER_KWH = 0.82;
+const CO2_KG_PER_KWH = 0.85; // https://share.google/hyPUrBbFnh8FKtgxg
 const COMMUNITY_NET_RATE = 0.7;
 
 function clamp(n, min, max) {
@@ -348,7 +348,7 @@ export default function Planner() {
                   options={[
                     { value: "School", label: "School" },
                     { value: "Household", label: "Household" },
-                    { value: "SME", label: "SME" },
+                    { value: "MSME", label: "MSME" },
                   ]}
                 />
               </div>
