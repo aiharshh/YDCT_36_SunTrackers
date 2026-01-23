@@ -525,6 +525,32 @@
   color: #2e7d32;
 }
 
+.plannerIntroNote {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.plannerIntroNote i {
+  margin-top: 2px;
+  color: #2563eb;
+  font-size: 1rem;
+}
+
+.plannerIntroNote p {
+  margin: 0;
+  line-height: 1.5;
+}
+
 .labelWithHelp{
   display: inline-flex;
   align-items: center;

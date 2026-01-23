@@ -5,13 +5,13 @@ import "../App.css";
 import "../styles/Planner.css";
 
 const DISTRICT_CONFIG = { // https://landscape.id/pages/landscape-solar said that in Indonesia, avg peak sun 4-5 hours, there's no website/journal showing per-district psh, so just use rough estimates
-  Bandung: { psh: 5.0, capexPerKwp: 16500000 }, // https://share.google/qDeYObK5xSMtYIjhF , use avg price
-  Bekasi: { psh: 4.6, capexPerKwp: 20000000 }, // https://www.rumah123.com/panduan-properti/tips-properti-101590-solar-panel-rumah-id.html
-  Bogor: { psh: 4.5, capexPerKwp: 17500000 },
-  Cirebon: { psh: 5.3, capexPerKwp: 17500000 },
+  Bandung: { psh: 4.5, capexPerKwp: 16500000 }, // https://share.google/qDeYObK5xSMtYIjhF , use avg price
+  Bekasi: { psh: 4.8, capexPerKwp: 20000000 }, // https://www.rumah123.com/panduan-properti/tips-properti-101590-solar-panel-rumah-id.html
+  Bogor: { psh: 4.6, capexPerKwp: 17500000 },
+  Cirebon: { psh: 4.9, capexPerKwp: 17500000 },
 };
 
-const TARIFF_BY_TYPE = { School: 1699.53, Household: 1444.70, MSME: 1444.70 }; //https://web.pln.co.id/media/2025/12/tarif-listrik , no tariff for school so use R3/6600VA
+const TARIFF_BY_TYPE = { School: 900, Household: 1444.70, MSME: 1444.70 }; //https://web.pln.co.id/media/2025/12/tarif-listrik , tariff for school 900 from csv
 const SHADING_FACTOR = { None: 1.0, Medium: 0.85, Heavy: 0.7 };
 const ROOF_MAX_KWP = { Small: 1, Medium: 3, Large: 10 }; //6-10m2, 18-30, 60-100
 const TARGET_OFFSET = { School: 0.3, Household: 0.4, MSME: 0.5 };
@@ -25,6 +25,12 @@ const PANEL_W = 350; // https://share.google/O8iQSUCcPgIADHSFH
 
 const CO2_KG_PER_KWH = 0.85; // https://share.google/hyPUrBbFnh8FKtgxg
 const COMMUNITY_NET_RATE = 0.7; // user gets 70% of savings after green fee
+
+const GRANT_RANGE_BY_TYPE = {
+  School: { min: 0, max: 70 },
+  MSME: { min: 0, max: 50 },
+  Household: { min: 0, max: 0 }, // disabled
+};
 
 function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n));
@@ -139,39 +145,45 @@ function UiSelect({ label, helpText, value, onChange, options }) {
 
 function calcLocal(inputs) {
   const districtCfg = DISTRICT_CONFIG[inputs.district] || DISTRICT_CONFIG.Bandung;
-  const userType = inputs.userType || "School";
+  const userType = inputs.userType || "School"; //School
 
-  const tariff = TARIFF_BY_TYPE[userType] ?? TARIFF_BY_TYPE.School;
-  const shadingFactor = SHADING_FACTOR[inputs.shading] ?? 1.0;
-  const roofMax = ROOF_MAX_KWP[inputs.roofSize] ?? 3;
-  const targetOffset = TARGET_OFFSET[userType] ?? 0.3;
+  const tariff = TARIFF_BY_TYPE[userType] ?? TARIFF_BY_TYPE.School; //900 IDR/kWh for school
+  const shadingFactor = SHADING_FACTOR[inputs.shading] ?? 1.0; //None --> 1.0
+  const roofMax = ROOF_MAX_KWP[inputs.roofSize] ?? 3; //large --> 10 kWp
+  const targetOffset = TARGET_OFFSET[userType] ?? 0.3; //School --> 0.3 , means only expect 30% electricity covered by solar
 
-  const billIdr = Number(inputs.bill);
-  const monthlyKwh = billIdr / tariff;
+  const billIdr = Number(inputs.bill); //monthly bill in IDR (user input)
+  const monthlyKwh = billIdr / tariff; // 900000/900 = 1000 kWh
 
-  const kwhPerKwpPerMonth = districtCfg.psh * 30 * PR * shadingFactor;
-  const desiredMonthlyOffsetKwh = monthlyKwh * targetOffset;
+  const kwhPerKwpPerMonth = districtCfg.psh * (365/12) * PR * shadingFactor; // Bandung --> 4.5 * 365/12 * 0.75 * 1 = 102.65625 kWh/kWp/month
+  const desiredMonthlyOffsetKwh = monthlyKwh * targetOffset; // 1000 * 0.3 = 300 kWh/month
 
-  let recommendedKwp = desiredMonthlyOffsetKwh / kwhPerKwpPerMonth;
-  if (!Number.isFinite(recommendedKwp) || recommendedKwp <= 0) recommendedKwp = 0.1;
+  let recommendedKwp = desiredMonthlyOffsetKwh / kwhPerKwpPerMonth; // 300 / 102.65625 = 2.9223744292 kWp
+  if (!Number.isFinite(recommendedKwp) || recommendedKwp <= 0) recommendedKwp = 0.1; // rounding
 
-  const systemKwp = clamp(recommendedKwp, 0.1, roofMax);
-  const panels = Math.max(1, Math.ceil((systemKwp * 1000) / PANEL_W));
+  const systemKwp = clamp(recommendedKwp, 0.1, roofMax); //look for highest from recKwp and 0.1, then limit to roofMax --> 2.92 kWp
+  const panels = Math.max(1, Math.ceil((systemKwp * 1000) / PANEL_W)); // 2.92*1000/350=8.34 --> 9 panels
 
-  const annualKwh = systemKwp * districtCfg.psh * 365 * PR * shadingFactor;
-  const monthlySavings = (annualKwh / 12) * tariff;
+  const annualKwh = systemKwp * districtCfg.psh * 365 * PR * shadingFactor; // 2.92 * 4.5 * 365 * 0.75 = 3,599.99 kWh/year
+  const monthlySavings = (annualKwh / 12) * tariff; // (3599.99/12)*900 = 270000 IDR/month
 
-  const grantPct = clamp(Number(inputs.grantPct ?? 0), 0, 100);
-  const baseCapex = systemKwp * districtCfg.capexPerKwp;
-  const capexAfterGrant = baseCapex * (1 - grantPct / 100);
+  const grantRange = GRANT_RANGE_BY_TYPE[userType] || { min: 0, max: 0 };
+  const grantPct = clamp(
+    Number(inputs.grantPct ?? 0),
+    grantRange.min,
+    grantRange.max
+  );
+  const baseCapex = systemKwp * districtCfg.capexPerKwp; // 2.9223744292 * 16,500,000 = 48,219,178.0818 IDR
+  const capexAfterGrant = baseCapex * (1 - grantPct / 100); // after grant , e.g. 0% --> 48,219,178.0818 IDR
 
-  const annualSavings = monthlySavings * 12;
-  const paybackYears = annualSavings > 0 ? capexAfterGrant / annualSavings : Number.POSITIVE_INFINITY;
+  const annualSavings = monthlySavings * 12; // 270000 * 12 = 3,240,000 IDR/year
+  const paybackYears = annualSavings > 0 ? capexAfterGrant / annualSavings : Number.POSITIVE_INFINITY; // 48,219,178.0818 / 3,240,000 = 14.88 years
 
-  const billReductionPct = clamp((monthlySavings / billIdr) * 100, 0, 100);
-  const co2KgYear = annualKwh * CO2_KG_PER_KWH;
+  const billReductionPct = clamp((monthlySavings / billIdr) * 100, 0, 100); // 270000 / 900,000 * 100 = 30.8 %
+  const co2KgYear = annualKwh * CO2_KG_PER_KWH; // 3,599.99 * 0.85 = 3,141.6 kg CO2/year
 
-  const isCommunity = inputs.financing === "Community";
+  const financing = userType === "Household" ? "Direct" : inputs.financing;
+  const isCommunity = financing === "Community";
   const greenFee = isCommunity ? monthlySavings * (1 - COMMUNITY_NET_RATE) : 0;
   const netSavingsSchool = isCommunity ? monthlySavings * COMMUNITY_NET_RATE : monthlySavings;
 
@@ -193,6 +205,7 @@ function calcLocal(inputs) {
     green_fee: Math.round(greenFee),
     net_savings_school: Math.round(netSavingsSchool),
     grantPct,
+    financing,
   };
 }
 
@@ -231,6 +244,29 @@ export default function Planner() {
     financing: "Direct",
     grantPct: 0,
   });
+
+  useEffect(() => {
+    const range = GRANT_RANGE_BY_TYPE[formData.userType] || { min: 0, max: 0 };
+
+    setFormData((prev) => {
+      const clampedGrant = clamp(prev.grantPct, range.min, range.max);
+
+      // prevent unnecessary re-render
+      if (clampedGrant === prev.grantPct) return prev;
+
+      return {
+        ...prev,
+        grantPct: clampedGrant,
+      };
+    });
+  }, [formData.userType]);
+
+  
+  useEffect(() => {
+    if (formData.userType === "Household" && formData.financing === "Community") {
+      setFormData((f) => ({ ...f, financing: "Direct" }));
+    }
+  }, [formData.userType]);
 
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -307,13 +343,22 @@ export default function Planner() {
   return (
     <div className="plannerShell">
       <div className="plannerTwoCol">
-        {/* LEFT */}
         <aside className="plannerLeft">
           <div className="leftHeader">
             <h1 className="leftTitle">
               <i className="bi bi-sun-fill"></i> Solar Calculator
             </h1>
             <p className="leftSubtitle">Estimate solar savings, payback, and community-funded options.</p>
+          </div>
+
+          <div className="plannerIntroNote">
+            <i className="bi bi-info-circle"></i>
+            <p>
+              This calculator uses a capacity range of <strong>1-10 kWp</strong> to represent a typical
+              initial installation in a small to medium-sized school, with a target energy offset of
+              approximately <strong>20-30%</strong>, in line with the common practice of phased
+              installations before large-scale system expansion.
+            </p>
           </div>
 
           <div className="plannerCard plannerFormCard">
@@ -389,13 +434,21 @@ export default function Planner() {
               <div>
                 <UiSelect
                   label="Financing"
-                  helpText="Direct means you pay upfront and keep the savings. Community means Rp 0 upfront, but savings are shared via a green fee."
+                  helpText={
+                    formData.userType === "Household"
+                      ? "Community financing is currently available only for schools and MSMEs."
+                      : "Direct means you pay upfront and keep the savings. Community means Rp 0 upfront, but savings are shared via a green fee."
+                  }
                   value={formData.financing}
                   onChange={(v) => setFormData({ ...formData, financing: v })}
-                  options={[
-                    { value: "Direct", label: "Direct" },
-                    { value: "Community", label: "Community" },
-                  ]}
+                  options={
+                    formData.userType === "Household"
+                      ? [{ value: "Direct", label: "Direct" }]
+                      : [
+                          { value: "Direct", label: "Direct" },
+                          { value: "Community", label: "Community" },
+                        ]
+                  }
                 />
               </div>
 
@@ -404,16 +457,33 @@ export default function Planner() {
                   <strong className="labelWithHelp">
                     Grant Coverage <HelpTip text="The percentage of upfront cost covered by grants or subsidies. Higher coverage lowers payback time." />
                   </strong>
-                  <span className="plannerHint"> {formData.grantPct}%</span>
+                  <span className="plannerHint">
+                    {formData.userType === "Household"
+                      ? "Not available"
+                      : `${formData.grantPct}%`}
+                  </span>
                 </label>
-                <input
-                  className="plannerRange"
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={formData.grantPct}
-                  onChange={(e) => setFormData({ ...formData, grantPct: Number(e.target.value) })}
-                />
+                {(() => {
+                  const range = GRANT_RANGE_BY_TYPE[formData.userType] || { min: 0, max: 0 };
+                  const disabled = formData.userType === "Household";
+
+                  return (
+                    <input
+                      className="plannerRange"
+                      type="range"
+                      min={range.min}
+                      max={range.max}
+                      value={clamp(formData.grantPct, range.min, range.max)}
+                      disabled={disabled}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          grantPct: Number(e.target.value),
+                        })
+                      }
+                    />
+                  );
+                })()}
               </div>
             </div>
 
@@ -426,7 +496,7 @@ export default function Planner() {
                 <div className="plannerMiniRow">
                   <span>Quick preview</span>
                   <span>
-                    {formatNum(localPreview.system_size, 1)} kWp • ~{localPreview.panels} panels
+                    {formatNum(localPreview.system_size, 1)} kWp ~{localPreview.panels} panels
                   </span>
                 </div>
                 <div className="plannerMiniRow">
