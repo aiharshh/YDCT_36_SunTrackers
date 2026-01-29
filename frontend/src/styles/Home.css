@@ -468,3 +468,156 @@
   background: #fff;
   color: #111827;
 }
+
+/* === Solar Insights Section === */
+.insightsSection {
+  margin-top: 26px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px 18px;
+  box-shadow: 0 12px 30px rgba(16,24,40,0.08);
+  border: 1px solid rgba(16,24,40,0.06);
+}
+
+.insightsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.insightsKicker {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #667085;
+  margin: 0 0 4px;
+}
+
+.insightsTitle {
+  margin: 0 0 6px;
+  font-size: 1.9rem;
+  color: #111827;
+  letter-spacing: -0.02em;
+}
+
+.insightsSubtitle {
+  max-width: 900px;
+  color: #475467;
+  line-height: 1.6;
+}
+
+.insightsViewAll {
+  font-weight: 700;
+  color: #2e7d32;
+  text-decoration: none;
+}
+
+.insightsViewAll:hover {
+  text-decoration: underline;
+}
+
+.insightsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.insightCard {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid rgba(16,24,40,0.06);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.insightImage {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  border-radius: 18px 18px 0 0;
+  display: block;
+}
+
+.insightImageWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.insightBadge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  backdrop-filter: blur(6px);
+}
+
+.insightBadge--edu {
+  background: rgba(230, 238, 255, 0.92);
+  color: #2563eb;
+}
+
+.insightBadge--green {
+  background: rgba(232, 245, 233, 0.95);
+  color: #2e7d32;
+}
+
+.insightBadge--tech {
+  background: rgba(255, 243, 224, 0.95);
+  color: #b26a00;
+}
+
+.insightContent {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.insightTitle {
+  font-size: 1.15rem;
+  margin: 0 0 6px;
+  color: #111827;
+}
+
+.insightText {
+  font-size: 0.95rem;
+  color: #667085;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.insightMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #98a2b3;
+  margin-top: 12px;
+}
+
+.insightRead {
+  font-weight: 700;
+  color: #2e7d32;
+  text-decoration: none;
+}
+
+.insightRead:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .insightsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .insightsHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

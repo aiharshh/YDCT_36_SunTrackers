@@ -9,9 +9,15 @@ import Analysis from './pages/Analysis';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import SolarPanelExplanation from './components/SolarPanelExplanation.jsx';
+
 import Checkout from './pages/Checkout.jsx';
 import TopUp from './pages/TopUp.jsx';
 import Receipt from './pages/Receipt.jsx';
+
+import Articles from './pages/Articles';
+import ArticleDetail from "./pages/ArticleDetail";
+import ScrollToTop from './components/ScrollToTop';
+
 
 function AppRoutes() {
   const location = useLocation();
@@ -20,7 +26,7 @@ function AppRoutes() {
   return (
     <>
       {showNavbar && <Navbar />}
-
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -31,9 +37,14 @@ function AppRoutes() {
         <Route path="/analysis" element={<Analysis />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/solarExplanation" element={<SolarPanelExplanation />} />
+
         <Route path="/checkout" element={<Checkout />} />
         <Route path="topUp"element={<TopUp />} />
         <Route path="/receipt" element={<Receipt />} />
+
+        <Route path="/articles" element={<Articles />} />
+        <Route path="/articles/:slug" element={<ArticleDetail />} />
+
       </Routes>
     </>
   );

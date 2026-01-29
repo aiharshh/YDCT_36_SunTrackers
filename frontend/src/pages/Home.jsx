@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
+import { articles } from "../data/articlesData";
 import "../styles/Home.css";
 
 export default function Home() {
@@ -27,7 +28,7 @@ export default function Home() {
     setShowAuthModal(false);
     navigate("/login");
   };
-
+  const featuredArticles = articles.slice(0, 3);
   return (
     <div className="homePage">
       <section className="hero">
@@ -154,6 +155,51 @@ export default function Home() {
             </button>
           </div>
         </div>
+
+        <section className="insightsSection">
+          <div className="insightsHeader">
+            <div>
+              <p className="insightsKicker">KNOWLEDGE CENTER</p>
+              <h2 className="insightsTitle">Solar Insights</h2>
+              <p className="insightsSubtitle">
+                Stay updated with the latest in solar technology, community stories, and sustainable living tips in West Java. 
+              </p>
+            </div>
+
+            <Link to="/articles" className="insightsViewAll">
+              View All Articles →
+            </Link>
+          </div>
+
+          <div className="insightsGrid">
+            {featuredArticles.map((item) => (
+              <article className="insightCard" key={item.slug}>
+                <div className="insightImageWrapper">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="insightImage"
+                  />
+                  <span className={`insightBadge insightBadge--${item.category.toLowerCase()}`}>
+                    {item.category}
+                  </span>
+                </div>
+
+                <div className="insightContent">
+                  <h3 className="insightTitle">{item.title}</h3>
+                  <p className="insightText">{item.description}</p>
+
+                  <div className="insightMeta">
+                    <span>{item.date} | {item.readTime}</span>
+                    <Link to={`/articles/${item.slug}`} className="insightRead">
+                      Read →
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
 
         <div className="homeFooter">
           <p>Logged in securely via Firebase</p>

@@ -11,19 +11,19 @@ const SOLAR_HOURS_BY_DISTRICT = {
   Bandung: 4.5,
   Bekasi: 4.8,
   Bogor: 4.6,
-  Cirebon: 5.0,
+  Cirebon: 4.9,
 };
 
 export function generateAdvisor(formData = {}, result = {}) {
   const bill = parseNumber(formData.bill || 0);
-  const district = formData.district || 'Bandung';
+  const district = formData.district || "Bandung";
 
-  const systemSize = parseNumber(result.system_size) || Math.max(0.5, bill / 1500000);
-  const cost = parseNumber(result.cost) || Math.round(systemSize * 14000000);
-  const savings = parseNumber(result.savings) || Math.round(bill * 0.6);
+  const systemSize = parseNumber(result.system_size);
+  const cost = parseNumber(result.cost);
+  const savings = parseNumber(result.savings);
 
-  const panelWatt = 330; // typical panel wattage used in estimates
-  const panels = Math.max(1, Math.round((systemSize * 1000) / panelWatt));
+  const panelWatt = 350; // typical panel wattage used in estimates
+  const panels = Math.max(1, Math.ceil((systemSize * 1000) / panelWatt));
 
   const sunHours = SOLAR_HOURS_BY_DISTRICT[district] || 4.5;
   const performanceRatio = 0.75; // losses (inverter, temp, wiring, shading)

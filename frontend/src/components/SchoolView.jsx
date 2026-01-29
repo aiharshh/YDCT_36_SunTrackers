@@ -274,7 +274,7 @@ function AreaChart({
   );
 }
 
-const GRID_EMISSION_KG_PER_KWH = 0.82;
+const GRID_EMISSION_KG_PER_KWH = 0.85;
 
 function clamp01(x) {
   if (!Number.isFinite(x)) return 0;
