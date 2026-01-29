@@ -25,7 +25,6 @@ export default function TopUp() {
     try {
       const userRef = ref(db, `users/${user.uid}/walletBalance`);
 
-      // RTDB increment safely using transaction
       await runTransaction(userRef, (currentBalance) => {
         return (currentBalance || 0) + amount;
       });
