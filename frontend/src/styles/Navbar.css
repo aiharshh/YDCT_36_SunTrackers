@@ -251,7 +251,7 @@
   }
 }
 
-@media (max-width: 720px){
+@media (max-width: 967px){
   .navbar{
     position: sticky;
     top: 0;
