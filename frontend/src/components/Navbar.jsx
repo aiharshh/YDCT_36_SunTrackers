@@ -120,6 +120,10 @@ export default function Navbar() {
               HOME
             </NavLink>
 
+            <NavLink to="/articles" onClick={closeMenu} className={({ isActive }) => (isActive ? 'active' : '')}>
+              AWARENESS
+            </NavLink>
+
             <NavLink to="/planner" onClick={closeMenu} className={({ isActive }) => (isActive ? 'active' : '')}>
               CALCULATOR
             </NavLink>

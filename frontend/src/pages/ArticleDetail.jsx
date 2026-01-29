@@ -63,12 +63,10 @@ export default function ArticleDetail() {
             </div>
             </div>
             <aside className="article-sidebar">
-                <h3>Related News</h3>
+                <h3>More Articles</h3>
                 {relatedArticles.map((item, idx) => (
-                    <a
-                    key={idx}
-                    href={`/articles/${item.slug}`}
-                    className="related-card"
+                    <a key={idx} href={`/articles/${item.slug}`}
+                        className="related-card"
                     >
                     <img src={item.image} alt={item.title} />
                     <p>{item.title}</p>
