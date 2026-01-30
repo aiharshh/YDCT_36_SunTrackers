@@ -7,24 +7,21 @@ export default function Receipt() {
 
   if (!state) return <div style={{padding: '50px', textAlign: 'center'}}>No Receipt Found.</div>;
 
-  const handleDownload = () => {
-    window.print(); // This opens the browser print dialog (Save as PDF)
-  };
-
   return (
     <div style={{ padding: '40px', fontFamily: 'Arial, sans-serif' }}>
-      {/* Receipt Card */}
+      {/* Receipt Card - This is what gets printed */}
       <div id="printable-receipt" style={{ 
         maxWidth: '600px', 
         margin: 'auto', 
         padding: '30px', 
         border: '2px solid #2e7d32', 
         borderRadius: '10px',
-        backgroundColor: '#fff' 
+        backgroundColor: '#fff',
+        boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
       }}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <h1 style={{ color: '#2e7d32', margin: '0' }}>PowerTrack</h1>
-          <p style={{ color: '#666' }}>Green Energy Investment Receipt</p>
+          <p style={{ color: '#666' }}>Official Green Investment Receipt</p>
         </div>
 
         <hr />
@@ -32,52 +29,45 @@ export default function Receipt() {
         <div style={{ padding: '20px 0' }}>
           <p><strong>Transaction ID:</strong> {state.transactionId}</p>
           <p><strong>Date:</strong> {state.date}</p>
-          <p><strong>Investor Email:</strong> {state.userEmail}</p>
+          <p><strong>Investor:</strong> {state.userEmail}</p>
           
-          <div style={{ marginTop: '30px', padding: '15px', backgroundColor: '#f1f8e9', borderRadius: '5px' }}>
+          <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f1f8e9', borderRadius: '5px' }}>
             <h3 style={{ margin: '0 0 10px 0' }}>Project: {state.projectName}</h3>
             <h2 style={{ margin: '0', color: '#1b5e20' }}>Amount: Rp {state.amount.toLocaleString()}</h2>
           </div>
-        </div>
 
-        <div style={{ textAlign: 'center', marginTop: '30px', fontSize: '0.9rem', color: '#888' }}>
-          <p>Thank you for contributing to the solar community in West Java!</p>
-          <p>This is a computer-generated receipt for your virtual investment demo.</p>
+          {/* New Awareness Text on the Receipt */}
+          <div style={{ marginTop: '20px', fontSize: '0.85rem', color: '#555', borderTop: '1px dashed #ccc', paddingTop: '15px' }}>
+             <strong>Solar Vending Note:</strong> Your investment has successfully "wound up" your share. 
+             You will receive energy credits proportional to the generation at {state.projectName}.
+          </div>
         </div>
       </div>
 
-      {/* Buttons - These will be hidden when printing */}
-      <div className="no-print" style={{ textAlign: 'center', marginTop: '30px' }}>
-        <button onClick={handleDownload} style={{ 
-          padding: '12px 25px', 
-          backgroundColor: '#2e7d32', 
-          color: 'white', 
-          border: 'none', 
-          borderRadius: '5px',
-          marginRight: '10px',
-          cursor: 'pointer'
-        }}>
+      {/* Action Buttons - Hidden during print */}
+      <div className="no-print" style={{ textAlign: 'center', marginTop: '30px', display: 'flex', gap: '15px', justifyContent: 'center' }}>
+        <button 
+          onClick={() => window.print()} 
+          style={{ padding: '12px 25px', background: '#666', color: 'white', borderRadius: '8px', border: 'none', cursor: 'pointer' }}
+        >
           Download / Print PDF
         </button>
-        <button onClick={() => navigate('/invest')} style={{ 
-          padding: '12px 25px', 
-          backgroundColor: '#666', 
-          color: 'white', 
-          border: 'none', 
-          borderRadius: '5px',
-          cursor: 'pointer'
-        }}>
-          Back to Dashboard
+        
+        {/* THE LANDING BRIDGE: The User Lands on the Dashboard here */}
+        <button 
+          onClick={() => navigate('/portfolio')} 
+          style={{ padding: '12px 25px', background: '#2e7d32', color: 'white', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}
+        >
+          View My Solar Impact →
         </button>
       </div>
 
-      {/* CSS to hide buttons during print */}
       <style>
         {`
           @media print {
             .no-print { display: none; }
             body { background: white; }
-            #printable-receipt { border: none; }
+            #printable-receipt { border: none; box-shadow: none; }
           }
         `}
       </style>

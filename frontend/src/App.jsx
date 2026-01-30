@@ -17,7 +17,7 @@ import Receipt from './pages/Receipt.jsx';
 import Articles from './pages/Articles';
 import ArticleDetail from "./pages/ArticleDetail";
 import ScrollToTop from './components/ScrollToTop';
-
+import Portfolio from './pages/Portfolio.jsx';
 
 function AppRoutes() {
   const location = useLocation();
@@ -44,6 +44,7 @@ function AppRoutes() {
 
         <Route path="/articles" element={<Articles />} />
         <Route path="/articles/:slug" element={<ArticleDetail />} />
+      <Route path="/portfolio" element={<Portfolio />} />
 
       </Routes>
     </>

@@ -30,6 +30,19 @@ export default function HowInvestmentWorks() {
 
   const sections = useMemo(
     () => [
+
+ 
+  {
+    title: "Phase 1: Solar Winding (The Setup)",
+    desc: "We 'wind up' the project by collecting micro-investments from the community. Your money funds the actual hardware on the school roof.",
+    icon: "bi bi-gear-wide-connected",
+  },
+  {
+    title: "Phase 2: Solar Vending (The Earnings)",
+    desc: "The school vends surplus electricity to the neighborhood. This creates a revenue stream that pays back the investors in Virtual Credits.",
+    icon: "bi bi-shop",
+  },
+
       {
         title: "Sunlight becomes electricity",
         desc:

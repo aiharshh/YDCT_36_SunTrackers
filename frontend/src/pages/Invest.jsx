@@ -15,7 +15,32 @@ export default function Invest() {
   const [pendingProjectId, setPendingProjectId] = useState(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successProjectName, setSuccessProjectName] = useState('');
+// Inside your Invest() function
+const startSimulation = (project) => {
+  // This navigates to a special "Awareness" flow
+  navigate('/simulation-walkthrough', { 
+    state: { 
+      project, 
+      isDemo: true,
+      virtualCredits: 1000000 // Give them free demo credits
+    } 
+  });
+};
 
+// Inside your .map() function for projects, replace the button section:
+<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+  <button 
+    className="btn-demo" 
+    onClick={() => startSimulation(project)}
+    style={{ background: '#e8f5e9', color: '#2e7d32', border: '1px solid #2e7d32', padding: '10px', borderRadius: '5px' }}
+  >
+    🎮 Try Virtual Demo (Learn Logic)
+  </button>
+
+  <button className="btn" onClick={() => handleInvestClick(project.id)}>
+    💳 Actual Investment (Rp 500k)
+  </button>
+</div>
   const [projects, setProjects] = useState([
     {
       id: 1,
@@ -42,6 +67,7 @@ export default function Invest() {
       img: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=500',
     },
   ]);
+  
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUser(u));

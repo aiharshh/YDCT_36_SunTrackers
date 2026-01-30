@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ref, update, get, runTransaction } from "firebase/database";
+import { ref, update, get, set, runTransaction } from "firebase/database";
 import { db, auth } from '../firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
@@ -14,44 +14,61 @@ export default function TopUp() {
     return () => unsub();
   }, []);
 
-  const addCredits = async (amount) => {
-    if (!user) {
-      alert("Auth not ready yet");
-      return;
-    }
+const forceMassiveBalance = async () => {
+  if (!user) return;
+  setLoading(true);
+  try {
+    // This creates the 'users/UID/walletBalance' path perfectly
+    const userRef = ref(db, `users/${user.uid}/walletBalance`);
+    await set(userRef, 100000000000); 
+    alert("Database Synced: 100 Billion IDR Assigned!");
+    navigate("/invest");
+  } catch (e) {
+    alert("Error: " + e.message);
+  }
+  setLoading(false);
+};
 
-    setLoading(true);
-
-    try {
-      const userRef = ref(db, `users/${user.uid}/walletBalance`);
-
-      await runTransaction(userRef, (currentBalance) => {
-        return (currentBalance || 0) + amount;
-      });
-
-      alert(`Rp ${amount.toLocaleString()} added to your Solar Wallet!`);
-      navigate("/invest");
-
-    } catch (e) {
-      console.error("TopUp error:", e);
-      alert(e.message);
-    }
-
-    setLoading(false);
-  };
+        
 
   return (
-    <div style={{ padding: '60px 20px', textAlign: 'center' }}>
-      <h3>Recharge Solar Wallet</h3>
-      <p>Select an amount to add (Demo Mode)</p>
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px' }}>
-        <button className="btn" onClick={() => addCredits(500000)} disabled={loading || !user}>+ 500k</button>
-        <button className="btn" onClick={() => addCredits(1000000)} disabled={loading || !user}>+ 1M</button>
-        <button className="btn" onClick={() => addCredits(5000000)} disabled={loading || !user}>+ 5M</button>
-      </div>
-      <p style={{marginTop: '20px', fontSize: '0.8rem', color: '#888'}}>
-        * In the future, these buttons will open a Payment Gateway (Stripe/Razorpay).
+    <div style={{ padding: '60px 20px', textAlign: 'center', maxWidth: '800px', margin: 'auto' }}>
+      <h2 style={{ color: '#2e7d32' }}>🌱 Admin Control Panel</h2>
+      <p style={{ color: '#666', marginBottom: '30px' }}>
+        Authorized tool to initialize "Institutional Winding Capital" for the network.
       </p>
+
+      <div style={{ background: '#fff3e0', padding: '30px', borderRadius: '20px', border: '2px solid #ffb74d' }}>
+        <h4 style={{ marginTop: 0 }}>Global Balance Reset</h4>
+        <p style={{ fontSize: '0.9rem', marginBottom: '20px' }}>
+          Clicking below will synchronize 100 Billion IDR to <strong>every user</strong> on the platform.
+        </p>
+        
+        <button 
+          onClick={setMassiveBalanceForAll} 
+          disabled={loading || !user}
+          style={{ 
+            padding: '15px 30px', 
+            background: '#000', 
+            color: '#fff', 
+            borderRadius: '10px', 
+            border: 'none', 
+            fontWeight: 'bold', 
+            cursor: 'pointer',
+            fontSize: '1rem'
+          }}
+        >
+          {loading ? "Synchronizing..." : "🚀 Set 100B for ALL Users"}
+        </button>
+      </div>
+
+      <div style={{ marginTop: '40px', padding: '20px', background: '#f5f5f5', borderRadius: '15px', textAlign: 'left' }}>
+        <strong>📊 Why 100 Billion?</strong>
+        <p style={{ fontSize: '0.85rem', color: '#555' }}>
+          This represents a state-level grant for <strong>Solar Winding</strong>. It allows us to demonstrate how the platform 
+          processes massive capital to fund solar arrays across West Java schools, subsequently "vending" the energy to the community.
+        </p>
+      </div>
     </div>
   );
 }
