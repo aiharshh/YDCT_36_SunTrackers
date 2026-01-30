@@ -154,7 +154,7 @@ export default function Checkout() {
               <p style={{ fontSize: '0.8rem', color: '#555', marginBottom: '15px' }}>Payment for: <strong>{state.projectName}</strong></p>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {['Google Pay', 'Amazon Pay', 'UPI / QRIS', 'Net Banking'].map(method => (
+                {['QRIS', 'GoPay', 'ShopeePay', 'Bank Transfer'].map(method => (
                   <button key={method} onClick={() => handleExternalNotify(method)} style={methodBtnStyle}>
                     <i className="bi bi-credit-card-2-front" style={{marginRight:'10px'}}></i> Pay with {method}
                   </button>
