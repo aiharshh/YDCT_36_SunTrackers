@@ -45,10 +45,10 @@ export const registerUser = async (email, password) => {
     const result = await createUserWithEmailAndPassword(auth, email, password);
     const user = result.user;
 
-    // We use set() to create the user node with the initial 10M grant
+    // We use set() to create the user node with the initial 15M grant
     await set(ref(db, `users/${user.uid}`), {
       email: user.email,
-      walletBalance: 600000, // 6 Millioncredits
+      walletBalance: 15000000, // 15 Millioncredits
       createdAt: new Date().toISOString()
     });
 
