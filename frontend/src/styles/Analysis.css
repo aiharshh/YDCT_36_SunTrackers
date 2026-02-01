@@ -139,6 +139,9 @@
     padding: 9px 12px;
     border-radius: 12px;
   }
+  .analysisTitleWrap p {
+    width: 100%;
+  }
 }
 
 @media (max-width: 420px) {

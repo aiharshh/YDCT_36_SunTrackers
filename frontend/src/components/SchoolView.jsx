@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "../styles/SchoolView.css";
+import SchoolReal from "../components/SchoolReal.jsx";
 
 function parseCSV(csvText) {
   const lines = csvText.replace(/\r/g, "").split("\n").filter(Boolean);
@@ -343,6 +344,8 @@ export default function SchoolView() {
 
   const [sortKey, setSortKey] = useState("sum_saving");
   const [sortDir, setSortDir] = useState("asc");
+
+  const [dataMode, setDataMode] = useState("synthetic"); // real | synthetic
 
   const [displayMode, setDisplayMode] = useState("money"); // energy | co2 | money
   const [compareMode, setCompareMode] = useState("none"); // none | prevYear
@@ -780,13 +783,9 @@ export default function SchoolView() {
     return rows;
   }, [schools, logs, sortKey, sortDir]);
 
-  const title = selectedSchool
-    ? `Schools Dashboard - ${selectedSchool.school_name}`
-    : "Schools Dashboard - West Java";
-
   const subtitle = selectedSchool
     ? `${selectedSchool.city} • ${selectedSchool.district}`
-    : `Total schools tracked: ${schools.length}`;
+    : `Total schools tracked [synthetic data]: ${schools.length}`;
 
   const toggleSort = (key) => {
     if (key === sortKey) {
@@ -820,6 +819,21 @@ export default function SchoolView() {
         <div className="svError">
           <div className="svErrorTitle">Failed to load School Dashboard</div>
           <div className="svErrorText">{err}</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (dataMode === "real") {
+    return <SchoolReal onBack={() => setDataMode("synthetic")} />;
+  }
+
+  if (err) {
+    return (
+      <div className="svWrap">
+        <div className="svError">
+          <div className="svErrorTitle">Failed to load School Dashboard</div>
+          <div className="svErrorText">{err}</div>
           <div className="svErrorHint">
             Make sure files exist in <code>public/data/schools.csv</code> and <code>public/data/school_energy_log.csv</code>.
           </div>
@@ -833,7 +847,7 @@ export default function SchoolView() {
       <div className="svBoard">
         <div className="svBoardHead">
           <div className="svHeadLeft">
-            <div className="svBoardTitle">{title}</div>
+            <div className="svBoardTitle">School Dashboard For West Java</div>
             <div className="svBoardSub">{subtitle}</div>
           </div>
 
@@ -843,25 +857,26 @@ export default function SchoolView() {
                 <button
                   type="button"
                   className={`svSegBtn ${displayMode === "money" ? "isActive" : ""}`}
+                  data-short="(Rp)"
+                  data-full="Money (Rp)"
                   onClick={() => setDisplayMode("money")}
                 >
-                  Money (Rp)
                 </button>
-
                 <button
                   type="button"
                   className={`svSegBtn ${displayMode === "energy" ? "isActive" : ""}`}
+                  data-short="(MWh)"
+                  data-full="Energy (MWh)"
                   onClick={() => setDisplayMode("energy")}
                 >
-                  Energy (MWh)
                 </button>
-
                 <button
                   type="button"
                   className={`svSegBtn ${displayMode === "co2" ? "isActive" : ""}`}
+                  data-short="(kgCO₂)"
+                  data-full="Impact (kgCO₂)"
                   onClick={() => setDisplayMode("co2")}
                 >
-                  Impact (kgCO₂)
                 </button>
               </div>
 
@@ -875,13 +890,25 @@ export default function SchoolView() {
               </button>
             </div>
 
-            {selectedSchoolId && (
-              <div className="svHeadBottomRow">
-                <button type="button" className="svClearBtn" onClick={() => setSelectedSchoolId(null)}>
+            <div className="svHeadBottomRow">
+              <button
+                type="button"
+                className="svDataToggleBtn"
+                onClick={() => setDataMode((m) => (m === "real" ? "synthetic" : "real"))}
+              >
+                {dataMode === "real" ? "Switch to Synthetic Data" : "Switch to Real Data"}
+              </button>
+
+              {selectedSchoolId && (
+                <button
+                  type="button"
+                  className="svClearBtn"
+                  onClick={() => setSelectedSchoolId(null)}
+                >
                   Clear selection
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 

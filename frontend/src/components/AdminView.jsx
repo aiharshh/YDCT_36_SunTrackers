@@ -271,7 +271,7 @@ export default function AdminView() {
           didFitRef.current = true;
         }
       } catch {
-        // ignore
+        
       }
     }
   }, [geo, yearData, bins, year, selected]);

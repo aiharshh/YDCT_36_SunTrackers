@@ -1,281 +1,18 @@
-:root{
+:root {
   --sv-primary: #F97316;
   --sv-primary-d: #EA580C;
   --sv-primary-soft: rgba(249,115,22,0.10);
   --sv-primary-soft-2: rgba(249,115,22,0.16);
   --sv-head-bg: #FFF7ED;
-  --sv-foot-bg: #FFFAF5;  --sv-row-hover: rgba(249,115,22,0.08);
-  --sv-row-active: rgba(249,115,22,0.18);
-  --sv-head-bg: #FFF7ED;
   --sv-foot-bg: #FFF1E6;
+  --sv-row-hover: rgba(249,115,22,0.08);
+  --sv-row-active: rgba(249,115,22,0.18);
   --sv-active-bar: #166534;
   --svCtrlH: 44px;
 }
 
-.svWrap{
+.svWrap {
   width: 100%;
-}
-
-.svBoard{
-  background: #fff;
-  border-radius: 5px;
-  border: 1px solid rgba(0,0,0,0.12);
-  box-shadow: 0 14px 34px rgba(0,0,0,0.08);
-  overflow: hidden;
-}
-
-.svBoardHead{
-  background: linear-gradient(180deg, var(--sv-primary), var(--sv-primary-d));
-  color: #fff;
-  border-radius: 0;
-  padding: 16px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: start;
-}
-
-.svHeadLeft{
-  min-width:0;
-}
-
-.svHeadRight{
-  display:flex;
-  align-items:flex-end;
-  gap:10px;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.svBoardTitle{
-  font-weight: 800;
-  letter-spacing: -0.3px;
-  font-size: clamp(20px, 4.2vw, 34px);
-  line-height: 1.15;
-  white-space: normal;
-  word-break: normal;
-  overflow-wrap: anywhere;
-}
-
-.svHeadTopRow{
-  display:flex;
-  align-items:stretch;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content: flex-end;
-}
-
-.svHeadBottomRow{
-  width:100%;
-  display:flex;
-  justify-content:flex-end;
-}
-
-.svBoardSub{
-  opacity: 0.92;
-  margin-top: 6px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.svClearBtn{
-  border-radius: 999px;
-  padding: 10px 12px;
-  font-weight: 900;
-  cursor: pointer;
-  background: rgba(255,255,255,0.18);
-  color: rgba(255,255,255,0.95);
-  border: 1px solid rgba(255,255,255,0.34);
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.svSegBtn:focus-visible,
-.svCompareBtn:focus-visible,
-.svClearBtn:focus-visible{
-  outline: 2px solid rgba(255,255,255,0.65);
-  outline-offset: 2px;
-}
-
-.svClearBtn:hover{
-  background: rgba(255,255,255,0.24);
-}
-
-.svClearBtn:active{
-  transform: translateY(0);
-}
-
-.svKpiGrid{
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  padding: 14px 14px 10px;
-  background: #fff;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-}
-
-.svKpi{
-  background: #fff;
-  border-radius: 14px;
-  border: 1px solid rgba(0,0,0,0.10);
-  box-shadow: 0 12px 26px rgba(0,0,0,0.06);
-  padding: 12px 12px 10px;
-}
-
-.svKpiLabel{
-  color: #6a756a;
-  font-weight: 800;
-  font-size: 12px;
-  letter-spacing: 0.2px;
-}
-
-.svKpiValue{
-  margin-top: 6px;
-  font-size: 22px;
-  font-weight: 900;
-  color: #1f2a1f;
-  letter-spacing: -0.2px;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  line-height: 1.1;
-}
-
-.svKpiSmall .svKpiValue{
-  font-size: 20px;
-}
-
-.svGrid2{
-  padding: 12px 14px 2px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.svGridBottom{
-  padding: 10px 14px 16px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
-  gap:16px;
-  align-items:stretch;
-}
-
-.svGridBottom > *{
-  min-width: 0;
-}
-
-.svGridBottom > .svCard{
-  /* height: 640px; */
-  height: 520px;
-  display:flex;
-  flex-direction:column;
-}
-
-.svCard{
-  background: #fff;
-  border-radius: 14px;
-  border: 1px solid rgba(0,0,0,0.10);
-  box-shadow: 0 12px 26px rgba(0,0,0,0.06);
-  overflow: hidden;
-}
-
-.svCardHead{
-  padding: 10px 12px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.svCardHeadTight{
-  padding: 10px 12px 8px;
-}
-
-.svCardTitle{
-  font-weight: 900;
-  color: #1f2a1f;
-  letter-spacing: -0.2px;
-  font-size: 14px;
-}
-
-.svCardHint{
-  font-size: 12px;
-  color: #6a756a;
-  font-weight: 700;
-}
-
-.svChartWrap{
-  padding: 10px 10px 4px;
-}
-
-.svChart{
-  width: 100%;
-  height: 220px; 
-  overflow: visible;
-  display: block;
-}
-
-.svGridLine{
-  stroke: rgba(0,0,0,0.08);
-  stroke-width: 1;
-}
-
-.svArea{
-  fill: rgba(249,115,22,0.18);
-}
-
-.svLine{
-  fill: none;
-  stroke: rgba(234,88,12,0.95);
-  stroke-width: 2.2;
-}
-
-.svDot{
-  fill: rgba(234,88,12,0.95);
-}
-
-.svAxisText{
-  fill: rgba(31,42,31,0.7);
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.svAxisTextX{
-  font-size: 11px;
-}
-
-.svDetails{
-  padding: 14px 16px 16px;
-}
-
-.svDetailsMuted{
-  color: #6a756a;
-  font-weight: 700;
-  line-height: 1.6;
-  margin-bottom: 14px;
-}
-
-.svDetailsRow{
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 10px;
-  padding: 6px 0;
-  border-bottom: 1px dashed rgba(0,0,0,0.08);
-}
-.svDetailsRow:last-child{
-  border-bottom: 0;
-}
-
-.svDetailsKey{
-  color: #6a756a;
-  font-weight: 800;
-  font-size: 12px;
-}
-
-.svDetailsVal{
-  color: #1f2a1f;
-  font-weight: 800;
-  font-size: 13px;
 }
 
 .svMap{
@@ -291,25 +28,292 @@
   display: block;
 }
 
-.svTableCard{
+.svBoard {
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,0.12);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.svBoardHead {
+  background: linear-gradient(180deg, var(--sv-primary), var(--sv-primary-d));
+  color: #fff;
+  border-radius: 0;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.svHeadLeft {
+  min-width: 0;
+}
+
+.svHeadRight {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.svBoardTitle {
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  font-size: clamp(20px, 4.2vw, 34px);
+  line-height: 1.15;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+.svHeadTopRow {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.svHeadBottomRow {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.svBoardSub {
+  opacity: 0.92;
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.svClearBtn {
+  border-radius: 999px;
+  padding: 10px 12px;
+  font-weight: 900;
+  cursor: pointer;
+  background: rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.95);
+  border: 1px solid rgba(255,255,255,0.34);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.svSegBtn:focus-visible,
+.svCompareBtn:focus-visible,
+.svClearBtn:focus-visible,
+.svDataToggleBtn:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.65);
+  outline-offset: 2px;
+}
+
+.svSegBtn::after {
+  content: attr(data-full);
+}
+
+.svClearBtn:hover {
+  background: rgba(255,255,255,0.24);
+}
+
+.svClearBtn:active {
+  transform: translateY(0);
+}
+
+.svKpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px 14px 10px;
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.svKpi {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.10);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.06);
+  padding: 12px 12px 10px;
+}
+
+.svKpiLabel {
+  color: #6a756a;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+}
+
+.svKpiValue {
+  margin-top: 6px;
+  font-size: 22px;
+  font-weight: 900;
+  color: #1f2a1f;
+  letter-spacing: -0.2px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.1;
+}
+
+.svKpiSmall .svKpiValue {
+  font-size: 20px;
+}
+
+.svGrid2 {
+  padding: 12px 14px 2px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.svGridBottom {
+  padding: 10px 14px 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.svGridBottom > * {
+  min-width: 0;
+}
+
+.svGridBottom > .svCard {
+  height: 520px;
   display: flex;
   flex-direction: column;
 }
 
-.svTableWrap{
+.svCard {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.10);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.svCardHead {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.svCardHeadTight {
+  padding: 10px 12px 8px;
+}
+
+.svCardTitle {
+  font-weight: 900;
+  color: #1f2a1f;
+  letter-spacing: -0.2px;
+  font-size: 14px;
+}
+
+.svCardHint {
+  font-size: 12px;
+  color: #6a756a;
+  font-weight: 700;
+}
+
+.svChartWrap {
+  padding: 10px 10px 4px;
+}
+
+.svChart {
+  width: 100%;
+  height: 220px;
+  overflow: visible;
+  display: block;
+}
+
+.svGridLine {
+  stroke: rgba(0,0,0,0.08);
+  stroke-width: 1;
+}
+
+.svArea {
+  fill: rgba(249,115,22,0.18);
+}
+
+.svLine {
+  fill: none;
+  stroke: rgba(234,88,12,0.95);
+  stroke-width: 2.2;
+}
+
+.svDot {
+  fill: rgba(234,88,12,0.95);
+}
+
+.svAxisText {
+  fill: rgba(31,42,31,0.7);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.svAxisTextX {
+  font-size: 11px;
+}
+
+.svDetails {
+  padding: 14px 16px 16px;
+}
+
+.svDetailsMuted {
+  color: #6a756a;
+  font-weight: 700;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.svDetailsRow {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.08);
+}
+
+.svDetailsRow:last-child {
+  border-bottom: 0;
+}
+
+.svDetailsKey {
+  color: #6a756a;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.svDetailsVal {
+  color: #1f2a1f;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.svTableCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.svTableWrap {
   overflow: auto;
-  /* max-height: 360px; */
   flex: 1;
 }
 
-.svTable{
+.svTable {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 13px;
 }
 
-.svTable thead th{
+.svTable thead th {
   position: sticky;
   top: 0;
   z-index: 2;
@@ -319,47 +323,49 @@
   text-align: left;
   padding: 10px 10px;
   border-bottom: 1px solid rgba(0,0,0,0.08);
-  white-space: nowrap;
+  white-space: normal;
+  vertical-align: middle;
 }
 
-.svTable thead th.isSortable{
+.svTable thead th.isSortable {
   cursor: pointer;
   user-select: none;
 }
-.svTable thead th.isSortable:hover{
+
+.svTable thead th.isSortable:hover {
   background: rgba(249,115,22,0.8);
 }
 
-.svTable tbody td{
+.svTable tbody td {
   padding: 9px 10px;
   border-bottom: 1px solid rgba(0,0,0,0.06);
   background: #fff;
 }
 
-.svTable tbody tr{
+.svTable tbody tr {
   cursor: pointer;
   transition: background .14s ease;
 }
-.svTable tbody tr:hover{
+
+.svTable tbody tr:hover {
   background: var(--sv-primary-soft);
 }
 
-.svTable tbody tr:hover td{
+.svTable tbody tr:hover td {
   position: relative;
   z-index: 1;
   background: var(--sv-row-hover);
 }
 
-.svTable tbody tr.isActive td{
+.svTable tbody tr.isActive td {
   background: var(--sv-row-active);
 }
 
-.svTable tbody tr.isActive td:first-child{
+.svTable tbody tr.isActive td:first-child {
   position: relative;
 }
 
-
-.svTable tbody tr.isActive td:first-child::before{
+.svTable tbody tr.isActive td:first-child::before {
   content: "";
   position: absolute;
   left: 0;
@@ -370,7 +376,7 @@
   background: var(--sv-active-bar);
 }
 
-.svTable tfoot td{
+.svTable tfoot td {
   position: sticky;
   bottom: 0;
   z-index: 3;
@@ -381,62 +387,56 @@
   font-weight: 900;
 }
 
-.svSchool{
+.svSchool {
   max-width: 360px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.isRight{
+.isRight {
   text-align: right;
 }
 
-.svTableFooterNote{
+.svTableFooterNote {
   padding: 10px 12px 12px;
   color: #6a756a;
   font-size: 12px;
   font-weight: 700;
 }
 
-.svTable thead th{
-  white-space: normal;
-  padding: 10px 10px;
-  vertical-align: middle;
-}
-
-.svTh{
+.svTh {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
 }
 
-.svThCenter{
+.svThCenter {
   justify-content: center;
 }
 
-.svThText{
+.svThText {
   display: flex;
   flex-direction: column;
   gap: 2px;
   line-height: 1.1;
 }
 
-.svThOneLine{
+.svThOneLine {
   white-space: nowrap;
 }
 
-.svThTop{
+.svThTop {
   font-weight: 900;
 }
 
-.svThBottom{
+.svThBottom {
   font-weight: 900;
   opacity: 0.9;
 }
 
-.svThSort{
+.svThSort {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -448,22 +448,22 @@
   transform: translateY(0);
 }
 
-.svTable thead th.isSortable:hover .svThSort{
+.svTable thead th.isSortable:hover .svThSort {
   opacity: 1;
   background: rgba(249,115,22,0.16);
 }
 
-.svTable thead th.isRight{
+.svTable thead th.isRight {
   text-align: center;
 }
 
-.svLoading{
+.svLoading {
   padding: 18px 6px;
   color: #1f2a1f;
   font-weight: 900;
 }
 
-.svError{
+.svError {
   border: 1px solid rgba(0,0,0,0.12);
   border-radius: 14px;
   background: #fff;
@@ -471,26 +471,26 @@
   box-shadow: 0 14px 34px rgba(0,0,0,0.08);
 }
 
-.svErrorTitle{
+.svErrorTitle {
   font-weight: 900;
   color: #1f2a1f;
   font-size: 16px;
   margin-bottom: 6px;
 }
 
-.svErrorText{
+.svErrorText {
   color: #6a756a;
   font-weight: 700;
 }
 
-.svErrorHint{
+.svErrorHint {
   margin-top: 10px;
   color: #6a756a;
   font-size: 12px;
   font-weight: 700;
 }
 
-.svSeg{
+.svSeg {
   display: inline-flex;
   gap: 6px;
   padding: 6px;
@@ -501,7 +501,7 @@
   height: var(--svCtrlH);
 }
 
-.svSegBtn{
+.svSegBtn {
   border: 0;
   border-radius: 999px;
   padding: 0 14px;
@@ -513,16 +513,16 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.svSegBtn:hover{
+.svSegBtn:hover {
   background: rgba(255,255,255,0.14);
 }
 
-.svSegBtn.isActive{
-  background:#fff;
-  color:#1f3a2a;
+.svSegBtn.isActive {
+  background: #fff;
+  color: #1f3a2a;
 }
 
-.svCompareBtn{
+.svCompareBtn {
   border-radius: 999px;
   padding: 0 16px;
   font-weight: 900;
@@ -535,116 +535,156 @@
 }
 
 .svCompareBtn,
-.svSeg{
+.svSeg {
   box-sizing: border-box;
 }
 
-.svCompareBtn:hover{
-  background:rgba(255,255,255,0.22);
+.svCompareBtn:hover {
+  background: rgba(255,255,255,0.22);
 }
 
-.svCompareBtn.isOn{
-  background:#ffffff;
-  color:#1f3a2a;
-  border-color:transparent;
+.svCompareBtn.isOn {
+  background: #ffffff;
+  color: #1f3a2a;
+  border-color: transparent;
 }
 
-.svLineCompare{
-  fill:none;
-  stroke:rgba(31,58,42,0.55);
-  stroke-width:2.4;
-  stroke-dasharray:6 6;
+.svDataToggleBtn {
+  border-radius: 999px;
+  padding: 0 18px;
+  font-weight: 800;
+  cursor: pointer;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.35);
+  height: var(--svCtrlH);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.svLeftInner{
-  display:flex;
-  flex-direction:column;
-  height:100%;
+.svDataToggleBtn:hover {
+  background: rgba(34,197,94,0.28);
 }
 
-.svLeftSwitch{
-  display:flex;
-  gap:18px;
+.svDataToggleBtn.isReal {
+  background: linear-gradient(
+    135deg,
+    #ffedd5,
+    #fed7aa
+  );
+  color: #7c2d12;
+  border-color: rgba(255,255,255,0.8);
+}
+
+.svDataIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+}
+
+.svDataToggleBtn.isReal .svDataIndicator {
+  background: #fff;
+  box-shadow: 0 0 6px rgba(255,255,255,0.8);
+}
+
+.svLineCompare {
+  fill: none;
+  stroke: rgba(31,58,42,0.55);
+  stroke-width: 2.4;
+  stroke-dasharray: 6 6;
+}
+
+.svLeftInner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.svLeftSwitch {
+  display: flex;
+  gap: 18px;
   padding: 14px 16px 10px;
   border-bottom: 1px solid rgba(16,24,40,0.08);
 }
 
-.svLeftSwitchBtn{
-  border:none;
-  background:transparent;
+.svLeftSwitchBtn {
+  border: none;
+  background: transparent;
   padding: 10px 2px;
   font-weight: 900;
-  cursor:pointer;
-  color:#667085;
-  position:relative;
+  cursor: pointer;
+  color: #667085;
+  position: relative;
 }
 
-.svLeftSwitchBtn.isActive{
-  color:#1f3a2a;
+.svLeftSwitchBtn.isActive {
+  color: #1f3a2a;
 }
 
-.svLeftSwitchBtn.isActive::after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:-11px;
-  height:3px;
-  border-radius:999px;
-  background:#2e7d32;
+.svLeftSwitchBtn.isActive::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -11px;
+  height: 3px;
+  border-radius: 999px;
+  background: #2e7d32;
 }
 
-.svLeftBody{
-  flex:1;
-  min-height:0;
+.svLeftBody {
+  flex: 1;
+  min-height: 0;
 }
 
-.svLeftBodyScroll{
-  height:100%;
-  overflow:auto;
+.svLeftBodyScroll {
+  height: 100%;
+  overflow: auto;
   padding: 14px 16px 16px;
 }
 
-.svTodo{
-  padding:14px;
-  border-radius:16px;
-  background:rgba(46,125,50,0.06);
-  border:1px solid rgba(46,125,50,0.14);
+.svTodo {
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(46,125,50,0.06);
+  border: 1px solid rgba(46,125,50,0.14);
 }
 
-.svTodoHead{
-  display:flex;
-  align-items:baseline;
-  justify-content:space-between;
-  gap:10px;
+.svTodoHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
 }
 
-.svTodoTitle{
-  font-weight:900;
-  color:#1f3a2a;
+.svTodoTitle {
+  font-weight: 900;
+  color: #1f3a2a;
 }
 
-.svTodoMeta{
-  color:#667085;
-  font-weight:800;
-  font-size:13px;
+.svTodoMeta {
+  color: #667085;
+  font-weight: 800;
+  font-size: 13px;
 }
 
-.svTodoSub{
-  margin-top:6px;
-  color:#475467;
-  line-height:1.6;
-  font-size:14px;
+.svTodoSub {
+  margin-top: 6px;
+  color: #475467;
+  line-height: 1.6;
+  font-size: 14px;
 }
 
-.svTodoList{
-  margin-top:12px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
+.svTodoList {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.svTodoItem{
+.svTodoItem {
   display: grid;
   grid-template-columns: 18px 1fr;
   column-gap: 12px;
@@ -657,54 +697,59 @@
   cursor: pointer;
 }
 
-.svTodoItem input{
-  margin-top:3px;
+.svTodoItem input {
+  margin-top: 3px;
   flex: 0 0 auto;
 }
 
-.svTodoText{
+.svTodoText {
   flex: 1;
   min-width: 0;
 }
 
-.svTodoNote{
-  margin-top:10px;
-  color:#667085;
-  font-size:12.5px;
-  line-height:1.55;
+.svTodoNote {
+  margin-top: 10px;
+  color: #667085;
+  font-size: 12.5px;
+  line-height: 1.55;
 }
 
-@media (max-width: 980px){
-  .svKpiGrid{
+@media (max-width: 980px) {
+  .svKpiGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .svGrid2{
+  .svGrid2 {
     grid-template-columns: 1fr;
   }
-  .svGridBottom{
+  .svGridBottom {
     grid-template-columns: 1fr;
   }
-  .svTableWrap{
+  .svTableWrap {
     max-height: 540px;
   }
+  .svSegBtn::after {
+    content: attr(data-short);
+  }
+  .svSegBtn {
+    padding: 0.25em 0.5em;
+    font-size: 0.85rem;
+  }
 }
 
-@media (max-width: 900px){
-  .svGridBottom{
+@media (max-width: 900px) {
+  .svGridBottom {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 720px){
-  .svBoardHead{
+@media (max-width: 720px) {
+  .svBoardHead {
     grid-template-columns: 1fr;
   }
-
-  .svHeadRight{
+  .svHeadRight {
     align-items: stretch;
   }
-
-  .svHeadTopRow{
+  .svHeadTopRow {
     justify-content: flex-start;
     max-width: 100%;
     width: 100%;
@@ -712,88 +757,79 @@
     align-items: stretch;
     gap: 10px;
   }
-
-  .svHeadBottomRow{
+  .svHeadBottomRow {
     width: 100%;
     justify-content: flex-end;
   }
-
   .svSegBtn,
   .svCompareBtn,
-  .svClearBtn{
+  .svClearBtn,
+  .svDataToggleBtn {
     padding: 9px 10px;
     font-size: 14px;
   }
-
-  .svSeg{
+  .svSeg {
     width: 100%;
+    display: flex;
+    justify-content: center;
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    gap: 0px !important;
+    gap: 8px !important;
   }
-  .svSeg::-webkit-scrollbar{
-    display:none;
+  .svSeg::-webkit-scrollbar {
+    display: none;
   }
-
-  .svSegBtn{
+  .svSegBtn {
     white-space: nowrap;
     flex: 0 0 auto;
     font-size: 13.5px !important;
   }
-
-  .svCompareBtn{
+  .svCompareBtn,
+  .svDataToggleBtn {
     width: 100%;
     justify-content: center;
     white-space: nowrap;
   }
-
-  .svHeadBottomRow{
+  .svHeadBottomRow {
     width: 100%;
     justify-content: flex-end;
   }
-
-  .svClearBtn{
+  .svClearBtn {
     align-self: flex-end;
   }
-
-    .svGridBottom > .svCard{
+  .svGridBottom > .svCard {
     height: auto;
     min-height: 0;
   }
-
-  .svLeftBodyScroll{
+  .svLeftBodyScroll {
     padding: 12px 14px 14px;
   }
 }
 
-@media (max-width: 520px){
-  .svHeadRight{
+@media (max-width: 520px) {
+  .svHeadRight {
     width: 100%;
     padding-right: 10px;
   }
-
   .svHeadTopRow,
-  .svHeadBottomRow{
+  .svHeadBottomRow {
     padding-right: 10px;
   }
-
   .svSeg,
-  .svCompareBtn{
+  .svCompareBtn,
+  .svDataToggleBtn {
     width: 100%;
     box-sizing: border-box;
   }
-
-  .svHeadBottomRow{
+  .svHeadBottomRow {
     justify-content: flex-end;
   }
-
-  .svClearBtn{
-    margin-right: 2px; 
+  .svClearBtn {
+    margin-right: 2px;
   }
-
-  .svKpiValue{
+  .svKpiValue {
     font-size: 18px;
   }
 }
