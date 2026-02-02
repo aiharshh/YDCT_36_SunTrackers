@@ -53,7 +53,7 @@ export default function ArticleDetail() {
                 {article.content.map((block, idx) => {
                 switch (block.type) {
                     case "heading":
-                    return <h2 key={idx}>{block.text}</h2>;
+                    return <h2 key={idx} className="article-content h2">{block.text}</h2>;
                     case "quote":
                     return <blockquote key={idx}>{block.text}</blockquote>;
                     default:

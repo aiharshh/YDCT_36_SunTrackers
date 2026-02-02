@@ -100,14 +100,138 @@ export const articles = [
         slug: "lorem-ipsum-investment",
         category: "Finance",
         date: "Jan 30, 2026",
-        title: "Lorem Ipsum Dolor Sit Amet",
+        title: "Understanding the Solar Calculator : How the Estimates Are Derived",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         image: "https://img.youtube.com/vi/9orGjtpbLQQ/hqdefault.jpg",
         videoId: "9orGjtpbLQQ",
         content: [
             {
+                type: "heading",
+                text: "Location and Solar Potential",
+            },
+            {
                 type: "paragraph",
-                text: "Lorem Ipsum Dolor Sit Amet",
+                text: "Solar energy production depends heavily on sunlight availability. The calculator uses regional solar potential estimates based on general climate patterns rather than real-time or site-specific measurements.",
+            },
+            {
+                type: "paragraph",
+                text: "Because district-level solar radiation data is not always consistently available from public, trusted sources, the values used in the calculator should be understood as reasonable approximations, suitable for comparison and early planning rather than engineering design.",
+            },
+            {
+                type: "heading",
+                text: "Electricity Usage and System Sizing",
+            },
+            {
+                type: "paragraph",
+                text: "The calculator estimates solar system capacity based on the user's average monthly electricity bill and usage profile. For schools and small businesses, the system is intentionally sized conservatively. Instead of aiming to offset 100% of electricity demand, the calculator targets a partial offset to reflect real-world constraints such as : ",
+            },
+            {
+                type: "quote",
+                text: "1. Budget limitations",
+            },
+            {
+                type: "quote",
+                text: "2. Lower electricity usage during weekends or holidays",
+            },
+            {
+                type: "quote",
+                text: "3. Regulatory limits on exporting excess energy to the grid",
+            },
+            {
+                type: "paragraph",
+                text: "This approach helps avoid unrealistic projections and overestimation of benefits.",
+            },
+            {
+                type: "heading",
+                text: "Roof Area and Shading Assumptions",
+            },
+            {
+                type: "paragraph",
+                text: "Users are asked to select roof size (small, medium, or large) and shading conditions. These inputs affect how much solar capacity can realistically be installed and how efficiently it performs.",
+            },
+            {
+                type: "paragraph",
+                text: "Shading is especially important, as even partial obstruction can significantly reduce solar output. The calculator applies a reduction factor to account for this, helping users understand why two buildings in the same area may produce different results.",
+            },
+            {
+                type: "heading",
+                text: "Financial Models and Grants",
+            },
+            {
+                type: "paragraph",
+                text: "The calculator supports different financing approaches, including : ",
+            },
+            {
+                type: "quote",
+                text: "1. Direct Financing",
+            },
+            {
+                type: "quote",
+                text: "2. Community or shared solar models",
+            },
+            {
+                type: "paragraph",
+                text: "For eligible user types (such as schools or MSMEs), grant coverage options are included to show how subsidies can reduce upfront costs. These values are configurable assumptions and may vary depending on government programs or institutional policies.",
+            },
+            {
+                type: "heading",
+                text: "Environmental Impact Estimates",
+            },
+            {
+                type: "paragraph",
+                text: "The CO₂ reduction figures shown are calculated using a fixed grid emission factor. This represents the average carbon intensity of electricity generated from the regional grid.",
+            },
+            {
+                type: "quote",
+                text: "1. Grid emission factors change over time as renewable energy increases",
+            },
+            {
+                type: "quote",
+                text: "2. The values used are meant for impact estimation, not official carbon accounting",
+            },
+            {
+                type: "paragraph",
+                text: "The calculator's goal is to make environmental impact understandable and comparable, rather than exact.",
+            },
+            {
+                type: "heading",
+                text: "Interpreting the Results",
+            },
+            {
+                type: "paragraph",
+                text: "The calculator output should be read as:",
+            },
+            {
+                type: "quote",
+                text: "- A planning and awareness tool",
+            },
+            {
+                type: "quote",
+                text: "- A way to compare scenarios (e.g., different roof sizes or financing options)",
+            },
+            {
+                type: "quote",
+                text: "- A starting point for deeper technical or financial analysis",
+            },
+            {
+                type: "paragraph",
+                text: "Actual system performance will always depend on site surveys, detailed engineering, and local regulations.",
+            },
+            {
+                type: "heading",
+                text: "Conclusions",
+            },
+            {
+                type: "paragraph",
+                text: "The solar calculator bridges the gap between technical solar concepts and everyday decision-making. By simplifying complex variables into clear estimates, it helps users explore possibilities, ask better questions, and understand trade-offs-without requiring technical expertise.",
+            },
+            {
+                type: "paragraph",
+                text: "For real installations, the calculator's results should always be complemented with professional assessments and verified data.",
+            },
+            {
+                type: "quote",
+                text: "The solar calculator is designed as an educational decision-support tool, not as an exact prediction of real-world performance. Its primary purpose is to help users understand how different factors-such as location, electricity usage, roof conditions, and financing models-affect the potential impact of installing solar panels. This article explains the key assumptions and logic behind the calculator, especially aspects that may not be fully covered in the video",
             },
         ],
         readTime: "5 min read",

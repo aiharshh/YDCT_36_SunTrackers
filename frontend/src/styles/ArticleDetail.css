@@ -45,6 +45,18 @@
   margin-bottom: 24px;
 }
 
+.article-content h2 {
+  line-height: 1.25;
+  margin-bottom: 10px;
+  color: #374151;
+}
+
+.article-content blockquote {
+  line-height: 1.25;
+  margin-left: 20px;
+  color: #374151;
+}
+
 .article-content p {
   line-height: 1.75;
   margin-bottom: 18px;
