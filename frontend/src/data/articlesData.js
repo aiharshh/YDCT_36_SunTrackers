@@ -42,8 +42,8 @@ export const articles = [
         title: "Why Shifting to Solar Energy is Essential for the Future",
         description:
             "Solar energy plays a key role in reducing reliance on fossil fuels, lowering emissions, and building a cleaner and more resilient energy system for the next generation.",
-        image: "https://img.youtube.com/vi/9orGjtpbLQQ/hqdefault.jpg",
-        videoId: "9orGjtpbLQQ",
+        image: "https://img.youtube.com/vi/JWDHA960Gu0/hqdefault.jpg",
+        videoId: "JWDHA960Gu0",
         content: [
             {
                 type: "paragraph",
@@ -70,8 +70,8 @@ export const articles = [
         date: "Jan 30, 2026",
         title: "Green Returns: Environmental and Economic Value from Solar Energy",
         description: "Understanding how solar energy creates both environmental and financial value.",
-        image: "https://img.youtube.com/vi/9orGjtpbLQQ/hqdefault.jpg",
-        videoId: "9orGjtpbLQQ",
+        image: "https://img.youtube.com/vi/UT6rRfBthzY/hqdefault.jpg",
+        videoId: "UT6rRfBthzY",
         content: [
             {
                 type: "paragraph",
@@ -97,13 +97,13 @@ export const articles = [
         readTime: "5 min read",
     },
     {
-        slug: "lorem-ipsum-investment",
+        slug: "understanding-the-solar-calculator",
         category: "Finance",
         date: "Jan 30, 2026",
         title: "Understanding the Solar Calculator : How the Estimates Are Derived",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://img.youtube.com/vi/9orGjtpbLQQ/hqdefault.jpg",
-        videoId: "9orGjtpbLQQ",
+        description: "A decision-support calculator designed to translate complex solar assumptions into accessible, early-stage insights.",
+        image: "https://img.youtube.com/vi/jEw1Ofbkt7o/hqdefault.jpg",
+        videoId: "jEw1Ofbkt7o",
         content: [
             {
                 type: "heading",
@@ -242,8 +242,8 @@ export const articles = [
         date: "Jan 30, 2026",
         title: "Understanding Net Metering and Solar Energy Consumption",
         description: "Learn how net metering works and how it benefits solar energy consumers.",
-        image: "https://img.youtube.com/vi/9orGjtpbLQQ/hqdefault.jpg",
-        videoId: "9orGjtpbLQQ",
+        image: "https://img.youtube.com/vi/c3fYcTuOys0/hqdefault.jpg",
+        videoId: "c3fYcTuOys0",
         content: [
             {
                 type: "paragraph",
@@ -269,16 +269,24 @@ export const articles = [
         readTime: "5 min read",
     },
     {
-        slug: "lorem-ipsum-invest",
+        slug: "solar-vending",
         category: "Community",
         date: "Jan 30, 2026",
-        title: "Lorem Ipsum Dolor Sit Amet",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://img.youtube.com/vi/9orGjtpbLQQ/hqdefault.jpg",
-        videoId: "9orGjtpbLQQ",
+        title: "Solar Vending : A New Model for Solar Energy Distribution",
+        description: "A new model for solar energy distribution that leverages vending machines to make solar power more accessible.",
+        image: "https://img.youtube.com/vi/Jb3pYSeeVOA/hqdefault.jpg",
+        videoId: "Jb3pYSeeVOA",
         content: [
           {
+              type: "heading",
+              text: "Lorem Ipsum Dolor Sit Amet",
+          },
+          {
               type: "paragraph",
+              text: "Lorem Ipsum Dolor Sit Amet",
+          },
+          {
+              type: "quote",
               text: "Lorem Ipsum Dolor Sit Amet",
           },
         ],

@@ -32,7 +32,6 @@ export default function Articles() {
                 Empowering West Java with sustainable solar energy education, investment trends, and technical guides.
             </p>
 
-            {/* FILTER */}
             <div className="filter-bar">
                 {categories.map((cat) => (
                 <button
