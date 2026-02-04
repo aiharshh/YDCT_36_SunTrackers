@@ -6,8 +6,8 @@ export const articles = [
         title: "What is a Carbon Footprint and Why Does it Matter?",
         description:
             "Understanding carbon footprint helps individuals and communities recognize how daily activities impact the environment.",
-        image: "https://img.youtube.com/vi/9orGjtpbLQQ/hqdefault.jpg",
-        videoId: "9orGjtpbLQQ",
+        image: "https://img.youtube.com/vi/glLqx2Wq0dM/hqdefault.jpg",
+        videoId: "glLqx2Wq0dM",
         content: [
             {
                 type: "paragraph",
@@ -234,7 +234,7 @@ export const articles = [
                 text: "The solar calculator is designed as an educational decision-support tool, not as an exact prediction of real-world performance. Its primary purpose is to help users understand how different factors-such as location, electricity usage, roof conditions, and financing models-affect the potential impact of installing solar panels. This article explains the key assumptions and logic behind the calculator, especially aspects that may not be fully covered in the video",
             },
         ],
-        readTime: "5 min read",
+        readTime: "15 min read",
     },
     {
         slug: "net-metering-solar-energy-consumption",
@@ -278,16 +278,20 @@ export const articles = [
         videoId: "Jb3pYSeeVOA",
         content: [
           {
-              type: "heading",
-              text: "Lorem Ipsum Dolor Sit Amet",
+              type: "paragraph",
+              text: "Solar vendoring refers to the ecosystem of professionals and organizations responsible for delivering solar projects-from design and installation to operation and maintenance. Reliable vendoring is essential for ensuring that solar systems perform safely and efficiently over their lifetime.",
           },
           {
               type: "paragraph",
-              text: "Lorem Ipsum Dolor Sit Amet",
+              text: "For schools and community buildings, solar vendoring simplifies the transition to renewable energy. Vendors assess rooftops, design systems, install equipment, and ensure compliance with technical standards. Once systems are operational, vendors provide maintenance and performance support.",
           },
           {
-              type: "quote",
-              text: "Lorem Ipsum Dolor Sit Amet",
+              type: "paragraph",
+              text: "However, one common challenge is the lack of transparency after installation. Building owners may not know whether systems are operating optimally or delivering promised benefits. This is where Solar Trackers plays a critical supporting role.",
+          },
+          {
+              type: "paragraph",
+              text: "By continuously monitoring system performance, Solar Trackers creates accountability across the solar value chain. Vendors can verify system output, institutions can track performance, and stakeholders can identify issues early. This data-driven approach strengthens trust, improves system reliability, and supports long-term success of solar projects.",
           },
         ],
         readTime: "5 min read",
