@@ -7,22 +7,45 @@ import Planner from './pages/Planner';
 import Invest from './pages/Invest';
 import Analysis from './pages/Analysis';
 import Chat from './pages/Chat';
+import Profile from './pages/Profile';
+import SolarPanelExplanation from './components/SolarPanelExplanation.jsx';
+
+import Checkout from './pages/Checkout.jsx';
+import TopUp from './pages/TopUp.jsx';
+import Receipt from './pages/Receipt.jsx';
+
+import Articles from './pages/Articles';
+import ArticleDetail from "./pages/ArticleDetail";
+import ScrollToTop from './components/ScrollToTop';
+import Portfolio from './pages/Portfolio.jsx';
 
 function AppRoutes() {
   const location = useLocation();
-  const showNavbar = location.pathname !== '/';
+  const showNavbar = location.pathname !== '/login';
 
   return (
     <>
       {showNavbar && <Navbar />}
-
+      <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/planner" element={<Planner />} />
         <Route path="/invest" element={<Invest />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/analysis" element={<Analysis />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/solarExplanation" element={<SolarPanelExplanation />} />
+
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="topUp"element={<TopUp />} />
+        <Route path="/receipt" element={<Receipt />} />
+
+        <Route path="/articles" element={<Articles />} />
+        <Route path="/articles/:slug" element={<ArticleDetail />} />
+      <Route path="/portfolio" element={<Portfolio />} />
+
       </Routes>
     </>
   );
