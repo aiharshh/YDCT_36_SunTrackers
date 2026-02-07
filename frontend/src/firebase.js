@@ -1,26 +1,27 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getDatabase } from "firebase/database"; // Use getDatabase
-import { ref, set } from "firebase/database"; // Import these
+import { getDatabase, ref, set } from "firebase/database";
 
-
+// 🔐 Firebase config from Vite env
 const firebaseConfig = {
-  apiKey: "AIzaSyC_wDHvEJc1z5FNepW9TxSwr6qHpLcXAVY",
-  authDomain: "suntrackers-9171b.firebaseapp.com",
-  databaseURL: "https://suntrackers-9171b-default-rtdb.firebaseio.com/", // Required for RTDB
-  projectId: "suntrackers-9171b",
-  storageBucket: "suntrackers-9171b.firebasestorage.app",
-  messagingSenderId: "752736161128",
-  appId: "1:752736161128:web:5078cbc2d928a9cc705add"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Exports
 export const auth = getAuth(app);
-// FIX: Export Realtime Database instead of Firestore
 export const db = getDatabase(app);
 
 // --- Authentication Helpers ---
+
 const mapAuthError = (err) => {
   const code = err?.code || "";
   switch (code) {
@@ -31,31 +32,30 @@ const mapAuthError = (err) => {
     case "auth/invalid-email":
       return "Email format is invalid.";
     case "auth/email-already-in-use":
-      return "Email already in use. Please use a different email.";
+      return "Email already in use.";
     case "auth/weak-password":
-      return "Password too weak. Please choose a stronger password.";
+      return "Password too weak.";
     case "auth/too-many-requests":
-      return "Too many unsuccessful login attempts. Please try again later.";
+      return "Too many attempts. Try later.";
     default:
       return err?.message || "Authentication failed.";
   }
 };
+
 export const registerUser = async (email, password) => {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, password);
     const user = result.user;
 
-    // We use set() to create the user node with the initial 15M grant
     await set(ref(db, `users/${user.uid}`), {
       email: user.email,
-      walletBalance: 15000000, // 15 Millioncredits
-      createdAt: new Date().toISOString()
+      walletBalance: 15000000,
+      createdAt: new Date().toISOString(),
     });
 
-    return { user: user, error: "" };
+    return { user, error: "" };
   } catch (error) {
-    // Check if the email already exists or if password is too weak
-    console.error("Signup Error:", error.code); 
+    console.error("Signup Error:", error.code);
     return { user: null, error: mapAuthError(error) };
   }
 };
