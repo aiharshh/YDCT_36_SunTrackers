@@ -71,7 +71,7 @@ export default function Articles() {
                 <h2>Solar Vendors in West Java</h2>
                 <p className="vendor-subtitle">
                     Solar panel vendors across Bandung, Bekasi, Cirebon, and Bogor.
-                    <br />
+                    <br/>
                     <span className="vendor-disclaimer">
                         Users are advised to independently verify vendors before making any transactions.
                         All transactions conducted between users and vendors are outside of our responsibility.
@@ -88,14 +88,9 @@ export default function Articles() {
                         </div>
 
                         <p className="vendor-category">{vendor.category}</p>
+                        <p className="vendor-category">{vendor.phone}</p>
 
                         <div className="vendor-actions">
-                        {vendor.phone && (
-                            <a href={`tel:${vendor.phone}`} className="vendor-btn">
-                            <i className="bi bi-whatsapp"></i> Chat
-                            </a>
-                        )}
-                        {vendor.website && (
                             <a
                             href={vendor.website}
                             target="_blank"
@@ -104,7 +99,6 @@ export default function Articles() {
                             >
                             <i className="bi bi-globe"></i> Website
                             </a>
-                        )}
                         </div>
                     </div>
                     ))}
