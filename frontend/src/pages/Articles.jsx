@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Articles.css";
 import { articles } from "../data/articlesData";
+import { vendors } from "../data/vendor";
 
 const categories = [
     "All",
@@ -65,6 +66,44 @@ export default function Articles() {
                     </div>
                     ))}
             </div>
+
+            <div className="vendor-section">
+                <h2>Solar Vendors in West Java</h2>
+                <p className="vendor-subtitle">
+                    Trusted solar panel vendors across Bandung, Bekasi, Cirebon, and Bogor.
+                </p>
+
+                <div className="vendor-grid">
+                    {vendors.map((vendor, index) => (
+                    <div className="vendor-card" key={index}>
+                        <div className="vendor-header">
+                        <h3>{vendor.name}</h3>
+                        <span className="vendor-location">{vendor.location}</span>
+                        </div>
+
+                        <p className="vendor-category">{vendor.category}</p>
+
+                        <div className="vendor-actions">
+                        {vendor.phone && (
+                            <a href={`tel:${vendor.phone}`} className="vendor-btn">
+                            <i className="bi bi-whatsapp"></i> Chat
+                            </a>
+                        )}
+                        {vendor.website && (
+                            <a
+                            href={vendor.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="vendor-btn outline"
+                            >
+                            <i className="bi bi-globe"></i> Website
+                            </a>
+                        )}
+                        </div>
+                    </div>
+                    ))}
+                </div>
+                </div>
         </div>
     );
 }
