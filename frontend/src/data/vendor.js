@@ -25,6 +25,6 @@ export const vendors = [
     location: "Bekasi, Bogor",
     category: "Solar Energy Distributor",
     phone: "+6281283783722",
-    website: "http://www.panelsuryajakarta.com/",
+    website: "https://panelsuryajakarta.com/product/jual-panel-surya-kota-bekasi-jawa-barat-hp-0812-837-837-22/",
   },
 ];

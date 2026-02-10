@@ -70,7 +70,13 @@ export default function Articles() {
             <div className="vendor-section">
                 <h2>Solar Vendors in West Java</h2>
                 <p className="vendor-subtitle">
-                    Trusted solar panel vendors across Bandung, Bekasi, Cirebon, and Bogor.
+                    Solar panel vendors across Bandung, Bekasi, Cirebon, and Bogor.
+                    <br />
+                    <span className="vendor-disclaimer">
+                        Users are advised to independently verify vendors before making any transactions.
+                        All transactions conducted between users and vendors are outside of our responsibility.
+                        This website is created for academic purposes and does not guarantee the legitimacy of vendors.
+                    </span>
                 </p>
 
                 <div className="vendor-grid">
