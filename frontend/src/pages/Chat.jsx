@@ -1,9 +1,13 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
 import LanguageContext from "../context/LanguageContext";
 import "../styles/Chat.css";
 
-// Navigation data structure for chatbot navigation
+// Protected routes that require authentication
+const PROTECTED_ROUTES = ["/analysis", "/profile"];
+
 export const NAVIGATION_PAGES = [
   { 
     route: "/home", 
@@ -27,7 +31,8 @@ export const NAVIGATION_PAGES = [
     route: "/analysis", 
     label: "📊 Impact Dashboard", 
     description: "View real-time monitoring of solar installations (requires login)",
-    keywords: ["analysis", "dashboard", "impact", "monitor", "monitoring", "data", "stats", "carbon", "co2", "realtime"]
+    keywords: ["analysis", "dashboard", "impact", "monitor", "monitoring", "data", "stats", "carbon", "co2", "realtime"],
+    requiresAuth: true
   },
   { 
     route: "/articles", 
@@ -51,7 +56,8 @@ export const NAVIGATION_PAGES = [
     route: "/profile", 
     label: "👤 Profile", 
     description: "View your investments, settings, and activity history (requires login)",
-    keywords: ["profile", "account", "settings", "history", "my investments"]
+    keywords: ["profile", "account", "settings", "history", "my investments"],
+    requiresAuth: true
   },
 ];
 
@@ -68,9 +74,20 @@ export default function Chat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [suggestedPage, setSuggestedPage] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const [pendingRoute, setPendingRoute] = useState(null);
 
   const boxRef = useRef(null);
   const firstRender = useRef(true);
+
+  // Track authentication state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (firstRender.current) {
@@ -78,7 +95,7 @@ export default function Chat() {
       return;
     }
     if (boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight;
-  }, [messages, loading]);
+  }, [messages, loading, showAuthPrompt]);
 
   // Detect which page is relevant based on user input
   const detectRelevantPage = (userInput) => {
@@ -94,10 +111,33 @@ export default function Chat() {
     return null;
   };
 
-  // Navigate to a page
+  // Navigate to a page with auth check
   const handleNavigate = (route) => {
+    // Check if route requires authentication
+    const page = NAVIGATION_PAGES.find(p => p.route === route);
+    if (page?.requiresAuth && !isAuthenticated) {
+      setPendingRoute(route);
+      setShowAuthPrompt(true);
+      setSuggestedPage(null);
+      return;
+    }
+    
     navigate(route);
     setSuggestedPage(null);
+    setShowAuthPrompt(false);
+  };
+
+  // Handle login button click
+  const handleLoginClick = () => {
+    navigate("/login");
+    setShowAuthPrompt(false);
+    setPendingRoute(null);
+  };
+
+  // Handle close auth prompt
+  const closeAuthPrompt = () => {
+    setShowAuthPrompt(false);
+    setPendingRoute(null);
   };
 
   // Render content with navigation links
@@ -248,7 +288,7 @@ export default function Chat() {
   const navigationSuggestions = [
     { route: "/planner", label: "☀️ Calculator", icon: "bi-calculator" },
     { route: "/invest", label: "🤝 Invest", icon: "bi-cash-coin" },
-    { route: "/analysis", label: "📊 Dashboard", icon: "bi-bar-chart" },
+    { route: "/analysis", label: "📊 Dashboard", icon: "bi-bar-chart", requiresAuth: true },
     { route: "/articles", label: "📚 Articles", icon: "bi-book" },
   ];
 
@@ -316,8 +356,43 @@ export default function Chat() {
               );
             })}
 
+            {/* Authentication required prompt */}
+            {showAuthPrompt && (
+              <div className="msgRow ai">
+                <div className="avatar">
+                  <i className="bi bi-robot" />
+                </div>
+                <div className="bubble bubbleAi authPromptBubble">
+                  <div className="authPrompt">
+                    <div className="authPromptHeader">
+                      <i className="bi bi-shield-lock"></i>
+                      <span>Authentication Required</span>
+                    </div>
+                    <p className="authPromptText">
+                      Please log in or create an account to access the Impact Dashboard and view real-time solar monitoring data.
+                    </p>
+                    <div className="authPromptButtons">
+                      <button 
+                        className="authPromptLoginBtn"
+                        onClick={handleLoginClick}
+                      >
+                        <i className="bi bi-box-arrow-in-right"></i>
+                        Go to Login
+                      </button>
+                      <button 
+                        className="authPromptCancelBtn"
+                        onClick={closeAuthPrompt}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Navigation suggestion button */}
-            {suggestedPage && !loading && (
+            {suggestedPage && !loading && !showAuthPrompt && (
               <div className="msgRow ai">
                 <div className="avatar">
                   <i className="bi bi-robot" />
@@ -364,9 +439,9 @@ export default function Chat() {
                 <button
                   key={i}
                   type="button"
-                  className="quickNavBtn"
+                  className={`quickNavBtn ${nav.requiresAuth ? 'requires-auth' : ''}`}
                   onClick={() => handleNavigate(nav.route)}
-                  title={`Navigate to ${nav.label}`}
+                  title={nav.requiresAuth ? "Requires login to access" : `Navigate to ${nav.label}`}
                 >
                   <i className={`bi ${nav.icon}`}></i>
                   <span>{nav.label}</span>
