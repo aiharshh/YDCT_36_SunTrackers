@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
+import Footer from './components/Footer.jsx';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Planner from './pages/Planner';
@@ -24,6 +25,7 @@ import { LanguageProvider } from './context/LanguageContext';
 function AppRoutes() {
   const location = useLocation();
   const showNavbar = location.pathname !== '/login';
+  const showFooter = location.pathname !== '/login';
 
   return (
     <>
@@ -49,6 +51,7 @@ function AppRoutes() {
       <Route path="/portfolio" element={<Portfolio />} />
 
       </Routes>
+      {showFooter && <Footer />}
     </>
   );
 }
