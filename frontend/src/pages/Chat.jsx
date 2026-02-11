@@ -1,16 +1,73 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import LanguageContext from "../context/LanguageContext";
 import "../styles/Chat.css";
 
+// Navigation data structure for chatbot navigation
+export const NAVIGATION_PAGES = [
+  { 
+    route: "/home", 
+    label: "🏠 Home", 
+    description: "Main landing page with hero section, featured articles, and quick actions",
+    keywords: ["home", "landing", "welcome", "hero", "main"]
+  },
+  { 
+    route: "/planner", 
+    label: "☀️ Solar Calculator", 
+    description: "Estimate solar savings, costs, payback period, CO₂ reduction",
+    keywords: ["calculator", "calculate", "savings", "cost", "payback", "size", "sizing", "panel", "kw", "kwp", "roi"]
+  },
+  { 
+    route: "/invest", 
+    label: "🤝 Invest", 
+    description: "Browse and invest in community solar projects",
+    keywords: ["invest", "investment", "project", "fund", "funding", "community", "donate", "support"]
+  },
+  { 
+    route: "/analysis", 
+    label: "📊 Impact Dashboard", 
+    description: "View real-time monitoring of solar installations (requires login)",
+    keywords: ["analysis", "dashboard", "impact", "monitor", "monitoring", "data", "stats", "carbon", "co2", "realtime"]
+  },
+  { 
+    route: "/articles", 
+    label: "📚 Knowledge Center", 
+    description: "Educational articles about solar energy, finance, and sustainability",
+    keywords: ["article", "learn", "education", "read", "article", "knowledge", "guide", "tutorial"]
+  },
+  { 
+    route: "/chat", 
+    label: "💬 AI Chat", 
+    description: "Talk to the AI assistant (current conversation)",
+    keywords: ["chat", "talk", "ask", "question", "assistant", "ai", "help"]
+  },
+  { 
+    route: "/login", 
+    label: "🔐 Login", 
+    description: "Sign in to access your account and track investments",
+    keywords: ["login", "signin", "sign in", "account", "authenticate"]
+  },
+  { 
+    route: "/profile", 
+    label: "👤 Profile", 
+    description: "View your investments, settings, and activity history (requires login)",
+    keywords: ["profile", "account", "settings", "history", "my investments"]
+  },
+];
+
 export default function Chat() {
+  const navigate = useNavigate();
+  const { t } = useContext(LanguageContext);
   const [messages, setMessages] = useState([
     {
       role: "assistant",
       content:
-        "Hello! I'm your AI Solar Assistant for PowerWestJava.\n\nI can help you with:\n• Solar system sizing and costs\n• Investment opportunities\n• Energy savings calculations\n• West Java solar policies\n\nHow can I help you today?",
+        "Hello! I'm your AI Solar Assistant for PowerWestJava.\n\nI can help you with:\n• Solar system sizing and costs\n• Investment opportunities\n• Energy savings calculations\n• West Java solar policies\n• Platform navigation\n\n💬 Saya juga bisa berbahasa Indonesia! Feel free to ask in English or Bahasa Indonesia.\n\nHow can I help you today?",
     },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [suggestedPage, setSuggestedPage] = useState(null);
 
   const boxRef = useRef(null);
   const firstRender = useRef(true);
@@ -23,7 +80,28 @@ export default function Chat() {
     if (boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight;
   }, [messages, loading]);
 
-  const renderContent = (text) => {
+  // Detect which page is relevant based on user input
+  const detectRelevantPage = (userInput) => {
+    const inputLower = userInput.toLowerCase();
+    
+    for (const page of NAVIGATION_PAGES) {
+      for (const keyword of page.keywords) {
+        if (inputLower.includes(keyword.toLowerCase())) {
+          return page;
+        }
+      }
+    }
+    return null;
+  };
+
+  // Navigate to a page
+  const handleNavigate = (route) => {
+    navigate(route);
+    setSuggestedPage(null);
+  };
+
+  // Render content with navigation links
+  const renderContent = (text, isLatestAssistantMessage = false) => {
     const lines = (text || "").split("\n");
     const blocks = [];
     let bullets = [];
@@ -41,6 +119,9 @@ export default function Chat() {
       }
     };
 
+    // Check for navigation link patterns like [Go to Calculator →](/planner)
+    const navigationLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    
     lines.forEach((raw) => {
       const line = raw.trimEnd();
 
@@ -56,11 +137,54 @@ export default function Chat() {
       }
 
       flushBullets();
-      blocks.push(
-        <p className="msgP" key={`p-${blocks.length}`}>
-          {line}
-        </p>
-      );
+
+      // Check for navigation links in the line
+      if (line.match(navigationLinkRegex)) {
+        const parts = [];
+        let lastIndex = 0;
+        let match;
+        
+        while ((match = navigationLinkRegex.exec(line)) !== null) {
+          // Add text before the link
+          if (match.index > lastIndex) {
+            parts.push(<span key={`text-${parts.length}`}>{line.substring(lastIndex, match.index)}</span>);
+          }
+          
+          // Add the navigation link
+          const linkText = match[1];
+          const linkRoute = match[2];
+          
+          parts.push(
+            <button
+              key={`nav-${parts.length}`}
+              className="nav-link-button"
+              onClick={() => handleNavigate(linkRoute)}
+              title={`Navigate to ${linkText}`}
+            >
+              {linkText}
+            </button>
+          );
+          
+          lastIndex = navigationLinkRegex.lastIndex;
+        }
+        
+        // Add remaining text
+        if (lastIndex < line.length) {
+          parts.push(<span key={`text-${parts.length}`}>{line.substring(lastIndex)}</span>);
+        }
+        
+        blocks.push(
+          <p className="msgP" key={`p-${blocks.length}`}>
+            {parts}
+          </p>
+        );
+      } else {
+        blocks.push(
+          <p className="msgP" key={`p-${blocks.length}`}>
+            {line}
+          </p>
+        );
+      }
     });
 
     flushBullets();
@@ -70,11 +194,18 @@ export default function Chat() {
   const send = async () => {
     if (!input.trim() || loading) return;
 
-    const userMsg = { role: "user", content: input.trim() };
+    const userInput = input.trim();
+    const userMsg = { role: "user", content: userInput };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
     setLoading(true);
+
+    // Detect relevant page from user input
+    const relevantPage = detectRelevantPage(userInput);
+    if (relevantPage) {
+      setSuggestedPage(relevantPage);
+    }
 
     try {
       const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5001";
@@ -114,6 +245,13 @@ export default function Chat() {
     "How to start investing in solar?",
   ];
 
+  const navigationSuggestions = [
+    { route: "/planner", label: "☀️ Calculator", icon: "bi-calculator" },
+    { route: "/invest", label: "🤝 Invest", icon: "bi-cash-coin" },
+    { route: "/analysis", label: "📊 Dashboard", icon: "bi-bar-chart" },
+    { route: "/articles", label: "📚 Articles", icon: "bi-book" },
+  ];
+
   return (
     <div className="chatShell">
       <div className="chatCard">
@@ -122,8 +260,8 @@ export default function Chat() {
             <i className="bi bi-robot" />
           </div>
           <div className="chatTopText">
-            <div className="chatTitle">AI Solar Assistant</div>
-            <div className="chatSub">Your expert guide to renewable energy in West Java.</div>
+            <div className="chatTitle">{t?.chatTitle || "AI Solar Assistant"}</div>
+            <div className="chatSub">{t?.chatSubtitle || "Your expert guide to renewable energy in West Java."}</div>
           </div>
         </div>
 
@@ -136,7 +274,7 @@ export default function Chat() {
                 <div className="hintBubble">
                   <i className="bi bi-lightbulb" />
                   <span>
-                    Try asking about <b>'payback period'</b> or <b>'West Java regulations'</b>.
+                    {t?.chatHint || "Try asking about"} <b>'payback period'</b> {t?.chatHint2 || "or"} <b>'West Java regulations'</b>.
                   </span>
                 </div>
               </div>
@@ -155,6 +293,7 @@ export default function Chat() {
             {messages.map((m, i) => {
               const isUser = m.role === "user";
               const isWelcome = !isUser && i === 0;
+              const isLatestAssistant = !isUser && i === messages.length - 1;
 
               return (
                 <div key={i} className={`msgRow ${isUser ? "user" : "ai"}`}>
@@ -165,7 +304,7 @@ export default function Chat() {
                   )}
 
                   <div className={`bubble ${isUser ? "bubbleUser" : "bubbleAi"} ${isWelcome ? "bubbleWelcome" : ""}`}>
-                    {renderContent(m.content)}
+                    {renderContent(m.content, isLatestAssistant)}
                   </div>
 
                   {isUser && (
@@ -176,6 +315,29 @@ export default function Chat() {
                 </div>
               );
             })}
+
+            {/* Navigation suggestion button */}
+            {suggestedPage && !loading && (
+              <div className="msgRow ai">
+                <div className="avatar">
+                  <i className="bi bi-robot" />
+                </div>
+                <div className="bubble bubbleAi navSuggestionBubble">
+                  <div className="navSuggestion">
+                    <span className="navSuggestionText">
+                      <i className="bi bi-arrow-right-circle"></i>
+                      Would you like to explore <strong>{suggestedPage.label.replace(/[^a-zA-Z0-9 ]/g, '')}</strong>?
+                    </span>
+                    <button 
+                      className="navSuggestionBtn"
+                      onClick={() => handleNavigate(suggestedPage.route)}
+                    >
+                      Go to {suggestedPage.label} →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {loading && (
               <div className="msgRow ai">
@@ -188,10 +350,29 @@ export default function Chat() {
                     <span />
                     <span />
                   </div>
-                  <span className="typingText">AI is thinking...</span>
+                  <span className="typingText">{t?.aiThinking || "AI is thinking..."}</span>
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Quick navigation bar */}
+          <div className="quickNavBar">
+            <span className="quickNavLabel">{t?.quickNavLabel || "Quick Navigation:"}</span>
+            <div className="quickNavButtons">
+              {navigationSuggestions.map((nav, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className="quickNavBtn"
+                  onClick={() => handleNavigate(nav.route)}
+                  title={`Navigate to ${nav.label}`}
+                >
+                  <i className={`bi ${nav.icon}`}></i>
+                  <span>{nav.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="composerCard">
@@ -201,7 +382,7 @@ export default function Chat() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKey}
-                  placeholder="Ask about solar sizing, payback, investments..."
+                  placeholder={t?.chatPlaceholder || "Ask about solar sizing, payback, investments, or navigation..."}
                   className="composerTextarea"
                   spellCheck={false}
                 />
@@ -231,7 +412,7 @@ export default function Chat() {
           <div className="infoBar">
             <i className="bi bi-info-circle" />
             <span>
-              This AI assistant provides educational information. For official advice, consult certified solar professionals.
+              {t?.aiDisclaimer || "This AI assistant provides educational information. For official advice, consult certified solar professionals."}
             </span>
           </div>
         </div>
@@ -239,3 +420,4 @@ export default function Chat() {
     </div>
   );
 }
+

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Articles.css";
 import { articles } from "../data/articlesData";
 import { vendors } from "../data/vendor";
+import LanguageContext from "../context/LanguageContext";
 
 const categories = [
     "All",
@@ -14,6 +15,7 @@ const categories = [
 ];
 
 export default function Articles() {
+  const { t } = useContext(LanguageContext);
   const [activeCategory, setActiveCategory] = useState("All");
 
   const filteredArticles =
@@ -35,17 +37,17 @@ export default function Articles() {
     </div>
     <a href="#vendor-section" className="vendor-pin-cta">
         <i className="bi bi-lightning-charge-fill"></i>
-        View All Vendors
+        {t?.viewAllVendors || "View All Vendors"}
     </a>
 </div>
             <div className="breadcrumbs">
-                <Link to="/"><i className="bi bi-house"></i> Home</Link>
+                <Link to="/"><i className="bi bi-house"></i> {t?.home || "Home"}</Link>
                 <span>/</span>
-                <span>Articles</span>
+                <span>{t?.articles || "Articles"}</span>
             </div>
-            <h1>Latest Insights</h1>
+            <h1>{t?.latestInsights || "Latest Insights"}</h1>
             <p className="subtitle">
-                Empowering West Java with sustainable solar energy education, investment trends, and technical guides.
+                {t?.articlesSubtitle || "Empowering West Java with sustainable solar energy education, investment trends, and technical guides."}
             </p>
 
             <div className="filter-bar">
@@ -75,7 +77,7 @@ export default function Articles() {
                                 <h3>{item.title}</h3>
                                 <p>{item.description}</p>
                             <Link to={`/articles/${item.slug}`} className="read-more">
-                                Read More →
+                                {t?.readMore || "Read More"} →
                             </Link>
                         </div>
                     </div>
@@ -87,17 +89,15 @@ export default function Articles() {
 <div className="vendor-section" id="vendor-section">
 
   <div className="vendor-section-label">
-    <i className="bi bi-geo-alt-fill"></i> West Java Directory
+    <i className="bi bi-geo-alt-fill"></i> {t?.westJavaDirectory || "West Java Directory"}
   </div>
 
-  <h2>Solar Vendors in West Java</h2>
+  <h2>{t?.solarVendors || "Solar Vendors in West Java"}</h2>
   <p className="vendor-subtitle">
-    Solar panel vendors across Bandung, Bekasi, Cirebon, and Bogor.
+    {t?.vendorSubtitle || "Solar panel vendors across Bandung, Bekasi, Cirebon, and Bogor."}
     <br />
     <span className="vendor-disclaimer">
-      Users are advised to independently verify vendors before making any transactions.
-      All transactions conducted between users and vendors are outside of our responsibility.
-      This website is created for academic purposes and does not guarantee the legitimacy of vendors.
+      {t?.vendorDisclaimer || "Users are advised to independently verify vendors before making any transactions. All transactions conducted between users and vendors are outside of our responsibility. This website is created for academic purposes and does not guarantee the legitimacy of vendors."}
     </span>
   </p>
 
@@ -119,7 +119,7 @@ export default function Articles() {
             rel="noopener noreferrer"
             className="vendor-btn outline"
           >
-            <i className="bi bi-globe"></i> Website
+            <i className="bi bi-globe"></i> {t?.website || "Website"}
           </a>
         </div>
       </div>

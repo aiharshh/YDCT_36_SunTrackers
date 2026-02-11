@@ -1,14 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { articles } from "../data/articlesData";
+import LanguageContext from "../context/LanguageContext";
 import "../styles/Home.css";
 
 export default function Home() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const { t } = useContext(LanguageContext);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUser(u));
@@ -34,24 +36,23 @@ export default function Home() {
       <section className="hero">
         <div className="heroOverlay" />
         <div className="heroInner">
-          <div className="heroBadge">Dream West Java Progressing Towards Reality</div>
+          <div className="heroBadge">{t?.heroBadge || "Dream West Java Progressing Towards Reality"}</div>
 
           <h1 className="heroTitle">
-            Welcome to the <span>Green Future</span>
+            {t?.heroTitle || "Welcome to the"} <span>{t?.cleanEnergy || "Green Future"}</span>
           </h1>
 
           <p className="heroSubtitle">
-            Empowering communities with sustainable solar energy solutions. Calculate savings,
-            invest in local projects, and track our collective impact.
+            {t?.heroSubtitle || "Empowering communities with sustainable solar energy solutions. Calculate savings, invest in local projects, and track our collective impact."}
           </p>
 
           <div className="heroActions">
             <Link to="/analysis" className="heroBtn heroBtnPrimary">
-              Explore Solutions <span aria-hidden="true">→</span>
+              {t?.exploreSolutions || "Explore Solutions"} <span aria-hidden="true">→</span>
             </Link>
 
             <Link to="/solarExplanation" className="heroBtn heroBtnGhost">
-              See Explanation
+              {t?.seeExplanation || "See Explanation"}
             </Link>
           </div>
         </div>
@@ -66,24 +67,22 @@ export default function Home() {
       <main className="content">
         <section className="infoCard">
           <div className="infoLeft">
-            <p className="infoKicker">HOW SOLAR WORKS</p>
+            <p className="infoKicker">{t?.howSolarWorks || "HOW SOLAR WORKS"}</p>
             <h2 className="infoTitle">
-              Harness the <span>Sun's Power</span>.
+              {t?.harnessSun || "Harness the"} <span>{t?.cleanEnergy || "Sun's Power"}</span>.
             </h2>
             <p className="infoText">
-              Solar panels convert sunlight into DC electricity. An inverter converts this into AC
-              electricity, which powers your home. Excess energy flows back to the grid or charges
-              your battery, ensuring you always have power when you need it.
+              {t?.solarDescription || "Solar panels convert sunlight into DC electricity. An inverter converts this into AC electricity, which powers your home. Excess energy flows back to the grid or charges your battery, ensuring you always have power when you need it."}
             </p>
 
             <div className="infoPills">
-              <div className="pill"><i className="bi bi-sun-fill"></i> Clean Energy</div>
-              <div className="pill"><i className="bi bi-piggy-bank-fill"></i> Cost Savings</div>
+              <div className="pill"><i className="bi bi-sun-fill"></i> {t?.cleanEnergy || "Clean Energy"}</div>
+              <div className="pill"><i className="bi bi-piggy-bank-fill"></i> {t?.costSavings || "Cost Savings"}</div>
             </div>
 
             <div className="infoActions">
               <Link to="/solarExplanation" className="infoBtn infoBtnPrimary">
-                Read More <span aria-hidden="true">→</span>
+                {t?.readMore || "Read More"} <span aria-hidden="true">→</span>
               </Link>
             </div>
           </div>
@@ -107,13 +106,12 @@ export default function Home() {
               <i className="bi bi-calculator"></i>
             </div>
 
-            <h2 className="homeCardTitle">Plan Solar</h2>
+            <h2 className="homeCardTitle">{t?.planSolar || "Plan Solar"}</h2>
             <p className="homeCardText">
-              Calculate potential costs & savings for your school or home. 
-              Get a personalized estimate tailored to West Java's sunlight data
+              {t?.planSolarText || "Calculate potential costs & savings for your school or home. Get a personalized estimate tailored to West Java's sunlight data"}
             </p>
             <Link to="/planner">
-              <button className="homeBtn" type="button">Open Calculator</button>
+              <button className="homeBtn" type="button">{t?.openCalculator || "Open Calculator"}</button>
             </Link>
           </div>
 
@@ -126,13 +124,12 @@ export default function Home() {
               <i className="bi bi-cash-stack"></i>
             </div>
 
-            <h2 className="homeCardTitle">Invest</h2>
+            <h2 className="homeCardTitle">{t?.investTitle || "Invest"}</h2>
             <p className="homeCardText">
-              Fund community solar projects and earn green returns. 
-              Empower local growth while contributing to a sustainable grid. 
+              {t?.investText || "Fund community solar projects and earn green returns. Empower local growth while contributing to a sustainable grid."}
             </p>
             <Link to="/invest">
-              <button className="homeBtn" type="button">Browse Projects</button>
+              <button className="homeBtn" type="button">{t?.browseProjects || "Browse Projects"}</button>
             </Link>
           </div>
 
@@ -145,13 +142,12 @@ export default function Home() {
               <i className="bi bi-bar-chart-line"></i>
             </div>
 
-            <h2 className="homeCardTitle">Impact Analysis</h2>
+            <h2 className="homeCardTitle">{t?.impactAnalysis || "Impact Analysis"}</h2>
             <p className="homeCardText">
-              Track West Java's carbon reduction progress visually. 
-              See real-time data on energy generation and environmental benefits. 
+              {t?.impactText || "Track West Java's carbon reduction progress visually. See real-time data on energy generation and environmental benefits."}
             </p>
             <button className="homeBtn homeBtn--primary" onClick={handleAnalysisClick} type="button">
-              View Dashboard
+              {t?.viewDashboard || "View Dashboard"}
             </button>
           </div>
         </div>
@@ -159,15 +155,15 @@ export default function Home() {
         <section className="insightsSection">
           <div className="insightsHeader">
             <div>
-              <p className="insightsKicker">KNOWLEDGE CENTER</p>
-              <h2 className="insightsTitle">Solar Insights</h2>
+              <p className="insightsKicker">{t?.knowledgeCenter || "KNOWLEDGE CENTER"}</p>
+              <h2 className="insightsTitle">{t?.solarInsights || "Solar Insights"}</h2>
               <p className="insightsSubtitle">
-                Stay updated with the latest in solar technology, community stories, and sustainable living tips in West Java. 
+                {t?.insightsSubtitle || "Stay updated with the latest in solar technology, community stories, and sustainable living tips in West Java."}
               </p>
             </div>
 
             <Link to="/articles" className="insightsViewAll">
-              View All Articles →
+              {t?.viewAllArticles || "View All Articles →"}
             </Link>
           </div>
 
