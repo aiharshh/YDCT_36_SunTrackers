@@ -20,11 +20,11 @@ const Footer = () => {
             <h3>SunTrackers Team</h3>
             <ul>
               <li>Febian Nurwanto</li>
-              <li>Shraddha Gajanan Desai</li>
               <li>Harsh Hublikar</li>
               <li>Isha Samanat</li>
               <li>Kim Seulkichan</li>
               <li>Kishore K</li>
+              <li>Shraddha Gajanan Desai</li>
             </ul>
           </div>
 
