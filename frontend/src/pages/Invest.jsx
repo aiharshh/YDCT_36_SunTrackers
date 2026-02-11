@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import confetti from 'canvas-confetti';
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase';
 import HowInvestmentWorks from '../components/HowInvestmentWorks.jsx';
+import LanguageContext from '../context/LanguageContext';
 
 import '../styles/Invest.css';
 
 export default function Invest() {
+  const { t } = useContext(LanguageContext);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
@@ -122,9 +124,9 @@ const handleInvestClick = (projectId) => {
 
   return (
     <div className="container">
-      <h1 className='investTitle'>🤝 Community Financing</h1>
+      <h1 className='investTitle'>🤝 {t?.communityFinancing || "Community Financing"}</h1>
       <p style={{ textAlign: 'center', color: '#666', marginBottom: '30px' }}>
-        Invest in local solar projects and earn green returns.
+        {t?.investSubtitle || "Invest in local solar projects and earn green returns."}
       </p>
       <HowInvestmentWorks />
       <div className="grid">
@@ -149,7 +151,7 @@ const handleInvestClick = (projectId) => {
               </div>
 
               <div style={{ marginTop: '15px', marginBottom: '5px', fontSize: '0.9rem', color: '#555' }}>
-                <span>Raised: Rp {(project.raised / 1000000).toFixed(1)} Juta</span>
+                <span>{t?.raised || "Raised"}: Rp {(project.raised / 1000000).toFixed(1)} Juta</span>
                 <span style={{ float: 'right' }}>{Math.round((project.raised / project.target) * 100)}%</span>
               </div>
 
@@ -167,7 +169,7 @@ const handleInvestClick = (projectId) => {
 
               <br />
               <button className="btn" onClick={() => handleInvestClick(project.id)}>
-                Invest Rp 500.000
+                {t?.investAmount || "Invest Rp 500.000"}
               </button>
             </div>
           </div>

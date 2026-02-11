@@ -1,12 +1,14 @@
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
+import LanguageContext from '../context/LanguageContext';
 import '../styles/Navbar.css';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { language, toggleLanguage, t } = useContext(LanguageContext);
 
   const [user, setUser] = useState(null);
 
@@ -117,23 +119,23 @@ export default function Navbar() {
             </button>
 
             <NavLink to="/home" onClick={closeMenu} className={({ isActive }) => (isActive ? 'active' : '')}>
-              HOME
+              {t?.home || "HOME"}
             </NavLink>
 
             <NavLink to="/articles" onClick={closeMenu} className={({ isActive }) => (isActive ? 'active' : '')}>
-              AWARENESS
+              {t?.awareness || "AWARENESS"}
             </NavLink>
 
             <NavLink to="/planner" onClick={closeMenu} className={({ isActive }) => (isActive ? 'active' : '')}>
-              CALCULATOR
+              {t?.calculator || "CALCULATOR"}
             </NavLink>
 
             <NavLink to="/invest" onClick={closeMenu} className={({ isActive }) => (isActive ? 'active' : '')}>
-              INVEST
+              {t?.invest || "INVEST"}
             </NavLink>
 
             <NavLink to="/chat" onClick={closeMenu} className={({ isActive }) => (isActive ? 'active' : '')}>
-              CHAT
+              {t?.chat || "CHAT"}
             </NavLink>
 
             <NavLink
@@ -144,12 +146,12 @@ export default function Navbar() {
               }}
               className={({ isActive }) => (isActive ? 'active' : '')}
             >
-              ANALYSIS
+              {t?.analysis || "ANALYSIS"}
             </NavLink>
             
             {!user ? (
               <NavLink to="/login" onClick={closeMenu} className="nav-btn">
-                LOGIN
+                {t?.login || "LOGIN"}
               </NavLink>
             ) : (
               <>
@@ -159,11 +161,11 @@ export default function Navbar() {
                     onClick={closeMenu}
                     className={({ isActive }) => (isActive ? 'active' : '')}
                   >
-                    PROFILE
+                    {t?.profile || "PROFILE"}
                   </NavLink>
 
                   <button type="button" className="nav-link" onClick={handleLogout}>
-                    LOGOUT
+                    {t?.logout || "LOGOUT"}
                   </button>
                 </div>
 
@@ -195,7 +197,7 @@ export default function Navbar() {
                           }}
                           role="menuitem"
                         >
-                          Profile
+                          {t?.profile || "Profile"}
                         </button>
 
                         <div className="userDropdownDivider" />
@@ -206,7 +208,7 @@ export default function Navbar() {
                           onClick={handleLogout}
                           role="menuitem"
                         >
-                          Logout
+                          {t?.logout || "Logout"}
                         </button>
                       </div>
                     )}
@@ -214,6 +216,18 @@ export default function Navbar() {
                 </div>
               </>
             )}
+            
+            {/* Language Toggle - Positioned at the end for better visibility */}
+            <button
+              type="button"
+              className="langToggle"
+              onClick={toggleLanguage}
+              title={language === 'en' ? 'Switch to Bahasa Indonesia' : 'Switch to English'}
+              aria-label={language === 'en' ? 'Switch to Bahasa Indonesia' : 'Switch to English'}
+            >
+              <span className="langIcon">🌐</span>
+              <span className="langLabel">{language === 'en' ? 'ID' : 'EN'}</span>
+            </button>
           </div>
         </div>
       </nav>

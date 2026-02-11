@@ -1,6 +1,7 @@
-import React, { useMemo, useState, useEffect, useRef, useId } from "react";
+import React, { useMemo, useState, useEffect, useRef, useId, useContext } from "react";
 import { calculateSolar } from "../services/api";
 import generateAdvisor from "../advisor/advisor";
+import LanguageContext from "../context/LanguageContext";
 import "../App.css";
 import "../styles/Planner.css";
 
@@ -235,6 +236,7 @@ function getLeftNote({ result, formData, localPreview }) {
 }
 
 export default function Planner() {
+  const { t } = useContext(LanguageContext);
   const [formData, setFormData] = useState({
     bill: "",
     district: "Bandung",
@@ -346,29 +348,26 @@ export default function Planner() {
         <aside className="plannerLeft">
           <div className="leftHeader">
             <h1 className="leftTitle">
-              <i className="bi bi-sun-fill"></i> Solar Calculator
+              <i className="bi bi-sun-fill"></i> {t?.solarCalculator || "Solar Calculator"}
             </h1>
-            <p className="leftSubtitle">Estimate solar savings, payback, and community-funded options.</p>
+            <p className="leftSubtitle">{t?.calcSubtitle || "Estimate solar savings, payback, and community-funded options."}</p>
           </div>
 
           <div className="plannerIntroNote">
             <i className="bi bi-info-circle"></i>
             <p>
-              This calculator uses a capacity range of <strong>1-10 kWp</strong> to represent a typical
-              initial installation in a small to medium-sized school, with a target energy offset of
-              approximately <strong>20-30%</strong>, in line with the common practice of phased
-              installations before large-scale system expansion.
+              {t?.calcIntro || "This calculator uses a capacity range of"} <strong>1-10 kWp</strong> {t?.calcIntro2 || "to represent a typical initial installation in a small to medium-sized school, with a target energy offset of approximately"} <strong>20-30%</strong>, {t?.calcIntro3 || "in line with the common practice of phased installations before large-scale system expansion."}
             </p>
           </div>
 
           <div className="plannerCard plannerFormCard">
             <label className="plannerLabel">
-              <strong>Monthly Electricity Bill (IDR)</strong>
+              <strong>{t?.monthlyBill || "Monthly Electricity Bill (IDR)"}</strong>
             </label>
             <input
               className="plannerInput"
               type="number"
-              placeholder="e.g. 2000000"
+              placeholder={t?.billPlaceholder || "e.g. 2000000"}
               value={formData.bill}
               onChange={(e) => setFormData({ ...formData, bill: e.target.value })}
             />
@@ -376,8 +375,8 @@ export default function Planner() {
             <div className="plannerFormGrid">
               <div>
                 <UiSelect
-                  label="District / Location"
-                  helpText="Used to estimate local sun hours and typical installed cost for your area."
+                  label={t?.districtLabel || "District / Location"}
+                  helpText={t?.districtHelp || "Used to estimate local sun hours and typical installed cost for your area."}
                   value={formData.district}
                   onChange={(v) => setFormData({ ...formData, district: v })}
                   options={[
@@ -391,8 +390,8 @@ export default function Planner() {
 
               <div>
                 <UiSelect
-                  label="User Type"
-                  helpText="Affects the electricity tariff and the target offset used to size the solar system."
+                  label={t?.userTypeLabel || "User Type"}
+                  helpText={t?.userTypeHelp || "Affects the electricity tariff and the target offset used to size the solar system."}
                   value={formData.userType}
                   onChange={(v) => setFormData({ ...formData, userType: v })}
                   options={[
@@ -405,8 +404,8 @@ export default function Planner() {
 
               <div>
                 <UiSelect
-                  label="Roof Size"
-                  helpText="A simple proxy for available roof area. It limits the maximum system size we can recommend."
+                  label={t?.roofSizeLabel || "Roof Size"}
+                  helpText={t?.roofSizeHelp || "A simple proxy for available roof area. It limits the maximum system size we can recommend."}
                   value={formData.roofSize}
                   onChange={(v) => setFormData({ ...formData, roofSize: v })}
                   options={[
@@ -419,8 +418,8 @@ export default function Planner() {
 
               <div>
                 <UiSelect
-                  label="Shading"
-                  helpText="Shading reduces solar output. Choose Medium/Heavy if trees or buildings shade the roof during peak hours."
+                  label={t?.shadingLabel || "Shading"}
+                  helpText={t?.shadingHelp || "Shading reduces solar output. Choose Medium/Heavy if trees or buildings shade the roof during peak hours."}
                   value={formData.shading}
                   onChange={(v) => setFormData({ ...formData, shading: v })}
                   options={[
@@ -433,11 +432,11 @@ export default function Planner() {
 
               <div>
                 <UiSelect
-                  label="Financing"
+                  label={t?.financingLabel || "Financing"}
                   helpText={
                     formData.userType === "Household"
-                      ? "Community financing is currently available only for schools and MSMEs."
-                      : "Direct means you pay upfront and keep the savings. Community means Rp 0 upfront, but savings are shared via a green fee."
+                      ? t?.financingHelpHH || "Community financing is currently available only for schools and MSMEs."
+                      : t?.financingHelp || "Direct means you pay upfront and keep the savings. Community means Rp 0 upfront, but savings are shared via a green fee."
                   }
                   value={formData.financing}
                   onChange={(v) => setFormData({ ...formData, financing: v })}
@@ -455,11 +454,11 @@ export default function Planner() {
               <div>
                 <label className="plannerLabel">
                   <strong className="labelWithHelp">
-                    Grant Coverage <HelpTip text="The percentage of upfront cost covered by grants or subsidies. Higher coverage lowers payback time." />
+                    {t?.grantCoverage || "Grant Coverage"} <HelpTip text={t?.grantHelp || "The percentage of upfront cost covered by grants or subsidies. Higher coverage lowers payback time."} />
                   </strong>
                   <span className="plannerHint">
                     {formData.userType === "Household"
-                      ? "Not available"
+                      ? t?.notAvailable || "Not available"
                       : `${formData.grantPct}%`}
                   </span>
                 </label>

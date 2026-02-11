@@ -614,3 +614,78 @@
   .mobileOnly{ display: contents; }
   .desktopOnly{ display: none; }
 }
+
+/* ===== Language Toggle ===== */
+.langToggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.20);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.langToggle:hover{
+  background: rgba(255,255,255,0.22);
+  border-color: rgba(255,255,255,0.40);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.langToggle:active{
+  transform: translateY(0);
+}
+
+.langToggle:focus-visible{
+  outline: 3px solid rgba(255,255,255,0.55);
+  outline-offset: 2px;
+}
+
+.langIcon{
+  font-size: 1.1rem;
+}
+
+.langLabel{
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+/* Mobile responsive for language toggle */
+@media (max-width: 967px){
+  .langToggle{
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    margin: 8px 0;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .langIcon{
+    font-size: 1rem;
+  }
+  
+  .nav-links .langToggle{
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+}
+
+@media (max-width: 420px){
+  .langToggle{
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .langToggle .langIcon{
+    display: inline-flex;
+    font-size: 1.1rem;
+  }
+}

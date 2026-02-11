@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "../firebase";
+import LanguageContext from "../context/LanguageContext";
 import "../styles/Login.css";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { language, toggleLanguage, t } = useContext(LanguageContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,6 +42,16 @@ export default function Login() {
 
   return (
     <div className="login-page">
+      {/* Language Toggle */}
+      <button
+        className="loginLangToggle"
+        onClick={toggleLanguage}
+        title={language === 'en' ? 'Switch to Bahasa Indonesia' : 'Switch to English'}
+      >
+        <span className="langIcon">🌐</span>
+        <span className="langLabel">{language === 'en' ? 'ID' : 'EN'}</span>
+      </button>
+
       <div className="login-card">
         <div className="login-brand">
           <span className="login-logo" aria-hidden="true">⚡</span>
@@ -47,11 +59,11 @@ export default function Login() {
         </div>
 
         <p className="login-subtitle">
-          {isRegistering ? "Create an Account" : "Welcome Back"}
+          {isRegistering ? "Create an Account" : t?.welcomeBack || "Welcome Back"}
         </p>
 
         <form className="login-form" onSubmit={handleSubmit}>
-          <label className="login-label">Email</label>
+          <label className="login-label">{t?.emailPlaceholder || "Email"}</label>
           <div className="login-field">
             <span className="login-icon" aria-hidden="true">
               <i className="bi bi-envelope-fill" />
@@ -59,7 +71,7 @@ export default function Login() {
             <input
               className="login-input"
               type="email"
-              placeholder="Email Address"
+              placeholder={t?.emailPlaceholder || "Email"}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
@@ -67,7 +79,7 @@ export default function Login() {
             />
           </div>
 
-          <label className="login-label">Password</label>
+          <label className="login-label">{t?.passwordPlaceholder || "Password"}</label>
           <div className="login-field">
             <span className="login-icon" aria-hidden="true">
               <i className="bi bi-lock-fill" />
@@ -75,7 +87,7 @@ export default function Login() {
             <input
               className="login-input"
               type="password"
-              placeholder="Password"
+              placeholder={t?.passwordPlaceholder || "Password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete={isRegistering ? "new-password" : "current-password"}
@@ -84,7 +96,7 @@ export default function Login() {
           </div>
 
           <button className="login-btn" type="submit" disabled={loading}>
-            {loading ? "Please wait..." : isRegistering ? "Sign Up" : "Log In"}
+            {loading ? t?.loading || "Loading..." : isRegistering ? (t?.createAccount || "Sign Up") : (t?.signIn || "Log In")}
           </button>
         </form>
 
@@ -92,13 +104,13 @@ export default function Login() {
 
         <div className="login-links">
           <div className="login-switch">
-            {isRegistering ? "Already have an account?" : "No account yet?"}
+            {isRegistering ? "Already have an account?" : t?.createAccount || "No account yet?"}
             <button
               type="button"
               className="login-linkBtn"
               onClick={() => setIsRegistering((v) => !v)}
             >
-              {isRegistering ? "Log In" : "Sign Up"}
+              {isRegistering ? (t?.signIn || "Log In") : (t?.createAccount || "Sign Up")}
             </button>
           </div>
 

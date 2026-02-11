@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "../styles/Analysis.css";
 import SchoolView from "../components/SchoolView";
 import AdminView from "../components/AdminView";
+import LanguageContext from "../context/LanguageContext";
 
 export default function Analysis() {
+  const { t } = useContext(LanguageContext);
   const [view, setView] = useState("dynamic");
 
   const handleShare = () => {
@@ -33,16 +35,15 @@ export default function Analysis() {
     <div className="analysisPage">
       <div className="analysisHeader">
         <div className="analysisTitleWrap">
-          <h1 style={{ margin: 0 }}><i className="bi bi-graph-up"></i> Impact Dashboard</h1>
+          <h1 style={{ margin: 0 }}><i className="bi bi-graph-up"></i> {t?.impactDashboard || "Impact Dashboard"}</h1>
           <p style={{ margin: 0 }}>
-            Real-time monitoring of West Java's transition to sustainable energy. 
-            Track savings, generation, & environmental impact. 
+            {t?.analysisSubtitle || "Real-time monitoring of West Java's transition to sustainable energy. Track savings, generation, & environmental impact."}
           </p>
         </div>
 
         <div className="analysisActions">
           <button onClick={handleShare} className="analysisShareBtn">
-            Share to WhatsApp
+            {t?.shareWhatsApp || "Share to WhatsApp"}
           </button>
 
           <div className="analysisToggle">
@@ -51,7 +52,7 @@ export default function Analysis() {
               className={`analysisToggleBtn ${view === "dynamic" ? "analysisToggleBtnActive" : ""}`}
               style={toggleBtnStyle(view === "dynamic")}
             >
-              School
+              {t?.viewSchool || "School"}
             </button>
 
             <button
@@ -59,7 +60,7 @@ export default function Analysis() {
               className={`analysisToggleBtn ${view === "adminDynamic" ? "analysisToggleBtnActive" : ""}`}
               style={toggleBtnStyle(view === "adminDynamic")}
             >
-              Admin
+              {t?.viewAdmin || "Admin"}
             </button>
           </div>
         </div>
@@ -90,7 +91,7 @@ export default function Analysis() {
         }}
       >
         <small style={{ color: "#555" }}>
-          <strong>Data Meta-Tag:</strong> Source: West Java ESDM | Verification: PLN S-2 Tariff | Last Updated: Dec 2024
+          <strong>{t?.dataMeta || "Data Meta-Tag"}:</strong> Source: West Java ESDM | Verification: PLN S-2 Tariff | Last Updated: Dec 2024
         </small>
       </div>
     </div>

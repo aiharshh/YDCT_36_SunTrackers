@@ -19,6 +19,8 @@ import ArticleDetail from "./pages/ArticleDetail";
 import ScrollToTop from './components/ScrollToTop';
 import Portfolio from './pages/Portfolio.jsx';
 
+import { LanguageProvider } from './context/LanguageContext';
+
 function AppRoutes() {
   const location = useLocation();
   const showNavbar = location.pathname !== '/login';
@@ -54,7 +56,9 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <LanguageProvider>
+        <AppRoutes />
+      </LanguageProvider>
     </BrowserRouter>
   );
 }

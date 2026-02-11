@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   onAuthStateChanged,
@@ -8,9 +8,11 @@ import {
   fetchSignInMethodsForEmail,
 } from 'firebase/auth';
 import { auth } from '../firebase';
+import LanguageContext from '../context/LanguageContext';
 import '../styles/Profile.css';
 
 export default function Profile() {
+  const { t } = useContext(LanguageContext);
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
@@ -174,7 +176,7 @@ export default function Profile() {
   return (
     <div className="profilePage">
       <div className="profileHeader">
-        <h1 className="profileTitle">Profile</h1>
+        <h1 className="profileTitle">{t?.myProfile || "My Profile"}</h1>
       </div>
 
       <div className="profileBody">
@@ -187,7 +189,7 @@ export default function Profile() {
             )}
           </div>
           <div className="profileMeta">
-            <div className="profileEmailLabel">email address</div>
+            <div className="profileEmailLabel">{t?.emailAddress || "email address"}</div>
             <div className="profileEmailValue">{displayEmail}</div>
           </div>
         </div>
@@ -201,7 +203,7 @@ export default function Profile() {
               setActiveTab('history');
             }}
           >
-            Invest History
+            {t?.investments || "Invest History"}
           </button>
           <button
             type="button"
@@ -211,7 +213,7 @@ export default function Profile() {
               setActiveTab('settings');
             }}
           >
-            Settings
+            {t?.settings || "Settings"}
           </button>
         </div>
 
@@ -225,7 +227,7 @@ export default function Profile() {
           <div className="profileSection">
             {investHistory.length === 0 ? (
               <div className="emptyState">
-                There is no history of investment/donation.
+                {t?.noHistory || "There is no history of investment/donation."}
               </div>
             ) : (
               <div className="historyList">
@@ -239,13 +241,13 @@ export default function Profile() {
                     <div className="historyRight">
                       <div className="schoolName">{it.schoolName}</div>
                       <div className="historyLine">
-                        <span className="label">Amount Donated (Rp)</span>
+                        <span className="label">{t?.amountDonated || "Amount Donated (Rp)"}</span>
                         <span className="value">
                           {Number(it.amount || 0).toLocaleString('id-ID')}
                         </span>
                       </div>
                       <div className="historyLine">
-                        <span className="label">Date</span>
+                        <span className="label">{t?.date || "Date"}</span>
                         <span className="value">{it.date}</span>
                       </div>
                     </div>
@@ -258,19 +260,19 @@ export default function Profile() {
           <div className="profileSection">
             <div className="settingsGrid">
               <div className="settingsCard">
-                <h3 className="settingsTitle">Change Email</h3>
+                <h3 className="settingsTitle">{t?.changeEmail || "Change Email"}</h3>
                 <form onSubmit={handleChangeEmail} className="settingsForm">
-                  <label className="fieldLabel">Current Email</label>
+                  <label className="fieldLabel">{t?.currentEmail || "Current Email"}</label>
                   <input
                     className="fieldInput"
                     value={displayEmail}
                     readOnly
                   />
 
-                  <label className="fieldLabel">New Email</label>
+                  <label className="fieldLabel">{t?.newEmail || "New Email"}</label>
                   <input
                     className="fieldInput"
-                    placeholder="newemail@example.com"
+                    placeholder={t?.newEmailPlaceholder || "newemail@example.com"}
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
                     type="email"
@@ -278,32 +280,32 @@ export default function Profile() {
                   />
 
                   <button className="primaryBtn" type="submit" disabled={emailLoading}>
-                    {emailLoading ? 'Updating...' : 'Update Email'}
+                    {emailLoading ? t?.updating || 'Updating...' : t?.updateEmail || 'Update Email'}
                   </button>
 
                   <div className="hint">
-                    The email must be in a valid format. The new email cannot already be used for another account.
+                    {t?.emailValidHint || "The email must be in a valid format. The new email cannot already be used for another account."}
                   </div>
                 </form>
               </div>
 
               <div className="settingsCard">
-                    <h3 className="settingsTitle">Change Password</h3>
+                    <h3 className="settingsTitle">{t?.changePassword || "Change Password"}</h3>
                     <form onSubmit={handleChangePassword} className="settingsForm">
-                        <label className="fieldLabel">New Password</label>
+                        <label className="fieldLabel">{t?.newPassword || "New Password"}</label>
                         <input
                             className="fieldInput"
-                            placeholder="Min 8 chars, 1 number, 1 symbol"
+                            placeholder={t?.passwordHint || "Min 8 chars, 1 number, 1 symbol"}
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             type="password"
                             autoComplete="new-password"
                         />
 
-                        <label className="fieldLabel">Confirm Password</label>
+                        <label className="fieldLabel">{t?.confirmPassword || "Confirm Password"}</label>
                         <input
                             className="fieldInput"
-                            placeholder="Confirm new password"
+                            placeholder={t?.confirmPassword || "Confirm new password"}
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             type="password"
@@ -311,11 +313,11 @@ export default function Profile() {
                         />
 
                         <button className="primaryBtn" type="submit" disabled={passLoading}>
-                            {passLoading ? 'Updating...' : 'Update Password'}
+                            {passLoading ? t?.updating || 'Updating...' : t?.updatePassword || 'Update Password'}
                         </button>
 
                         <div className="hint">
-                            Password must be at least 8 characters, must contain at least 1 number and 1 symbol.
+                            {t?.passwordHint || "Password must be at least 8 characters, must contain at least 1 number and 1 symbol."}
                         </div>
                     </form>
               </div>
