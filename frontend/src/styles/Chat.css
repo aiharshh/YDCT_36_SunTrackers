@@ -538,6 +538,105 @@
   box-shadow: 0 4px 8px rgba(46, 125, 50, 0.2);
 }
 
+.quickNavBtn.requires-auth {
+  position: relative;
+}
+
+.quickNavBtn.requires-auth::after {
+  content: '🔒';
+  font-size: 0.65rem;
+  margin-left: 4px;
+}
+
+/* ===== Authentication Prompt Styles ===== */
+.authPromptBubble {
+  border: 1px solid rgba(220, 53, 69, 0.3) !important;
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%) !important;
+}
+
+.authPrompt {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.authPromptHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #c62828;
+}
+
+.authPromptHeader i {
+  font-size: 1.2rem;
+}
+
+.authPromptText {
+  margin: 0;
+  font-size: 0.92rem;
+  color: rgba(27, 31, 27, 0.85);
+  line-height: 1.5;
+}
+
+.authPromptButtons {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.authPromptLoginBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.authPromptLoginBtn:hover {
+  background: #1b5e20;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.35);
+}
+
+.authPromptCancelBtn {
+  background: #fff;
+  color: #666;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.authPromptCancelBtn:hover {
+  background: #f5f5f5;
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+/* Mobile adjustments for auth prompt */
+@media (max-width: 520px) {
+  .authPromptButtons {
+    flex-direction: column;
+  }
+  
+  .authPromptLoginBtn,
+  .authPromptCancelBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* Mobile adjustments for quick nav */
 @media (max-width: 520px) {
   .quickNavBar {
