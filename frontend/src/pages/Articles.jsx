@@ -23,6 +23,21 @@ export default function Articles() {
 
     return (
         <div className="articles-page">
+
+<div id="google_translate_element"></div>
+<div className="vendor-pin-banner">
+    <div className="vendor-pin-left">
+        <div className="vendor-pin-icon">☀️</div>
+        <div className="vendor-pin-text">
+            <strong>Solar Vendors in West Java</strong>
+            <span>Bandung · Bekasi · Cirebon · Bogor — listings below</span>
+        </div>
+    </div>
+    <a href="#vendor-section" className="vendor-pin-cta">
+        <i className="bi bi-lightning-charge-fill"></i>
+        View All Vendors
+    </a>
+</div>
             <div className="breadcrumbs">
                 <Link to="/"><i className="bi bi-house"></i> Home</Link>
                 <span>/</span>
@@ -67,43 +82,52 @@ export default function Articles() {
                     ))}
             </div>
 
-            <div className="vendor-section">
-                <h2>Solar Vendors in West Java</h2>
-                <p className="vendor-subtitle">
-                    Solar panel vendors across Bandung, Bekasi, Cirebon, and Bogor.
-                    <br/>
-                    <span className="vendor-disclaimer">
-                        Users are advised to independently verify vendors before making any transactions.
-                        All transactions conducted between users and vendors are outside of our responsibility.
-                        This website is created for academic purposes and does not guarantee the legitimacy of vendors.
-                    </span>
-                </p>
+         
 
-                <div className="vendor-grid">
-                    {vendors.map((vendor, index) => (
-                    <div className="vendor-card" key={index}>
-                        <div className="vendor-header">
-                        <h3>{vendor.name}</h3>
-                        <span className="vendor-location">{vendor.location}</span>
-                        </div>
+<div className="vendor-section" id="vendor-section">
 
-                        <p className="vendor-category">{vendor.category}</p>
-                        <p className="vendor-category">{vendor.phone}</p>
+  <div className="vendor-section-label">
+    <i className="bi bi-geo-alt-fill"></i> West Java Directory
+  </div>
 
-                        <div className="vendor-actions">
-                            <a
-                            href={vendor.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="vendor-btn outline"
-                            >
-                            <i className="bi bi-globe"></i> Website
-                            </a>
-                        </div>
-                    </div>
-                    ))}
-                </div>
-                </div>
+  <h2>Solar Vendors in West Java</h2>
+  <p className="vendor-subtitle">
+    Solar panel vendors across Bandung, Bekasi, Cirebon, and Bogor.
+    <br />
+    <span className="vendor-disclaimer">
+      Users are advised to independently verify vendors before making any transactions.
+      All transactions conducted between users and vendors are outside of our responsibility.
+      This website is created for academic purposes and does not guarantee the legitimacy of vendors.
+    </span>
+  </p>
+
+  <div className="vendor-grid">
+    {vendors.map((vendor, index) => (
+      <div className="vendor-card" key={index}>
+        <div className="vendor-header">
+          <h3>{vendor.name}</h3>
+          <span className="vendor-location">{vendor.location}</span>
         </div>
+
+        <p className="vendor-category">{vendor.category}</p>
+        <p className="vendor-category">{vendor.phone}</p>
+
+        <div className="vendor-actions">
+          <a
+            href={vendor.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="vendor-btn outline"
+          >
+            <i className="bi bi-globe"></i> Website
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+
+</div>
+ </div>
+      
     );
 }
