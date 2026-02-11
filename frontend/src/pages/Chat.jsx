@@ -386,14 +386,6 @@ export default function Chat() {
                   className="composerTextarea"
                   spellCheck={false}
                 />
-                <button
-                  type="button"
-                  className="composerMic"
-                  aria-label="Mic (UI only)"
-                  onClick={() => {}}
-                >
-                  <i className="bi bi-mic" />
-                </button>
               </div>
 
               <button
