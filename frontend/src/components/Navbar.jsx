@@ -13,6 +13,7 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
 
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingAuthPage, setPendingAuthPage] = useState("");
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -70,6 +71,7 @@ export default function Navbar() {
       e.preventDefault();
       setMenuOpen(false);
       setUserMenuOpen(false);
+      setPendingAuthPage("Analysis");
       setShowAuthModal(true);
     }
   };
@@ -254,7 +256,7 @@ export default function Navbar() {
 
             <h3 className="authModalTitle">Please sign in</h3>
             <p className="authModalText">
-              You need to log in to access <strong>Analysis</strong>.
+              You need to log in to access <strong>{pendingAuthPage}</strong>.
             </p>
 
             <div className="authModalActions">
@@ -275,3 +277,4 @@ export default function Navbar() {
     </>
   );
 }
+
