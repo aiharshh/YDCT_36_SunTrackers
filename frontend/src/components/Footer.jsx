@@ -1,6 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
 
 const Footer = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Track authentication state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Handle protected navigation
+  const handleProtectedNavigate = (route, e) => {
+    const protectedRoutes = ["/analysis", "/profile"];
+    
+    if (protectedRoutes.includes(route) && !isAuthenticated) {
+      e.preventDefault();
+      // Store the intended destination to redirect after login
+      sessionStorage.setItem("redirectAfterLogin", route);
+      // Redirect to login
+      window.location.href = "/login";
+      return false;
+    }
+    
+    // Allow normal navigation
+    return true;
+  };
+
   return (
     <>
       <footer className="footer">
@@ -36,7 +65,15 @@ const Footer = () => {
               <li><a href="/articles">Awareness</a></li>
               <li><a href="/planner">Calculator</a></li>
               <li><a href="/invest">Invest</a></li>
-              <li><a href="/analysis">Analysis</a></li>
+              <li className="protected-link">
+                <a 
+                  href="/analysis" 
+                  onClick={(e) => handleProtectedNavigate("/analysis", e)}
+                  title={isAuthenticated ? "View Impact Dashboard" : "Login required to access"}
+                >
+                  Analysis {isAuthenticated ? "" : "🔒"}
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -96,10 +133,28 @@ const Footer = () => {
           text-decoration: none;
           color: #cbd5e1;
           transition: 0.3s;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
         }
 
         .footer-links a:hover {
           color: #22c55e;
+        }
+
+        .footer-links a.protected {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+
+        .protected-link a {
+          position: relative;
+        }
+
+        .protected-link a::after {
+          content: '🔒';
+          font-size: 0.75rem;
+          margin-left: 4px;
         }
 
         .footer-bottom {
@@ -122,3 +177,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

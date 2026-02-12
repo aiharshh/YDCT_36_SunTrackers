@@ -33,7 +33,14 @@ export default function Login() {
     setLoading(false);
 
     if (res.user) {
-      navigate("/home");
+      // Check if there's a redirect destination stored
+      const redirectAfterLogin = sessionStorage.getItem("redirectAfterLogin");
+      if (redirectAfterLogin) {
+        sessionStorage.removeItem("redirectAfterLogin");
+        navigate(redirectAfterLogin);
+      } else {
+        navigate("/home");
+      }
       return;
     }
 

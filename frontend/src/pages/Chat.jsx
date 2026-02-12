@@ -44,7 +44,8 @@ export const NAVIGATION_PAGES = [
     route: "/chat", 
     label: "💬 AI Chat", 
     description: "Talk to the AI assistant (current conversation)",
-    keywords: ["chat", "talk", "ask", "question", "assistant", "ai", "help"]
+    keywords: ["chat", "talk", "ask", "question", "assistant", "ai", "help"],
+    requiresAuth: true
   },
   { 
     route: "/login", 
@@ -247,12 +248,34 @@ export default function Chat() {
       setSuggestedPage(relevantPage);
     }
 
+    // Check if user shared a URL
+    let urlContent = null;
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const urls = userInput.match(urlRegex);
+    
+    if (urls && urls.length > 0) {
+      try {
+        const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5001";
+        const fetchRes = await fetch(`${apiBase}/api/fetch-url`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: urls[0] }),
+        });
+        const fetchData = await fetchRes.json();
+        if (fetchData && !fetchData.error && fetchData.content) {
+          urlContent = fetchData;
+        }
+      } catch (err) {
+        console.error("URL fetch failed:", err);
+      }
+    }
+
     try {
       const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5001";
       const res = await fetch(`${apiBase}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: newMessages, urlContent }),
       });
 
       const data = await res.json();
@@ -291,6 +314,60 @@ export default function Chat() {
     { route: "/analysis", label: "📊 Dashboard", icon: "bi-bar-chart", requiresAuth: true },
     { route: "/articles", label: "📚 Articles", icon: "bi-book" },
   ];
+
+  // Show login required screen if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="chatShell">
+        <div className="chatCard">
+          <div className="chatTop">
+            <div className="chatTopIcon">
+              <i className="bi bi-robot" />
+            </div>
+            <div className="chatTopText">
+              <div className="chatTitle">{t?.chatTitle || "AI Solar Assistant"}</div>
+              <div className="chatSub">{t?.chatSubtitle || "Your expert guide to renewable energy in West Java."}</div>
+            </div>
+          </div>
+
+          <div className="chatDivider" />
+
+          <div className="chatBody">
+            <div className="loginRequiredContainer">
+              <div className="loginRequiredIcon">
+                <i className="bi bi-shield-lock"></i>
+              </div>
+              <h2 className="loginRequiredTitle">Login Required</h2>
+              <p className="loginRequiredText">
+                You need to be logged in to access the AI Solar Assistant. 
+                This helps us manage API usage and provide personalized responses.
+              </p>
+              <button 
+                className="loginRequiredBtn"
+                onClick={() => navigate("/login")}
+              >
+                <i className="bi bi-box-arrow-in-right"></i>
+                Login to Continue
+              </button>
+              <button 
+                className="loginRequiredBtnSecondary"
+                onClick={() => navigate("/home")}
+              >
+                Go to Home
+              </button>
+            </div>
+          </div>
+
+          <div className="infoBar">
+            <i className="bi bi-info-circle" />
+            <span>
+              {t?.aiDisclaimer || "This AI assistant provides educational information. For official advice, consult certified solar professionals."}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="chatShell">
