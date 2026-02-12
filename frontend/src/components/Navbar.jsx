@@ -121,7 +121,7 @@ export default function Navbar() {
             </button>
 
             <NavLink to="/home" onClick={closeMenu} className={({ isActive }) => (isActive ? 'active' : '')}>
-              {t?.home || "HOME"}
+              {"HOME" || t?.home}
             </NavLink>
 
             <NavLink to="/articles" onClick={closeMenu} className={({ isActive }) => (isActive ? 'active' : '')}>
