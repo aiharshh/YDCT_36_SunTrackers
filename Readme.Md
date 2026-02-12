@@ -419,13 +419,6 @@ Developed for the **YDCT SL2 with Meta 2025** competition as part of efforts to 
 
 For support, contact team members or join community discussions.
 
-## 🗺️ Roadmap
-
-- [ ] Mobile application development
-- [ ] Integration with local solar installation companies
-- [ ] Advanced analytics with machine learning
-- [ ] Government dashboard for policy makers
-- [ ] Integration with utility companies for grid management
 
 ---
 
