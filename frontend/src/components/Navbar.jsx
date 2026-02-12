@@ -134,9 +134,11 @@ export default function Navbar() {
               {t?.invest || "INVEST"}
             </NavLink>
 
-            <NavLink to="/chat" onClick={closeMenu} className={({ isActive }) => (isActive ? 'active' : '')}>
-              {t?.chat || "CHAT"}
-            </NavLink>
+            {user && (
+              <NavLink to="/chat" onClick={closeMenu} className={({ isActive }) => (isActive ? 'active' : '')}>
+                {t?.chat || "CHAT"}
+              </NavLink>
+            )}
 
             <NavLink
               to="/analysis"
