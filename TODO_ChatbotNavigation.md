@@ -46,12 +46,6 @@
 - [x] Store redirect destination in sessionStorage for post-login redirect
 - [x] Update Login.jsx to handle redirect after successful authentication
 
-## Summary - All Protected Routes:
-- ✅ Chatbot Dashboard button → Shows auth prompt when not logged in
-- ✅ Chatbot AI Chat → Shows login required screen when not logged in
-- ✅ Navbar Analysis link → Shows auth modal when not logged in
-- ✅ Footer Analysis link → Redirects to login when not logged in
-
 ## Phase 7: Chatbot API Cost Protection
 - [x] Restrict chatbot access to authenticated users only
 - [x] Add login required screen when non-authenticated user accesses /chat
@@ -59,4 +53,31 @@
 - [x] Add "Login to Continue" and "Go to Home" buttons
 - [x] Add CSS styles for login required container
 - [x] Hide Chat link from Navbar when not logged in
+
+## Phase 8: Backend Link Generation
+- [x] Update system prompt to require markdown-style links
+- [x] Add explicit examples: [Go to Solar Calculator →](/planner)
+- [x] Emphasize importance of link generation for frontend rendering
+
+## Phase 9: URL Fetching & Summarization
+- [x] Add URL fetching utility function in backend
+- [x] Create /api/fetch-url endpoint for fetching web page content
+- [x] Implement HTML parsing to extract text from web pages
+- [x] Add URL validation and security checks (HTTP/HTTPS only)
+- [x] Update chat endpoint to accept urlContent parameter
+- [x] Update frontend to detect URLs in user messages
+- [x] Fetch URL content before sending to AI
+- [x] Add URL content to AI system prompt for summarization
+- [x] Update allowlist to include URL-related keywords
+- [x] Increase max_tokens for URL-based responses
+
+## Summary - Complete Feature Set:
+- ✅ Chatbot AI Chat → Login required screen when not logged in (API cost protection)
+- ✅ Chatbot Dashboard button → Shows auth prompt when not logged in
+- ✅ Chatbot Profile button → Shows auth prompt when not logged in
+- ✅ Navbar Analysis link → Shows auth modal when not logged in
+- ✅ Navbar Chat link → Hidden when not logged in
+- ✅ Footer Analysis link → Redirects to login when not logged in
+- ✅ Chatbot generates clickable navigation links → [Go to Solar Calculator →](/planner)
+- ✅ Chatbot fetches and summarizes URLs shared by users
 

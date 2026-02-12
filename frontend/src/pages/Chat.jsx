@@ -248,12 +248,34 @@ export default function Chat() {
       setSuggestedPage(relevantPage);
     }
 
+    // Check if user shared a URL
+    let urlContent = null;
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const urls = userInput.match(urlRegex);
+    
+    if (urls && urls.length > 0) {
+      try {
+        const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5001";
+        const fetchRes = await fetch(`${apiBase}/api/fetch-url`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: urls[0] }),
+        });
+        const fetchData = await fetchRes.json();
+        if (fetchData && !fetchData.error && fetchData.content) {
+          urlContent = fetchData;
+        }
+      } catch (err) {
+        console.error("URL fetch failed:", err);
+      }
+    }
+
     try {
       const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5001";
       const res = await fetch(`${apiBase}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: newMessages, urlContent }),
       });
 
       const data = await res.json();
